@@ -1,0 +1,5 @@
+txt = readLines("/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/DEMOGRAPHY/SON_CHI_Vireo_bellii.ml")
+mat = as.numeric(strsplit(txt," ")[[1]])
+mat = matrix(mat,nrow=17,ncol=17)
+heatmap(mat)
+logmat = log(mat)

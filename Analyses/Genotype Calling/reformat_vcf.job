@@ -1,0 +1,22 @@
+#!/bin/bash
+#PBS -l select=1:ncpus=1:mem=32gb
+#PBS -l walltime=5000:00:00
+#PBS -N reformat_vcf
+#PBS -j oe
+#PBS -m ae
+#PBS -M kprovost@amnh.org
+#PBS -k oe
+
+cd /vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/VCFS/
+
+source activate py36
+
+for vcf in */*vcf; 
+do echo $vcf; 
+python3 /home/kprovost/nas3/ANGSD_pipeline/vcf_remove_2tabs.py $vcf; 
+done;
+
+for vcf in *vcf; 
+do echo $vcf; 
+python3 /home/kprovost/nas3/ANGSD_pipeline/vcf_remove_2tabs.py $vcf; 
+done;
