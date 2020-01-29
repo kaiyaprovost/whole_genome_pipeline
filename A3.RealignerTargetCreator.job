@@ -1,0 +1,168 @@
+#!/bin/bash
+#PBS -l select=1:ncpus=1
+#PBS -l walltime=5000:00:00
+#PBS -N bil_RealignerTargetCreator
+#PBS -j oe
+#PBS -m ae
+#PBS -M kprovost@amnh.org
+#PBS -k oe
+
+# change to the working directory
+cd $PBS_O_WORKDIR
+echo "pbsworkdir"
+echo $PBS_O_WORKDIR
+EXECDIR=`pwd`
+export PATH=./:$PATH
+echo $PATH
+
+#Arguments:
+## ref=reference sequence
+
+#Arguments:
+## ref=reference sequence
+#ref=/home/kprovost/nas3/genomeresequencingFromLucas/Corvus_brachyrhynchus_GCF_000691975.1_ASM69197v1_genomic.fasta
+#ref=/home/kprovost/nas3/genomeresequencingFromLucas/Geospiza_fortis_GCF_000277835.1_GeoFor_1.0_genomic.fasta
+#ref=/home/kprovost/nas3/genomeresequencingFromLucas/Parus_major_GCF_001522545.2_Parus_major1.1_genomic.fasta
+#ref=/home/kprovost/nas3/genomeresequencingFromLucas/Strunus_vulgaris_GCF_001447265.1_Sturnus_vulgaris-1.0_genomic.fasta
+ref=/home/kprovost/nas3/genomeresequencingFromLucas/Zonotrichia_albicollis_GCF_000385455.1_Zonotrichia_albicollis-1.0.1_genomic.fasta
+
+##References:
+##Corvus -- Vireo
+##Geospiza -- Cardinalis
+##Parus -- Auriparus
+##Sturnus -- Toxostoma, Campylorhynchus, Polioptila, Phainopepla
+##Zonotrichia -- Amphispiza, Pipilo
+
+echo
+echo
+echo RealignerTargetCreator
+echo
+echo
+
+## /vz-nas1-active/ProcessedGenomicReads/AMN_245109/Plate2/bilineata/December_Rerun/BAM_files ## F069_AMN_245109_P002_WD03_i5-515_i7-135_S96_L005.dedup.reheadered.bam
+
+command="time java -Djava.io.tmpdir=/home/kprovost/nas3/tmp/ 
+-jar /home/kprovost/nas3/genomeresequencingFromLucas/GenomeAnalysisTK-3.8-1-0-gf15c1c3ef/GenomeAnalysisTK.jar 
+-T RealignerTargetCreator -R ${ref} "
+
+cd /vz-nas1-active/ProcessedGenomicReads/AMN_245111/Plate2/bilineata/December_Rerun/BAM_files/not_merged/
+for prebam in *dedup.reheadered.bam; do 
+bam=${prebam%.bam}
+name=`echo $bam | rev | cut -d'/' -f 1 | rev`
+inputbam=${name}.clipped.bam
+command="${command}-I ${inputbam} ";
+time java -Djava.io.tmpdir=/home/kprovost/nas3/tmp/ -jar /home/kprovost/nas3/genomeresequencingFromLucas/picard.jar BuildBamIndex I=$inputbam 
+done
+
+cd /vz-nas1-active/ProcessedGenomicReads/AMN_245109/Plate2/bilineata/December_Rerun/BAM_files/not_merged/
+for prebam in *dedup.reheadered.bam; do 
+bam=${prebam%.bam}
+name=`echo $bam | rev | cut -d'/' -f 1 | rev`
+inputbam=${name}.clipped.bam
+command="${command}-I ${inputbam} ";
+time java -Djava.io.tmpdir=/home/kprovost/nas3/tmp/ -jar /home/kprovost/nas3/genomeresequencingFromLucas/picard.jar BuildBamIndex I=$inputbam 
+done
+
+cd /vz-nas1-active/ProcessedGenomicReads/AMN_245107/bilineata/December_Rerun/BAM_files/not_merged/
+for prebam in *dedup.bam; do 
+bam=${prebam%.bam}
+name=`echo $bam | rev | cut -d'/' -f 1 | rev`
+inputbam=${name}.clipped.bam
+command="${command}-I ${inputbam} ";
+time java -Djava.io.tmpdir=/home/kprovost/nas3/tmp/ -jar /home/kprovost/nas3/genomeresequencingFromLucas/picard.jar BuildBamIndex I=$inputbam 
+done
+
+cd /vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/
+
+command="${command} -o bilineata-allsamplesClipped.intervals"
+
+echo
+echo $command
+#eval $command
+
+
+
+
+
+#####
+
+# time java -jar /home/lmoreira/programs/GenomeAnalysisTK-3.8-1-0-gf15c1c3ef/GenomeAnalysisTK.jar \
+# -T RealignerTargetCreator \
+# -R $ref \
+# -I PV-AK-10.clipped.bam \
+# -I PV-AK-1.clipped.bam \
+# -I PV-AK-2.clipped.bam \
+# -I PV-AK-3.clipped.bam \
+# -I PV-AK-4.clipped.bam \
+# -I PV-AK-5.clipped.bam \
+# -I PV-AK-6.clipped.bam \
+# -I PV-AK-7.clipped.bam \
+# -I PV-AK-8.clipped.bam \
+# -I PV-AK-9.clipped.bam \
+# -I PV-MW-11.clipped.bam \
+# -I PV-MW-12.clipped.bam \
+# -I PV-MW-13.clipped.bam \
+# -I PV-MW-14.clipped.bam \
+# -I PV-MW-15.clipped.bam \
+# -I PV-MW-16.clipped.bam \
+# -I PV-MW-2.clipped.bam \
+# -I PV-MW-3.clipped.bam \
+# -I PV-MW-7.clipped.bam \
+# -I PV-MW-9.clipped.bam \
+# -I PV-NE-01.clipped.bam \
+# -I PV-NE-27.clipped.bam \
+# -I PV-NE-28.clipped.bam \
+# -I PV-NE-29.clipped.bam \
+# -I PV-NE-31.clipped.bam \
+# -I PV-NE-32.clipped.bam \
+# -I PV-NE-36.clipped.bam \
+# -I PV-NE-37.clipped.bam \
+# -I PV-NE-47.clipped.bam \
+# -I PV-NE-51.clipped.bam \
+# -I PV-NR-01.clipped.bam \
+# -I PV-NR-02.clipped.bam \
+# -I PV-NR-03.clipped.bam \
+# -I PV-NR-04.clipped.bam \
+# -I PV-NR-05.clipped.bam \
+# -I PV-NR-06.clipped.bam \
+# -I PV-NR-07.clipped.bam \
+# -I PV-NR-08.clipped.bam \
+# -I PV-NR-09.clipped.bam \
+# -I PV-NR-10.clipped.bam \
+# -I PV-NW-12.clipped.bam \
+# -I PV-NW-16.clipped.bam \
+# -I PV-NW-17.clipped.bam \
+# -I PV-NW-18.clipped.bam \
+# -I PV-NW-21.clipped.bam \
+# -I PV-NW-23.clipped.bam \
+# -I PV-NW-25.clipped.bam \
+# -I PV-NW-26.clipped.bam \
+# -I PV-NW-27.clipped.bam \
+# -I PV-NW-8.clipped.bam \
+# -I PV-SE-01.clipped.bam \
+# -I PV-SE-02.clipped.bam \
+# -I PV-SE-03.clipped.bam \
+# -I PV-SE-04.clipped.bam \
+# -I PV-SE-05.clipped.bam \
+# -I PV-SE-10.clipped.bam \
+# -I PV-SE-6.clipped.bam \
+# -I PV-SE-7.clipped.bam \
+# -I PV-SE-8.clipped.bam \
+# -I PV-SE-9.clipped.bam \
+# -I PV-SR-06.clipped.bam \
+# -I PV-SR-12.clipped.bam \
+# -I PV-SR-16.clipped.bam \
+# -I PV-SR-18.clipped.bam \
+# -I PV-SR-19.clipped.bam \
+# -I PV-SR-23.clipped.bam \
+# -I PV-SR-24.clipped.bam \
+# -I PV-SR-27.clipped.bam \
+# -I PV-SR-30.clipped.bam \
+# -I PV-SR-31.clipped.bam \
+# -o PV-all_samples.intervals
+# 
+# ## 
+# 
+#  
+
+

@@ -1,0 +1,56 @@
+#!/bin/bash
+#PBS -l select=1:ncpus=32:mem=32gb
+#PBS -l walltime=5000:00:00
+#PBS -N ban2fastq
+#PBS -j oe
+#PBS -m ae
+#PBS -M kprovost@amnh.org
+#PBS -k oe
+
+# change to the working directory
+cd $PBS_O_WORKDIR
+echo "pbsworkdir"
+echo $PBS_O_WORKDIR
+EXECDIR=`pwd`
+export PATH=./:$PATH
+echo $PATH
+
+#Arguments:
+## ref=reference sequence -- going to use parus because its done
+## bam
+ref=/home/kprovost/nas3/genomeresequencingFromLucas/Parus_major_GCF_001522545.2_Parus_major1.1_genomic.fna
+
+cd /vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/REALIGNED_BAMS
+
+date
+time
+
+module load bwa-0.7.15
+module load fastqc-0.11.5
+module load R-3.4.1
+
+time java -jar /home/kprovost/nas3/genomeresequencingFromLucas/picard.jar SamToFastq \
+I=$bam \
+FASTQ=$bam.fastq \
+SECOND_END_FASTQ=$bam.fastq
+
+time bwa mem \
+-M \
+-t 28 \
+$ref \
+$bam.fastq \
+$bam.fastq \
+> $bam.fastq.zf.sam 
+
+mkdir tmp
+time java -jar /home/kprovost/nas3/genomeresequencingFromLucas/picard.jar SortSam \
+INPUT=$bam.fastq.zf.sam \
+OUTPUT=$bam.fastq.zf.bam \
+SORT_ORDER=coordinate \
+TMP_DIR=`pwd`/tmp
+rm -r tmp/
+
+time java -jar /home/kprovost/nas3/genomeresequencingFromLucas/picard.jar BuildBamIndex \
+I=$bam.fastq.zf.bam 
+
+

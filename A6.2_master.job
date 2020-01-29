@@ -1,0 +1,199 @@
+#!/bin/bash
+#PBS -l select=1:ncpus=16
+#PBS -l walltime=5000:00:00
+#PBS -N all_dxy_rscript
+#PBS -j oe
+#PBS -m ae
+#PBS -M kprovost@amnh.org
+#PBS -k oe
+
+# change to the working directory
+cd $PBS_O_WORKDIR
+echo "pbsworkdir"
+echo $PBS_O_WORKDIR
+EXECDIR=`pwd`
+export PATH=./:$PATH
+echo $PATH
+
+cd /vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/
+module load R-3.4.1
+
+echo "XXXXXXXXXXXXXX"
+echo "BELLII"
+sonmaf=/vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/Vireo-bellii-NOWEIRD-SONDXY.mafs
+chimaf=/vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/Vireo-bellii-NOWEIRD-CHIDXY.mafs
+sonlen=`cat $sonmaf | wc -l`
+chilen=`cat $chimaf | wc -l`
+gunzip $sonmaf.gz
+gunzip $chimaf.gz
+echo "son maf file is: ${sonmaf}"
+echo "length: ${sonlen}"
+echo "chi maf file is: ${chimaf}"
+echo "length: ${chilen}"
+Rscript /home/kprovost/nas3/ANGSD_pipeline/ngsTools/ngsPopGen/scripts/calcDxy.R \
+--popA $sonmaf \
+--popB $chimaf \
+--totLen $sonlen
+mv Dxy_persite.txt bel_SON_Dxy_persite.txt
+
+echo "XXXXXXXXXXXXXX"
+echo "BILINEATA"
+sonmaf=/vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/Amphispiza-bilineata-SONDXY.mafs
+chimaf=/vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/Amphispiza-bilineata-CHIDXY.mafs
+sonlen=`cat $sonmaf | wc -l`
+chilen=`cat $chimaf | wc -l`
+echo "son maf file is: ${sonmaf}"
+echo "length: ${sonlen}"
+echo "chi maf file is: ${chimaf}"
+echo "length: ${chilen}"
+gunzip $sonmaf.gz
+gunzip $chimaf.gz
+Rscript /home/kprovost/nas3/ANGSD_pipeline/ngsTools/ngsPopGen/scripts/calcDxy.R \
+--popA $sonmaf \
+--popB $chimaf \
+--totLen $sonlen
+mv Dxy_persite.txt bil_SON_Dxy_persite.txt
+
+echo "XXXXXXXXXXXXXX"
+echo "BRUNNEICAPILLUS"
+sonmaf=/vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/Campylorhynchus-brunneicapillus-SONDXY.mafs
+chimaf=/vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/Campylorhynchus-brunneicapillus-CHIDXY.mafs
+sonlen=`cat $sonmaf | wc -l`
+chilen=`cat $chimaf | wc -l`
+echo "son maf file is: ${sonmaf}"
+echo "length: ${sonlen}"
+echo "chi maf file is: ${chimaf}"
+echo "length: ${chilen}"
+gunzip $sonmaf.gz
+gunzip $chimaf.gz
+Rscript /home/kprovost/nas3/ANGSD_pipeline/ngsTools/ngsPopGen/scripts/calcDxy.R \
+--popA $sonmaf \
+--popB $chimaf \
+--totLen $sonlen
+mv Dxy_persite.txt bru_SON_Dxy_persite.txt
+
+echo "XXXXXXXXXXXXXX"
+echo "CRISSALE"
+sonmaf=/vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/Toxostoma-crissale-SONDXY.mafs
+chimaf=/vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/Toxostoma-crissale-CHIDXY.mafs
+sonlen=`cat $sonmaf | wc -l`
+chilen=`cat $chimaf | wc -l`
+gunzip $sonmaf.gz
+gunzip $chimaf.gz
+echo "son maf file is: ${sonmaf}"
+echo "length: ${sonlen}"
+echo "chi maf file is: ${chimaf}"
+echo "length: ${chilen}"
+Rscript /home/kprovost/nas3/ANGSD_pipeline/ngsTools/ngsPopGen/scripts/calcDxy.R \
+--popA $sonmaf \
+--popB $chimaf \
+--totLen $sonlen
+mv Dxy_persite.txt cri_SON_Dxy_persite.txt
+
+echo "XXXXXXXXXXXXXX"
+echo "CURVIROSTRE"
+sonmaf=/vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/Toxostoma-curvirostre-SONDXY.mafs
+chimaf=/vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/Toxostoma-curvirostre-CHIDXY.mafs
+sonlen=`cat $sonmaf | wc -l`
+chilen=`cat $chimaf | wc -l`
+echo "son maf file is: ${sonmaf}"
+echo "length: ${sonlen}"
+echo "chi maf file is: ${chimaf}"
+echo "length: ${chilen}"
+gunzip $sonmaf.gz
+gunzip $chimaf.gz
+Rscript /home/kprovost/nas3/ANGSD_pipeline/ngsTools/ngsPopGen/scripts/calcDxy.R \
+--popA $sonmaf \
+--popB $chimaf \
+--totLen $sonlen
+mv Dxy_persite.txt cur_SON_Dxy_persite.txt
+
+echo "XXXXXXXXXXXXXX"
+echo "FLAVICEPS"
+sonmaf=/vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/Auriparus-flaviceps-NOWEIRD-SONDXY.mafs
+chimaf=/vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/Auriparus-flaviceps-NOWEIRD-CHIDXY.mafs
+sonlen=`cat $sonmaf | wc -l`
+chilen=`cat $chimaf | wc -l`
+echo "son maf file is: ${sonmaf}"
+echo "length: ${sonlen}"
+echo "chi maf file is: ${chimaf}"
+echo "length: ${chilen}"
+gunzip $sonmaf.gz
+gunzip $chimaf.gz
+Rscript /home/kprovost/nas3/ANGSD_pipeline/ngsTools/ngsPopGen/scripts/calcDxy.R \
+--popA $sonmaf \
+--popB $chimaf \
+--totLen $sonlen
+mv Dxy_persite.txt fla_SON_Dxy_persite.txt
+
+echo "XXXXXXXXXXXXXX"
+echo "FUSCA"
+sonmaf=/vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/Melozone-fusca-SONDXY.mafs
+chimaf=/vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/Melozone-fusca-CHIDXY.mafs
+sonlen=`cat $sonmaf | wc -l`
+chilen=`cat $chimaf | wc -l`
+gunzip $sonmaf.gz
+gunzip $chimaf.gz
+echo "son maf file is: ${sonmaf}"
+echo "length: ${sonlen}"
+echo "chi maf file is: ${chimaf}"
+echo "length: ${chilen}"
+Rscript /home/kprovost/nas3/ANGSD_pipeline/ngsTools/ngsPopGen/scripts/calcDxy.R \
+--popA $sonmaf \
+--popB $chimaf \
+--totLen $sonlen
+mv Dxy_persite.txt fus_SON_Dxy_persite.txt
+
+echo "XXXXXXXXXXXXXX"
+echo "MELANURA"
+sonmaf=/vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/Polioptila-melanura-SONDXY.mafs
+chimaf=/vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/Polioptila-melanura-CHIDXY.mafs
+sonlen=`cat $sonmaf | wc -l`
+chilen=`cat $chimaf | wc -l`
+echo "son maf file is: ${sonmaf}"
+echo "length: ${sonlen}"
+echo "chi maf file is: ${chimaf}"
+echo "length: ${chilen}"
+gunzip $sonmaf.gz
+gunzip $chimaf.gz
+Rscript /home/kprovost/nas3/ANGSD_pipeline/ngsTools/ngsPopGen/scripts/calcDxy.R \
+--popA $sonmaf \
+--popB $chimaf \
+--totLen $sonlen
+mv Dxy_persite.txt mel_SON_Dxy_persite.txt
+
+echo "XXXXXXXXXXXXXX"
+echo "NITENS"
+sonmaf=/vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/Phainopepla-nitens-NOWEIRD-SONDXY.mafs
+chimaf=/vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/Phainopepla-nitens-NOWEIRD-CHIDXY.mafs
+sonlen=`cat $sonmaf | wc -l`
+chilen=`cat $chimaf | wc -l`
+echo "son maf file is: ${sonmaf}"
+echo "length: ${sonlen}"
+echo "chi maf file is: ${chimaf}"
+echo "length: ${chilen}"
+gunzip $sonmaf.gz
+gunzip $chimaf.gz
+Rscript /home/kprovost/nas3/ANGSD_pipeline/ngsTools/ngsPopGen/scripts/calcDxy.R \
+--popA $sonmaf \
+--popB $chimaf \
+--totLen $sonlen
+mv Dxy_persite.txt nit_SON_Dxy_persite.txt
+
+echo "XXXXXXXXXXXXXX"
+echo "SINUATUS"
+sonmaf=/vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/Cardinalis-sinuatus-SONDXY.mafs
+chimaf=/vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/Cardinalis-sinuatus-CHIDXY.mafs
+sonlen=`cat $sonmaf | wc -l`
+chilen=`cat $chimaf | wc -l`
+echo "son maf file is: ${sonmaf}"
+echo "length: ${sonlen}"
+echo "chi maf file is: ${chimaf}"
+echo "length: ${chilen}"
+gunzip $sonmaf.gz
+gunzip $chimaf.gz
+Rscript /home/kprovost/nas3/ANGSD_pipeline/ngsTools/ngsPopGen/scripts/calcDxy.R \
+--popA $sonmaf \
+--popB $chimaf \
+--totLen $sonlen
+mv Dxy_persite.txt sin_SON_Dxy_persite.txt
