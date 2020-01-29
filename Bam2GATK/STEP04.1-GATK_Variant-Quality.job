@@ -1,0 +1,34 @@
+#!/bin/bash
+#PBS -l select=1:ncpus=64
+#PBS -l walltime=5000:00:00
+#PBS -N GATK_Variant_Quality
+#PBS -j oe
+#PBS -m ae
+#PBS -M lmoreira@amnh.org
+#PBS -k oe
+
+# change to the working directory
+cd $PBS_O_WORKDIR
+echo "pbsworkdir"
+echo $PBS_O_WORKDIR
+EXECDIR=`pwd`
+export PATH=./:$PATH
+echo $PATH
+
+#Arguments:
+## ref=reference sequence
+## vcf
+
+echo
+echo
+echo Extracting Variant Quality Scores
+echo
+echo
+
+time java -jar /home/lmoreira/programs/GenomeAnalysisTK-3.8-1-0-gf15c1c3ef/GenomeAnalysisTK.jar \
+-T VariantsToTable \
+-R $ref \
+-V $vcf \
+-F CHROM -F POS -F QUAL -F QD -F DP -F MQ -F MQRankSum -F FS -F ReadPosRankSum -F SOR \
+--allowMissingData \
+-o all_SNPs.table

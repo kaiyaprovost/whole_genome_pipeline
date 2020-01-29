@@ -1,0 +1,115 @@
+#!/bin/bash
+#PBS -l select=1:ncpus=16
+#PBS -l walltime=5000:00:00
+#PBS -N mel109_S2.1_GATK_SNP_calling
+#PBS -j oe
+#PBS -m ae
+#PBS -M kprovost@amnh.org
+#PBS -k oe
+
+# change to the working directory
+cd $PBS_O_WORKDIR
+echo "pbsworkdir"
+echo $PBS_O_WORKDIR
+EXECDIR=`pwd`
+export PATH=./:$PATH
+echo $PATH
+
+#Arguments:
+## ref=reference sequence
+## bam=bam file
+
+#Arguments:
+## ref=reference sequence
+## ref=reference sequence
+#ref=/home/kprovost/nas3/genomeresequencingFromLucas/Corvus_brachyrhynchus_GCF_000691975.1_ASM69197v1_genomic.fna
+#ref=/home/kprovost/nas3/genomeresequencingFromLucas/Geospiza_fortis_GCF_000277835.1_GeoFor_1.0_genomic.fna
+#ref=/home/kprovost/nas3/genomeresequencingFromLucas/Parus_major_GCF_001522545.2_Parus_major1.1_genomic.fna
+ref=/home/kprovost/nas3/genomeresequencingFromLucas/Strunus_vulgaris_GCF_001447265.1_Sturnus_vulgaris-1.0_genomic.fna
+#ref=/home/kprovost/nas3/genomeresequencingFromLucas/Zonotrichia_albicollis_GCF_000385455.1_Zonotrichia_albicollis-1.0.1_genomic.fna
+
+## 14 jan 2019: emitRefConf argument in here does not work on the multisample bams, so need to run on each individual (not merged) bam file 
+## 25 jan 2019: merging in 1.2 did not fix, trying putting all bams into the below 
+
+##References:
+##Corvus -- Vireo
+##Geospiza -- Cardinalis
+##Parus -- Auriparus
+##Sturnus -- Toxostoma, Campylorhynchus, Polioptila, Phainopepla
+##Zonotrichia -- Amphispiza, Melozone
+
+## edited to reflect renamed headers (changed "*" to "AMN*") and so were in different folder
+
+## move to the folder
+
+#cd /vz-nas1-active/ProcessedGenomicReads/AMN_245107/melanura/December_Rerun/BAM_files/not_merged/
+cd /vz-nas1-active/ProcessedGenomicReads/AMN_245109/Plate2/melanura/December_Rerun/BAM_files/not_merged/
+#cd /vz-nas1-active/ProcessedGenomicReads/AMN_245111/Plate2/melanura/December_Rerun/BAM_files/not_merged/
+
+
+## add in the reheader_bams
+echo "Reheadering"
+sh /home/kprovost/nas3/genomeresequencingFromLucas/for_AMN_245109/reheader_bams.sh
+
+#prefix="GW18" ## 107
+prefix="F067" ## 109
+#prefix="F073" ## 111
+ 
+
+## create the folders and the command
+
+if [ ! -d "vcf_files/" ]; then mkdir vcf_files; fi
+
+## iterate through the bam files 
+
+for prebam in $prefix*dedup.reheadered.bam; do 
+
+command="time java -Djava.io.tmpdir=/home/kprovost/nas3/tmp/ -jar /home/kprovost/nas3/genomeresequencingFromLucas/GenomeAnalysisTK-3.8-1-0-gf15c1c3ef/GenomeAnalysisTK.jar -T HaplotypeCaller -R ${ref} "
+
+#name=`echo $bam | cut -d '/' -f2 | cut -d '.' -f1` ## lucas's version
+outputname=$(echo $prebam | cut -d "_" -f 2-5); 
+
+echo
+echo "#######################"
+echo $prebam
+echo $outputname
+echo "#######################"
+
+for bam in *$outputname*.dedup.reheadered.bam; do
+
+name=$(echo $bam | cut -f 1 -d '.')
+
+## add indexes
+
+#echo
+echo
+echo Building Index $bam
+#echo
+echo
+
+time java -Djava.io.tmpdir=/home/kprovost/nas3/tmp/ -jar /home/kprovost/nas3/genomeresequencingFromLucas/picard.jar BuildBamIndex I=$bam
+
+
+
+## add them to the command
+
+command="${command}-I ${bam} "; 
+
+## add the end of the command
+## run the command 
+done;
+
+echo
+#echo
+echo Calling SNPs with GATK Haplotype Caller "${outputname}_melanura"
+#echo
+echo
+
+## added vcf_files output folder to this
+## also added the "hets" line, 0.05, changed from default 0.001
+
+command="${command} -o vcf_files/${outputname}_melanura.raw.g.vcf --emitRefConfidence GVCF -minPruning 1 -minDanglingBranchLength 1 -hets 0.05 -nct 16"
+
+echo $command
+eval $command
+done

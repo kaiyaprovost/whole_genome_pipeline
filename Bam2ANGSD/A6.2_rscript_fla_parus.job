@@ -1,0 +1,48 @@
+#!/bin/bash
+#PBS -l select=1:ncpus=16
+#PBS -l walltime=5000:00:00
+#PBS -N fla_son_RSCRIPT
+#PBS -j oe
+#PBS -m ae
+#PBS -M kprovost@amnh.org
+#PBS -k oe
+
+# change to the working directory
+cd $PBS_O_WORKDIR
+echo "pbsworkdir"
+echo $PBS_O_WORKDIR
+EXECDIR=`pwd`
+export PATH=./:$PATH
+echo $PATH
+
+cd /vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/
+
+sonmaf=/vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/Auriparus-flaviceps-NOWEIRD-SONDXY.mafs
+chimaf=/vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/Auriparus-flaviceps-NOWEIRD-CHIDXY.mafs
+sonlen=`cat $sonmaf | wc -l`
+chilen=`cat $chimaf | wc -l`
+
+## don't think you need totLen to generate the Dxy thing 
+
+echo "son maf file is: ${sonmaf}"
+echo "length: ${sonlen}"
+echo "chi maf file is: ${chimaf}"
+echo "length: ${chilen}"
+
+module load R-3.4.1
+gunzip $sonmaf.gz
+gunzip $chimaf.gz
+
+Rscript /home/kprovost/nas3/ANGSD_pipeline/ngsTools/ngsPopGen/scripts/calcDxy.R \
+--popA $sonmaf \
+--popB $chimaf \
+--totLen $sonlen
+
+mv Dxy_persite.txt fla_SON_Dxy_persite.txt
+
+# Rscript /home/kprovost/nas3/ANGSD_pipeline/ngsTools/ngsPopGen/scripts/calcDxy.R \
+# --popA $chimaf \
+# --popB $sonmaf \
+# --totLen $chilen
+# 
+# mv Dxy_persite.txt fla_CHI_Dxy_persite.txt

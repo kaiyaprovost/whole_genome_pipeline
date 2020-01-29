@@ -1,0 +1,60 @@
+#!/bin/bash
+#PBS -l select=1:ncpus=16
+#PBS -l walltime=5000:00:00
+#PBS -N S3sin109_GATK_SNP_calling
+#PBS -j oe
+#PBS -m ae
+#PBS -M kprovost@amnh.org
+#PBS -k oe
+
+# change to the working directory
+cd $PBS_O_WORKDIR
+echo "pbsworkdir"
+echo $PBS_O_WORKDIR
+EXECDIR=`pwd`
+export PATH=./:$PATH
+echo $PATH
+
+#Arguments:
+## ref=reference sequence
+## bam=bam file
+
+#Arguments:
+#Arguments:
+## ref=reference sequence
+#ref=/home/kprovost/nas3/genomeresequencingFromLucas/Zonotrichia_albicollis_GCF_000385455.1_Zonotrichia_albicollis-1.0.1_genomic.fna
+#ref=/home/kprovost/nas3/genomeresequencingFromLucas/Strunus_vulgaris_GCF_001447265.1_Sturnus_vulgaris-1.0_genomic.fna
+ref=/home/kprovost/nas3/genomeresequencingFromLucas/Geospiza_fortis_GCF_000277835.1_GeoFor_1.0_genomic.fna 
+
+##References:
+##Corvus -- Vireo bellii
+##Parus -- Auriparus flaviceps
+##Sturnus -- Toxostoma curvirostre, Toxostoma crissale, Campylorhynchus brunneicapillus, Polioptila melanura, Phainopepla nitens
+##Zonotrichia -- Amphispiza sinuatus, Pipilo sincus
+##Geospiza -- Cardinalis cardinalis, Cardinalis sinuatus
+
+## edited to reflect renamed headers (changed "*" to "AMN*") and so were in different folder
+#cd /home/kprovost/nas3/AMN_245109/sequences/sinuatus/sin_dedup_bam/
+cd /home/kprovost/nas3/EVERY_PLATE/dedup_bam/sinuatus
+
+name=$(echo $bam | cut -f 1 -d '.')
+	
+echo
+echo "#######################"
+echo $name
+echo "#######################"
+
+echo
+echo
+echo Calling SNPs with GATK Haplotype Caller
+echo
+echo
+
+time java -jar /home/lmoreira/programs/GenomeAnalysisTK-3.8-1-0-gf15c1c3ef/GenomeAnalysisTK.jar -T HaplotypeCaller \
+-R $ref \
+-I $bam \
+-o $name.raw.g.vcf \
+--emitRefConfidence GVCF \
+-minPruning 1 \
+-minDanglingBranchLength 1 \
+-nct 16

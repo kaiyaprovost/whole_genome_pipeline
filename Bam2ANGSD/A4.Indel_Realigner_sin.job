@@ -1,0 +1,56 @@
+#!/bin/bash
+#PBS -l select=1:ncpus=4:mem=32gb
+#PBS -l walltime=99999:00:00
+#PBS -N sin_Indel_Realigner
+#PBS -j oe
+#PBS -m ae
+#PBS -M kprovost@amnh.org
+#PBS -k oe
+
+# change to the working directory
+cd $PBS_O_WORKDIR
+echo "pbsworkdir"
+echo $PBS_O_WORKDIR
+EXECDIR=`pwd`
+export PATH=./:$PATH
+echo $PATH
+
+#Arguments:
+## bam = clipped BAM file
+## note: don't know what "clipped" files are
+
+#Arguments:
+## ref=reference sequence
+ref=/home/kprovost/nas3/genomeresequencingFromLucas/Geos_chrom/pseudochromosomesSHORT.fasta
+
+##References:
+##Corvus -- Vireo
+##Geospiza -- Cardinalis
+##Parus -- Auriparus
+##Sturnus -- Toxostoma, Campylorhynchus, Polioptila, Phainopepla
+##Zonotrichia -- Amphispiza, Pipilo
+
+#name=`echo $bam | cut -d '.' -f1`
+name=${bam%.bam}
+
+echo
+echo "#######################"
+echo $name
+echo "#######################"
+
+echo
+echo
+echo Indel Realigner
+echo
+echo
+
+cd /vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/
+
+time java -jar /home/kprovost/nas3/genomeresequencingFromLucas/GenomeAnalysisTK-3.8-1-0-gf15c1c3ef/GenomeAnalysisTK.jar \
+-T IndelRealigner \
+-R $ref \
+-I $bam \
+-targetIntervals sinuatus-allsamplesClipped-final.intervals \
+-o $name.realigned.bam
+
+## changed targetIntervals from accessing just intervals to accessing Clipped.intervals

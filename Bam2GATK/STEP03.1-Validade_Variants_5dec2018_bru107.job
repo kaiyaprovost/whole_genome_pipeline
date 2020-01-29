@@ -1,0 +1,53 @@
+#!/bin/bash
+#PBS -l select=1:ncpus=2
+#PBS -l walltime=5000:00:00
+#PBS -N bru107_3.1_validate
+#PBS -j oe
+#PBS -m ae
+#PBS -M kprovost@amnh.org
+#PBS -k oe
+
+# change to the working directory
+cd $PBS_O_WORKDIR
+echo "pbsworkdir"
+echo $PBS_O_WORKDIR
+EXECDIR=`pwd`
+export PATH=./:$PATH
+echo $PATH
+
+## may need to change
+cd /vz-nas1-active/ProcessedGenomicReads/AMN_245107/brunneicapillus/December_Rerun/BAM_files/not_merged/vcf_files/
+
+#Arguments:
+## ref=reference sequence
+#ref=/home/kprovost/nas3/genomeresequencingFromLucas/Corvus_brachyrhynchus_GCF_000691975.1_ASM69197v1_genomic.fna
+#ref=/home/kprovost/nas3/genomeresequencingFromLucas/Geospiza_fortis_GCF_000277835.1_GeoFor_1.0_genomic.fna
+#ref=/home/kprovost/nas3/genomeresequencingFromLucas/Parus_major_GCF_001522545.2_Parus_major1.1_genomic.fna
+ref=/home/kprovost/nas3/genomeresequencingFromLucas/Strunus_vulgaris_GCF_001447265.1_Sturnus_vulgaris-1.0_genomic.fna
+#ref=/home/kprovost/nas3/genomeresequencingFromLucas/Zonotrichia_albicollis_GCF_000385455.1_Zonotrichia_albicollis-1.0.1_genomic.fna
+
+##References:
+##Corvus -- Vireo
+##Geospiza -- Cardinalis
+##Parus -- Auriparus
+##Sturnus -- Toxostoma, Campylorhynchus, Polioptila, Phainopepla
+##Zonotrichia -- Amphispiza, Pipilo
+
+## vcf -- need to do with the run simultaneous?
+
+for vcf in *.vcf; do
+
+echo
+echo
+echo Validate GVCFs $vcf
+echo
+echo
+
+time java -Djava.io.tmpdir=/home/kprovost/nas3/tmp/ -jar /home/kprovost/nas3/genomeresequencingFromLucas/GenomeAnalysisTK-3.8-1-0-gf15c1c3ef/GenomeAnalysisTK.jar \
+-T ValidateVariants \
+-R $ref \
+-V $vcf \
+--validateGVCF
+done;
+
+

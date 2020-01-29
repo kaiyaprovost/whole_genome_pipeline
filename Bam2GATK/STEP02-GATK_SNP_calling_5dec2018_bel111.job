@@ -1,0 +1,82 @@
+#!/bin/bash
+#PBS -l select=1:ncpus=16
+#PBS -l walltime=5000:00:00
+#PBS -N bel111_mS2_GATK_SNP_calling
+#PBS -j oe
+#PBS -m ae
+#PBS -M kprovost@amnh.org
+#PBS -k oe
+
+# change to the working directory
+cd $PBS_O_WORKDIR
+echo "pbsworkdir"
+echo $PBS_O_WORKDIR
+EXECDIR=`pwd`
+export PATH=./:$PATH
+echo $PATH
+
+#Arguments:
+## ref=reference sequence
+## bam=bam file
+
+#Arguments:
+## ref=reference sequence
+## ref=reference sequence
+ref=/home/kprovost/nas3/genomeresequencingFromLucas/Corvus_brachyrhynchus_GCF_000691975.1_ASM69197v1_genomic.fna
+#ref=/home/kprovost/nas3/genomeresequencingFromLucas/Geospiza_fortis_GCF_000277835.1_GeoFor_1.0_genomic.fna
+#ref=/home/kprovost/nas3/genomeresequencingFromLucas/Parus_major_GCF_001522545.2_Parus_major1.1_genomic.fna
+#ref=/home/kprovost/nas3/genomeresequencingFromLucas/Strunus_vulgaris_GCF_001447265.1_Sturnus_vulgaris-1.0_genomic.fna
+#ref=/home/kprovost/nas3/genomeresequencingFromLucas/Zonotrichia_albicollis_GCF_000385455.1_Zonotrichia_albicollis-1.0.1_genomic.fna
+
+## 14 jan 2019: emitRefConf argument in here does not work on the multisample bams, so need to run on each individual (not merged) bam file 
+## 25 jan 2019: realized merging wrong. have remerged again. will try to run a batch and see if it will work. 
+
+##References:
+##Corvus -- Vireo
+##Geospiza -- Cardinalis
+##Parus -- Auriparus
+##Sturnus -- Toxostoma, Campylorhynchus, Polioptila, Phainopepla
+##Zonotrichia -- Amphispiza, Melozone
+
+## edited to reflect renamed headers (changed "*" to "AMN*") and so were in different folder
+
+
+#name=`echo $bam | cut -d '/' -f2 | cut -d '.' -f1` ## lucas's version
+name=$(echo $bam | cut -f 1 -d '.')
+	
+echo
+echo "#######################"
+echo $name
+echo "#######################"
+
+echo
+echo
+echo Building Index
+echo
+echo
+
+time java -Djava.io.tmpdir=/home/kprovost/nas3/tmp/ -jar /home/kprovost/nas3/genomeresequencingFromLucas/picard.jar BuildBamIndex I=$bam
+
+echo
+echo
+echo Calling SNPs with GATK Haplotype Caller
+echo
+echo
+
+#cd /vz-nas1-active/ProcessedGenomicReads/AMN_245107/bellii/December_Rerun/BAM_files/
+#cd /vz-nas1-active/ProcessedGenomicReads/AMN_245109/Plate2/bellii/December_Rerun/BAM_files/
+cd /vz-nas1-active/ProcessedGenomicReads/AMN_245111/Plate2/bellii/December_Rerun/BAM_files/
+
+if [ ! -d "vcf_files/" ]; then mkdir vcf_files; fi
+
+## added vcf_files output folder to this
+## also added the "hets" line, 0.05, changed from default 0.001
+time java -Djava.io.tmpdir=/home/kprovost/nas3/tmp/ -jar /home/kprovost/nas3/genomeresequencingFromLucas/GenomeAnalysisTK-3.8-1-0-gf15c1c3ef/GenomeAnalysisTK.jar -T HaplotypeCaller \
+-R $ref \
+-I $bam \
+-o vcf_files/$name.raw.g.vcf \
+--emitRefConfidence GVCF \
+-minPruning 1 \
+-minDanglingBranchLength 1 \
+-hets 0.05 \
+-nct 16

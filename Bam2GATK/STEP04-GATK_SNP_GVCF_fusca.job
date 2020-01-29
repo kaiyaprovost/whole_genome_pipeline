@@ -1,0 +1,40 @@
+#!/bin/bash
+#PBS -l select=1:ncpus=64
+#PBS -l walltime=5000:00:00
+#PBS -N GATKsnpGVCFfus
+#PBS -j oe
+#PBS -m ae
+#PBS -M kprovost@amnh.org
+#PBS -k oe
+
+# change to the working directory
+cd $PBS_O_WORKDIR
+echo "pbsworkdir"
+echo $PBS_O_WORKDIR
+EXECDIR=`pwd`
+export PATH=./:$PATH
+echo $PATH
+
+#Arguments:
+## ref=reference sequence
+ref=/home/kprovost/nas3/genomeresequencingFromLucas/Zonotrichia_albicollis_GCF_000385455.1_Zonotrichia_albicollis-1.0.1_genomic.fna
+
+cd /home/kprovost/nas3/AMN_245107/sequences/fusca/fusca_raw_vcf
+
+
+echo
+echo
+echo Combine GVCFs
+echo
+echo
+
+time java -jar /home/kprovost/nas3/genomeresequencingFromLucas/GenomeAnalysisTK-3.8-1-0-gf15c1c3ef/GenomeAnalysisTK.jar \
+-T GenotypeGVCFs \
+-R $ref \
+--variant AMN_245107_P01_WF02_fusca.raw.g.vcf \
+--variant AMN_245107_P01_WG02_fusca.raw.g.vcf \
+--variant AMN_245107_P01_WC03_fusca.raw.g.vcf \
+--variant AMN_245107_P01_WD02_fusca.raw.g.vcf \
+--variant AMN_245107_P01_WE02_fusca.raw.g.vcf \
+-o allsamples_fusca.raw.vcf \
+-nt 64

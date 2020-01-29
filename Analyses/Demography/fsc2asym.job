@@ -1,0 +1,23 @@
+#!/bin/bash
+#PBS -q production
+#PBS -N fscAsym 					## can be up to 15 alphanumeric
+#PBS –l select=2:ncpus=2
+#PBS –l mem=<????>mb
+#PBS -l place=free
+#PBS -V
+
+# change to the working directory 
+#cd $PBS_O_WORKDIR
+cd "/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/DEMOGRAPHY/asymmetric_mono/"
+
+#echo -n ">>>> PBS Master compute node is: "
+#hostname
+echo ">>>> Begin FSC2 Run" | echo date
+
+# actual binary (with IO redirections) and required input 
+# parameters is called in the next line
+
+#cd ./models/asymmetric/
+./run_fscKP.sh -t -p asymmetric_bel -m > asym_bel_test_output.txt 2>&1
+
+#echo ">>>> Begin ≈<job_name></font color> Run ..."

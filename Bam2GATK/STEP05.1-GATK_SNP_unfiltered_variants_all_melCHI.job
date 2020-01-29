@@ -1,0 +1,93 @@
+#!/bin/bash
+#PBS -l select=1:ncpus=2
+#PBS -l walltime=5000:00:00
+#PBS -N melCHI_S5.1_unfiltered
+#PBS -j oe
+#PBS -m ae
+#PBS -M kprovost@amnh.org
+#PBS -k oe
+
+# change to the working directory
+cd $PBS_O_WORKDIR
+echo "pbsworkdir"
+echo $PBS_O_WORKDIR
+EXECDIR=`pwd`
+export PATH=./:$PATH
+echo $PATH
+
+#Arguments:
+## vcf
+cd /vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/
+vcf=/vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/melanura109-111_CHI.combined.db.vcf
+
+echo
+echo "#######################"
+echo $vcf
+echo "#######################"
+
+echo
+echo
+echo Selecting Variants 
+echo
+echo
+
+## not changed from previous
+/home/kprovost/opt/bin/vcftools \
+--vcf $vcf \
+--remove-indels \
+--remove-filtered-all \
+--min-meanDP 2 \
+--max-meanDP 10 \
+--max-maf 0.05 \
+--max-missing 0.25 \
+--hwe 0.01 \
+--min-alleles 2 \
+--max-alleles 2 \
+--recode \
+--recode-INFO-all \
+--out melanura_unfiltered_CHI-SNP-only-max25dp
+
+echo
+echo
+echo Selecting Variants
+echo
+echo
+
+## not different 
+/home/kprovost/opt/bin/vcftools \
+--vcf $vcf \
+--remove-indels \
+--remove-filtered-all \
+--min-meanDP 2 \
+--max-meanDP 10 \
+--max-maf 0.05 \
+--max-missing 1 \
+--hwe 0.01 \
+--min-alleles 2 \
+--max-alleles 2 \
+--recode \
+--recode-INFO-all \
+--out melanura_unfiltered_CHI-SNP-only_no-missing-max25dp
+
+echo
+echo
+echo Selecting Variants
+echo
+echo
+
+## didn't change
+/home/kprovost/opt/bin/vcftools \
+--vcf $vcf \
+--remove-indels \
+--remove-filtered-all \
+--min-meanDP 2 \
+--max-meanDP 10 \
+--max-maf 0.05 \
+--max-missing 0 \
+--hwe 0.01 \
+--min-alleles 2 \
+--max-alleles 2 \
+--recode \
+--recode-INFO-all \
+--out melanura_unfiltered_CHI-SNP-only_alldata
+

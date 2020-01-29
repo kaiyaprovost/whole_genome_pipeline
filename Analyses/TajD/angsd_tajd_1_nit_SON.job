@@ -1,0 +1,60 @@
+#!/bin/bash
+#PBS -l select=1:ncpus=32
+#PBS -l walltime=5000:00:00
+#PBS -N nit_taj1
+#PBS -j oe
+#PBS -m ae
+#PBS -M kprovost@amnh.org
+#PBS -k oe
+
+# change to the working directory
+cd $PBS_O_WORKDIR
+echo "pbsworkdir"
+echo $PBS_O_WORKDIR
+EXECDIR=`pwd`
+export PATH=./:$PATH
+echo $PATH
+
+#Arguments:
+## ref=reference sequence
+#ref=/home/kprovost/nas3/genomeresequencingFromLucas/OLD_GENOMES/Corvus_brachyrhynchus_GCF_000691975.1_ASM69197v1_genomic.fna
+#ref=/home/kprovost/nas3/genomeresequencingFromLucas/OLD_GENOMES/Geospiza_fortis_GCF_000277835.1_GeoFor_1.0_genomic.fna
+#ref=/home/kprovost/nas3/genomeresequencingFromLucas/OLD_GENOMES/Parus_major_GCF_001522545.2_Parus_major1.1_genomic.fna
+ref=/home/kprovost/nas3/genomeresequencingFromLucas/OLD_GENOMES/Strunus_vulgaris_GCF_001447265.1_Sturnus_vulgaris-1.0_genomic.fna
+#ref=/home/kprovost/nas3/genomeresequencingFromLucas/OLD_GENOMES/Zonotrichia_albicollis_GCF_000385455.1_Zonotrichia_albicollis-1.0.1_genomic.fna
+
+##References:
+##Corvus -- Vireo
+##Geospiza -- Cardinalis
+##Parus -- Auriparus
+##Sturnus -- Toxostoma, Campylorhynchus, Polioptila, Phainopepla
+##Zonotrichia -- Amphispiza, Pipilo
+
+## bam_list = list of BAM files
+bamlist=/home/kprovost/nas3/ANGSD_pipeline/SON_Vireo_bellii.indlist
+# chilist=/home/kprovost/nas3/ANGSD_pipeline/CHI_Vireo_bellii.indlist
+# bamlist=/home/kprovost/nas3/ANGSD_pipeline/Phainopepla-nitens-NOWEIRD.bamlist
+
+cd /vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/
+
+date
+time
+
+time /home/kprovost/nas3/angsd/angsd -bam $bamlist -doSaf 1 -anc $ref -GL 1 -P 24 -out Phainopepla-nitens-SON-taj1
+
+time /home/kprovost/nas3/angsd/misc/realSFS \
+/vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/Phainopepla-nitens-SON-taj1.saf.idx \
+> Phainopepla-nitens-SON-taj.sfs
+
+time /home/kprovost/nas3/angsd/angsd -GL 2 -bam $bamlist -doThetas 1 -doSaf 1 -pest Phainopepla-nitens-SON-taj.sfs -anc $ref -out Phainopepla-nitens-SON-taj2 
+
+#Estimate for every Chromosome/scaffold
+time /home/kprovost/nas3/angsd/misc/thetaStat do_stat \
+Phainopepla-nitens-SON-taj2.thetas.idx
+
+#Do a sliding window analysis based on the output from the make_bed command.
+time /home/kprovost/nas3/angsd/misc/thetaStat do_stat \
+Phainopepla-nitens-SON-taj2.thetas.idx \
+-win 100000 \
+-step 10000  \
+-outnames Phainopepla-nitens-SON-taj2.thetasWindow.gz

@@ -1,0 +1,169 @@
+#!/bin/bash
+#PBS -l select=2:ncpus=64
+#PBS -l walltime=5000:00:00
+#PBS -N S1S2_mel109_BWA_align
+#PBS -j oe
+#PBS -m ae
+#PBS -M kprovost@amnh.org
+#PBS -k oe
+
+# change to the working directory
+cd $PBS_O_WORKDIR
+echo "pbsworkdir"
+echo $PBS_O_WORKDIR
+EXECDIR=`pwd`
+export PATH=./:$PATH
+echo $PATH
+
+#Arguments:
+## ref=reference sequence
+#ref=/home/kprovost/nas3/genomeresequencingFromLucas/Zonotrichia_albicollis_GCF_000385455.1_Zonotrichia_albicollis-1.0.1_genomic.fna
+ref=/home/kprovost/nas3/genomeresequencingFromLucas/Strunus_vulgaris_GCF_001447265.1_Sturnus_vulgaris-1.0_genomic.fna
+#ref=/home/kprovost/nas3/genomeresequencingFromLucas/Geospiza_fortis_GCF_000277835.1_GeoFor_1.0_genomic.fna 
+
+
+##References:
+##Corvus -- Vireo bellii
+##Parus -- Auriparus flaviceps
+##Sturnus -- Toxostoma curvirostre, Toxostoma crissale, Campylorhynchus brunneicapillus, Polioptila melanura, Phainopepla nitens
+##Zonotrichia -- Amphispiza bilineata, Pipilo fuscus
+##Geospiza -- Cardinalis cardinalis, Cardinalis sinuatus
+
+cd /home/kprovost/nas3/AMN_245109/sequences/melanura/
+
+date
+time
+
+module load bwa-0.7.15
+module load fastqc-0.11.5
+module load R-3.4.1
+
+echo
+echo "#######################"
+echo "AMN_245109_P002_WA01_melanura.bam"
+echo "#######################"
+time java -jar /home/kprovost/nas3/genomeresequencingFromLucas/picard.jar MergeSamFiles \
+I=AMN_245109_P002_WA01_melanura/F067_AMN_245109_P002_WA01_i5-515_i7-97_S76_L001.bam \
+I=AMN_245109_P002_WA01_melanura/F069_AMN_245109_P002_WA01_i5-515_i7-97_S76_L001.bam \
+I=AMN_245109_P002_WA01_melanura/F069_AMN_245109_P002_WA01_i5-515_i7-97_S76_L002.bam \
+I=AMN_245109_P002_WA01_melanura/F069_AMN_245109_P002_WA01_i5-515_i7-97_S76_L003.bam \
+I=AMN_245109_P002_WA01_melanura/F069_AMN_245109_P002_WA01_i5-515_i7-97_S76_L004.bam \
+I=AMN_245109_P002_WA01_melanura/F069_AMN_245109_P002_WA01_i5-515_i7-97_S76_L005.bam \
+O=AMN_245109_P002_WA01_melanura.bam
+
+echo
+echo "#######################"
+echo "AMN_245109_P002_WA02_melanura.bam"
+echo "#######################"
+time java -jar /home/kprovost/nas3/genomeresequencingFromLucas/picard.jar MergeSamFiles \
+I=AMN_245109_P002_WA02_melanura/F067_AMN_245109_P002_WA02_i5-515_i7-98_S77_L001.bam \
+I=AMN_245109_P002_WA02_melanura/F069_AMN_245109_P002_WA02_i5-515_i7-98_S77_L001.bam \
+I=AMN_245109_P002_WA02_melanura/F069_AMN_245109_P002_WA02_i5-515_i7-98_S77_L002.bam \
+I=AMN_245109_P002_WA02_melanura/F069_AMN_245109_P002_WA02_i5-515_i7-98_S77_L003.bam \
+I=AMN_245109_P002_WA02_melanura/F069_AMN_245109_P002_WA02_i5-515_i7-98_S77_L004.bam \
+I=AMN_245109_P002_WA02_melanura/F069_AMN_245109_P002_WA02_i5-515_i7-98_S77_L005.bam \
+O=AMN_245109_P002_WA02_melanura.bam
+
+echo
+echo "#######################"
+echo "AMN_245109_P002_WA04_melanura.bam"
+echo "#######################"
+time java -jar /home/kprovost/nas3/genomeresequencingFromLucas/picard.jar MergeSamFiles \
+I=AMN_245109_P002_WA04_melanura/F067_AMN_245109_P002_WA04_i5-515_i7-100_S79_L001.bam \
+I=AMN_245109_P002_WA04_melanura/F069_AMN_245109_P002_WA04_i5-515_i7-100_S78_L001.bam \
+I=AMN_245109_P002_WA04_melanura/F069_AMN_245109_P002_WA04_i5-515_i7-100_S78_L002.bam \
+I=AMN_245109_P002_WA04_melanura/F069_AMN_245109_P002_WA04_i5-515_i7-100_S78_L003.bam \
+I=AMN_245109_P002_WA04_melanura/F069_AMN_245109_P002_WA04_i5-515_i7-100_S78_L004.bam \
+I=AMN_245109_P002_WA04_melanura/F069_AMN_245109_P002_WA04_i5-515_i7-100_S78_L005.bam \
+O=AMN_245109_P002_WA04_melanura.bam
+
+echo
+echo "#######################"
+echo "AMN_245109_P002_WB02_melanura.bam"
+echo "#######################"
+time java -jar /home/kprovost/nas3/genomeresequencingFromLucas/picard.jar MergeSamFiles \
+I=AMN_245109_P002_WB02_melanura/F067_AMN_245109_P002_WB02_i5-515_i7-110_S84_L001.bam \
+I=AMN_245109_P002_WB02_melanura/F069_AMN_245109_P002_WB02_i5-515_i7-110_S83_L001.bam \
+I=AMN_245109_P002_WB02_melanura/F069_AMN_245109_P002_WB02_i5-515_i7-110_S83_L002.bam \
+I=AMN_245109_P002_WB02_melanura/F069_AMN_245109_P002_WB02_i5-515_i7-110_S83_L003.bam \
+I=AMN_245109_P002_WB02_melanura/F069_AMN_245109_P002_WB02_i5-515_i7-110_S83_L004.bam \
+I=AMN_245109_P002_WB02_melanura/F069_AMN_245109_P002_WB02_i5-515_i7-110_S83_L005.bam \
+O=AMN_245109_P002_WB02_melanura.bam
+
+echo
+echo "#######################"
+echo "AMN_245109_P002_WB03_melanura.bam"
+echo "#######################"
+time java -jar /home/kprovost/nas3/genomeresequencingFromLucas/picard.jar MergeSamFiles \
+I=AMN_245109_P002_WB03_melanura/F067_AMN_245109_P002_WB03_i5-515_i7-111_S85_L001.bam \
+I=AMN_245109_P002_WB03_melanura/F069_AMN_245109_P002_WB03_i5-515_i7-111_S84_L001.bam \
+I=AMN_245109_P002_WB03_melanura/F069_AMN_245109_P002_WB03_i5-515_i7-111_S84_L002.bam \
+I=AMN_245109_P002_WB03_melanura/F069_AMN_245109_P002_WB03_i5-515_i7-111_S84_L003.bam \
+I=AMN_245109_P002_WB03_melanura/F069_AMN_245109_P002_WB03_i5-515_i7-111_S84_L004.bam \
+I=AMN_245109_P002_WB03_melanura/F069_AMN_245109_P002_WB03_i5-515_i7-111_S84_L005.bam \
+O=AMN_245109_P002_WB03_melanura.bam
+
+echo
+echo "#######################"
+echo "AMN_245109_P002_WC05_melanura.bam"
+echo "#######################"
+time java -jar /home/kprovost/nas3/genomeresequencingFromLucas/picard.jar MergeSamFiles \
+I=AMN_245109_P002_WC05_melanura/F067_AMN_245109_P002_WC05_i5-515_i7-125_S93_L001.bam \
+I=AMN_245109_P002_WC05_melanura/F069_AMN_245109_P002_WC05_i5-515_i7-125_S92_L001.bam \
+I=AMN_245109_P002_WC05_melanura/F069_AMN_245109_P002_WC05_i5-515_i7-125_S92_L002.bam \
+I=AMN_245109_P002_WC05_melanura/F069_AMN_245109_P002_WC05_i5-515_i7-125_S92_L003.bam \
+I=AMN_245109_P002_WC05_melanura/F069_AMN_245109_P002_WC05_i5-515_i7-125_S92_L004.bam \
+I=AMN_245109_P002_WC05_melanura/F069_AMN_245109_P002_WC05_i5-515_i7-125_S92_L005.bam \
+O=AMN_245109_P002_WC05_melanura.bam
+
+echo
+echo "#######################"
+echo "AMN_245109_P002_WD04_melanura.bam"
+echo "#######################"
+time java -jar /home/kprovost/nas3/genomeresequencingFromLucas/picard.jar MergeSamFiles \
+I=AMN_245109_P002_WD04_melanura/F067_AMN_245109_P002_WD04_i5-515_i7-136_S98_L001.bam \
+I=AMN_245109_P002_WD04_melanura/F069_AMN_245109_P002_WD04_i5-515_i7-136_S97_L001.bam \
+I=AMN_245109_P002_WD04_melanura/F069_AMN_245109_P002_WD04_i5-515_i7-136_S97_L002.bam \
+I=AMN_245109_P002_WD04_melanura/F069_AMN_245109_P002_WD04_i5-515_i7-136_S97_L003.bam \
+I=AMN_245109_P002_WD04_melanura/F069_AMN_245109_P002_WD04_i5-515_i7-136_S97_L004.bam \
+I=AMN_245109_P002_WD04_melanura/F069_AMN_245109_P002_WD04_i5-515_i7-136_S97_L005.bam \
+O=AMN_245109_P002_WD04_melanura.bam
+
+echo
+echo "#######################"
+echo "AMN_245109_P002_WE04_melanura.bam"
+echo "#######################"
+time java -jar /home/kprovost/nas3/genomeresequencingFromLucas/picard.jar MergeSamFiles \
+I=AMN_245109_P002_WE04_melanura/F067_AMN_245109_P002_WE04_i5-515_i7-148_S104_L001.bam \
+I=AMN_245109_P002_WE04_melanura/F069_AMN_245109_P002_WE04_i5-515_i7-148_S103_L001.bam \
+I=AMN_245109_P002_WE04_melanura/F069_AMN_245109_P002_WE04_i5-515_i7-148_S103_L002.bam \
+I=AMN_245109_P002_WE04_melanura/F069_AMN_245109_P002_WE04_i5-515_i7-148_S103_L003.bam \
+I=AMN_245109_P002_WE04_melanura/F069_AMN_245109_P002_WE04_i5-515_i7-148_S103_L004.bam \
+I=AMN_245109_P002_WE04_melanura/F069_AMN_245109_P002_WE04_i5-515_i7-148_S103_L005.bam \
+O=AMN_245109_P002_WE04_melanura.bam
+
+echo
+echo "#######################"
+echo "AMN_245109_P002_WG03_melanura.bam"
+echo "#######################"
+time java -jar /home/kprovost/nas3/genomeresequencingFromLucas/picard.jar MergeSamFiles \
+I=AMN_245109_P002_WG03_melanura/F067_AMN_245109_P002_WG03_i5-515_i7-171_S113_L001.bam \
+I=AMN_245109_P002_WG03_melanura/F069_AMN_245109_P002_WG03_i5-515_i7-171_S112_L001.bam \
+I=AMN_245109_P002_WG03_melanura/F069_AMN_245109_P002_WG03_i5-515_i7-171_S112_L002.bam \
+I=AMN_245109_P002_WG03_melanura/F069_AMN_245109_P002_WG03_i5-515_i7-171_S112_L003.bam \
+I=AMN_245109_P002_WG03_melanura/F069_AMN_245109_P002_WG03_i5-515_i7-171_S112_L004.bam \
+I=AMN_245109_P002_WG03_melanura/F069_AMN_245109_P002_WG03_i5-515_i7-171_S112_L005.bam \
+O=AMN_245109_P002_WG03_melanura.bam
+
+echo
+echo "#######################"
+echo "AMN_245109_P002_WH03_melanura.bam"
+echo "#######################"
+time java -jar /home/kprovost/nas3/genomeresequencingFromLucas/picard.jar MergeSamFiles \
+I=AMN_245109_P002_WH03_melanura/F067_AMN_245109_P002_WH03_i5-515_i7-183_S118_L001.bam \
+I=AMN_245109_P002_WH03_melanura/F069_AMN_245109_P002_WH03_i5-515_i7-183_S117_L001.bam \
+I=AMN_245109_P002_WH03_melanura/F069_AMN_245109_P002_WH03_i5-515_i7-183_S117_L002.bam \
+I=AMN_245109_P002_WH03_melanura/F069_AMN_245109_P002_WH03_i5-515_i7-183_S117_L003.bam \
+I=AMN_245109_P002_WH03_melanura/F069_AMN_245109_P002_WH03_i5-515_i7-183_S117_L004.bam \
+I=AMN_245109_P002_WH03_melanura/F069_AMN_245109_P002_WH03_i5-515_i7-183_S117_L005.bam \
+O=AMN_245109_P002_WH03_melanura.bam

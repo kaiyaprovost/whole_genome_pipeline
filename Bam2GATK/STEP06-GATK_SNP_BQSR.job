@@ -1,0 +1,70 @@
+#!/bin/bash
+#PBS -l select=1:ncpus=32
+#PBS -l walltime=5000:00:00
+#PBS -N GATK_SNP_BQSR
+#PBS -j oe
+#PBS -m ae
+#PBS -M lmoreira@amnh.org
+#PBS -k oe
+
+# change to the working directory
+cd $PBS_O_WORKDIR
+echo "pbsworkdir"
+echo $PBS_O_WORKDIR
+EXECDIR=`pwd`
+export PATH=./:$PATH
+echo $PATH
+
+#Arguments:
+## ref=reference sequence
+## bam=bam file
+
+name=`echo $bam | cut -d '/' -f2 | cut -d '.' -f1`
+
+echo
+echo "#######################"
+echo $name
+echo "#######################"
+
+echo
+echo
+echo BQSR
+echo
+echo
+
+time java -jar /home/lmoreira/programs/GenomeAnalysisTK-3.8-1-0-gf15c1c3ef/GenomeAnalysisTK.jar -T BaseRecalibrator \
+-R $ref \
+-I $bam \
+-knownSites vcf_files/combined.db.vcf \
+-o BAM_files/$name.recal_data.grp \
+-nct 32
+
+time java -jar /home/lmoreira/programs/GenomeAnalysisTK-3.8-1-0-gf15c1c3ef/GenomeAnalysisTK.jar -T BaseRecalibrator \
+-R $ref \
+-I $bam \
+-knownSites vcf_files/combined.db.vcf \
+-BQSR BAM_files/$name.recal_data.grp \
+-o BAM_files$name.post_recal_data.grp \
+-nct 32
+
+time java -jar /home/lmoreira/programs/GenomeAnalysisTK-3.8-1-0-gf15c1c3ef/GenomeAnalysisTK.jar -T AnalyzeCovariates \
+-R $ref \
+-before BAM_files/$name.recal_data.grp \
+-after BAM_files/$name.post_recal_data.grp \
+-plots BAM_files/$name.recalibration_plots.pdf
+
+echo
+echo
+echo Producing recalibrated VCF file
+echo
+echo
+
+time java -jar /home/lmoreira/programs/GenomeAnalysisTK-3.8-1-0-gf15c1c3ef/GenomeAnalysisTK.jar -T HaplotypeCaller \
+-R $ref \
+-I $bam \
+-o vcf_files/$name.recal.raw.g.vcf \
+--emitRefConfidence GVCF \
+-minPruning 1 \
+-minDanglingBranchLength 1 \
+-BQSR BAM_files/$name.recal_data.grp \
+-nct 32

@@ -1,0 +1,84 @@
+#!/bin/bash
+#PBS -l select=1:ncpus=1
+#PBS -l walltime=5000:00:00
+#PBS -N rsyncing_S1.2
+#PBS -j oe
+#PBS -m ae
+#PBS -M kprovost@amnh.org
+#PBS -k oe
+
+# change to the working directory
+cd $PBS_O_WORKDIR
+echo "pbsworkdir"
+echo $PBS_O_WORKDIR
+EXECDIR=`pwd`
+export PATH=./:$PATH
+echo $PATH
+
+## move to the species' folder
+## make a directory for the december files 
+## make a directory if it doesn't exist for all the files
+## aka stats, vcf, bam_files, etc 
+
+## go to the directory 
+cd /vz-nas1-active/ProcessedGenomicReads
+
+## loop through directories to do something
+for runfolder in */; do
+
+	## this is the AMN directories 
+	echo $runfolder; 
+	
+	cd $runfolder ## move to AMN directory
+	
+	## if the Plate2 directory exists, move to it 
+	if [ -d "Plate2/" ]; then cd Plate2/; fi 
+	
+	for sppfolder in */;  do	
+		
+		## this is the species directory
+		echo $sppfolder
+		
+		cd $sppfolder ## move to species directory
+		
+		## make December_Rerun directory if it doesn't already exist
+		if [ ! -d "December_Rerun/" ]; then mkdir December_Rerun; fi ## added from lucas's 
+		
+		cd December_Rerun/ ## move to december rerun directory
+		
+		## make the subfolders? might just be able to rsync them 
+		if [ ! -d "Stats/" ]; then mkdir Stats; fi
+		if [ ! -d "htmlFiles/" ]; then mkdir htmlFiles; fi
+		if [ ! -d "paired/" ]; then mkdir paired; fi
+		if [ ! -d "unpaired/" ]; then mkdir unpaired; fi
+		if [ ! -d "BAM_files/" ]; then mkdir BAM_files; fi
+		if [ ! -d "vcf_files/" ]; then mkdir vcf_files; fi
+		
+		foldersuffix=${PWD#"/vz-nas1-active/ProcessedGenomicReads/"}
+				
+		## go find stats files
+		rsync -avzP /vz-nas1-active/RawGenomicReads/$foldersuffix/*/Stats ./Stats
+		
+		## go find html files 
+		rsync -avzP /vz-nas1-active/RawGenomicReads/$foldersuffix/*/*html ./htmlFiles
+
+		## go find paired and unpaired files 
+		rsync -avzP vz-nas1-active/RawGenomicReads/$foldersuffix/*/*_paired_* ./paired
+		rsync -avzP /vz-nas1-active/RawGenomicReads/$foldersuffix/*/*un_paired_* ./unpaired
+
+		## go find bam files 
+		rsync -avzP /vz-nas1-active/RawGenomicReads/$foldersuffix/BAM_files ./BAM_files
+		
+		## go find vcf_files if present
+		## currently not present
+		
+		cd ../ ## takes you out of december rerun
+		
+		cd ../ ## takes you out of the species 
+		
+	done; 
+
+	cd ../
+
+done;
+

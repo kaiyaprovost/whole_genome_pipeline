@@ -1,0 +1,87 @@
+#!/bin/bash
+#PBS -l select=2:ncpus=14
+#PBS -l walltime=5000:00:00
+#PBS -N BWAalign07SIN
+#PBS -j oe
+#PBS -m ae
+#PBS -M kprovost@amnh.org
+#PBS -k oe
+
+# change to the working directory
+#cd $PBS_O_WORKDIR
+echo "pbsworkdir"
+echo $PBS_O_WORKDIR
+EXECDIR=`pwd`
+export PATH=./:$PATH
+echo $PATH
+
+#Arguments:
+## ref=reference sequence
+ref=/home/kprovost/nas3/genomeresequencingFromLucas/Geospiza_fortis_GCF_000277835.1_GeoFor_1.0_genomic.fna 
+
+##References:
+##Corvus -- Vireo bellii
+##Parus -- Auriparus flaviceps
+##Sturnus -- Toxostoma curvirostre, Toxostoma crissale, Campylorhynchus brunneicapillus, Polioptila melanura, Phainopepla nitens
+##Zonotrichia -- Amphispiza bilineata, Pipilo fuscus
+##Geospiza -- Cardinalis cardinalis, Cardinalis sinuatus
+
+
+date
+time
+
+module load bwa-0.7.15
+module load fastqc-0.11.5
+module load R-3.4.1
+
+cd /home/kprovost/nas3/AMN_245107/sequences/sinuatus/
+
+for i in */; do
+	echo $i 
+	cd $i
+	name="${i///}"
+	read1=RAPiD-Genomics*_R1_*
+	read2=RAPiD-Genomics*_R2_*
+	header=`zcat $read1 | head -1`
+	IFS=':' read -a header <<< "$header"
+	INSTRUMENT=${header[0]}
+	RUN_ID=${header[1]}
+	FLOWCELL_BARCODE=${header[2]}
+	LANE=${header[3]}
+	ID=$FLOWCELL_BARCODE.$LANE
+	PU=$FLOWCELL_BARCODE.$LANE.$name
+	SM=$name
+	PL=ILLUMINA
+	LB=TrueSeq
+        echo $name $read1 $read2 $ID $PU $SM $PL $LB
+	
+	echo
+	echo "#######################"
+	echo $name
+	echo "#######################"
+	
+	echo	
+	echo
+	echo Collect Coverage matrics
+	echo
+	echo
+	
+	time java -jar /home/kprovost/nas3/genomeresequencingFromLucas/picard.jar CollectRawWgsMetrics \
+	I=$name.bam \
+	O=$name.raw_wgs_metrics.txt \
+	R=$ref \
+	INCLUDE_BQ_HISTOGRAM=true
+
+	cd ../
+
+	echo
+	echo "#######################"
+	echo $name DONE!
+	echo "#######################"
+	echo
+	echo
+
+done
+
+date
+time

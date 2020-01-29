@@ -1,0 +1,106 @@
+#!/bin/bash
+#PBS -l select=1:ncpus=16
+#PBS -l walltime=5000:00:00
+#PBS -N cri_S1.2_merge_bam2
+#PBS -j oe
+#PBS -m ae
+#PBS -M kprovost@amnh.org
+#PBS -k oe
+
+# change to the working directory
+cd $PBS_O_WORKDIR
+echo "pbsworkdir"
+echo $PBS_O_WORKDIR
+EXECDIR=`pwd`
+export PATH=./:$PATH
+echo $PATH
+
+spp="crissale" 
+
+cd /vz-nas1-active/ProcessedGenomicReads/
+
+if [ ! -d "FILTERED/" ] ; then mkdir FILTERED; fi
+cd FILTERED/
+
+if [ ! -d "${spp}/" ]; then mkdir ${spp}; fi
+cd ${spp}
+
+if [ ! -d "REHEADERED/" ]; then mkdir REHEADERED; fi
+
+if [ ! -d "DEDUP/" ]; then mkdir DEDUP; fi
+cd DEDUP/
+
+if [ ! -d "Stats/" ]; then mkdir Stats; fi
+
+rsync -avzP /vz-nas1-active/RawGenomicReads/FASTQ_SCREEN_RESULTS/${spp}/BAM_dedup/*ba* ./ 
+cd ../REHEADERED/
+
+if [ ! -d "Stats/" ]; then mkdir Stats; fi
+
+suffix1="L002.${spp}.zf.fil.dedup.bam.dedup.reheadered.bam";
+suffix=".zf.fil.dedup.bam.dedup.reheadered.bam";
+for bam in *WG07*${suffix1}; do 
+name=$(echo $bam | cut -d "_" -f 2-5); 
+echo
+echo "#######################"
+echo $name
+echo "#######################"
+if [ -f "${name}_${spp}.merged${suffix}" ]
+then
+echo "FILE ALREADY MERGED"
+else 
+echo
+echo
+echo Merging Bam Files
+echo
+echo
+command="time java -jar /home/kprovost/nas3/genomeresequencingFromLucas/picard.jar MarkDuplicates TMP_DIR=tmp "
+#command="time java -jar /home/kprovost/nas3/genomeresequencingFromLucas/picard.jar MergeSamFiles ";
+for i in *$name*$suffix; do command="${command}I=${i} "; 
+done; 
+merged="${name}_${spp}.merged${suffix}"
+command="${command} O=${merged}"
+command="${command} METRICS_FILE=Stats/$name.merged.dedup.metrics.txt REMOVE_DUPLICATES=false MAX_FILE_HANDLES_FOR_READ_ENDS_MAP=1024 TAGGING_POLICY=All"
+echo
+echo
+echo "COMMAND IS:"
+echo $command
+echo
+echo
+eval $command
+fi
+done;
+
+suffix1="_L003.${spp}.zf.fil.dedup.bam.dedup.reheadered.bam";
+suffix=".zf.fil.dedup.bam.dedup.reheadered.bam";
+for bam in *$suffix1; do 
+name=$(echo $bam | cut -d "_" -f 2-5); 
+echo
+echo "#######################"
+echo $name
+echo "#######################"
+if [ -f "${name}_${spp}.merged${suffix}" ]
+	then
+	echo "FILE ALREADY MERGED"
+else 
+	echo
+	echo
+	echo Merging Bam Files
+	echo
+	echo
+	command="time java -jar /home/kprovost/nas3/genomeresequencingFromLucas/picard.jar MarkDuplicates TMP_DIR=tmp "
+	#command="time java -jar /home/kprovost/nas3/genomeresequencingFromLucas/picard.jar MergeSamFiles ";
+	for i in *$name*$suffix; do command="${command}I=${i} "; 
+	done; 
+	merged="${name}_${spp}.merged${suffix}"
+	command="${command} O=${merged}"
+	command="${command} METRICS_FILE=Stats/$name.merged.dedup.metrics.txt REMOVE_DUPLICATES=false MAX_FILE_HANDLES_FOR_READ_ENDS_MAP=1024 TAGGING_POLICY=All"
+	echo
+	echo
+	echo "COMMAND IS:"
+	echo $command
+	echo
+	echo
+	eval $command
+fi
+done;

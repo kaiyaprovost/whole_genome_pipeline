@@ -1,0 +1,56 @@
+#!/bin/bash
+#PBS -l select=1:ncpus=64
+#PBS -l walltime=5000:00:00
+#PBS -N fus109_GATKsnpGVCF_4CHIHUAHUAN
+#PBS -j oe
+#PBS -m ae
+#PBS -M kprovost@amnh.org
+#PBS -k oe
+
+# change to the working directory
+cd $PBS_O_WORKDIR
+echo "pbsworkdir"
+echo $PBS_O_WORKDIR
+EXECDIR=`pwd`
+export PATH=./:$PATH
+echo $PATH
+
+#Arguments:
+## ref=reference sequence
+ref=/home/kprovost/nas3/genomeresequencingFromLucas/Zonotrichia_albicollis_GCF_000385455.1_Zonotrichia_albicollis-1.0.1_genomic.fna
+#ref=/home/kprovost/nas3/genomeresequencingFromLucas/Strunus_vulgaris_GCF_001447265.1_Sturnus_vulgaris-1.0_genomic.fna
+#ref=/home/kprovost/nas3/genomeresequencingFromLucas/Geospiza_fortis_GCF_000277835.1_GeoFor_1.0_genomic.fna 
+
+##References:
+##Corvus -- Vireo 
+##Parus -- Auriparus 
+##Sturnus -- Toxostoma Campylorhynchus Polioptila Phainopepla
+##Zonotrichia -- Amphispiza Pipilo
+##Geospiza -- Cardinalis 
+
+
+## NOTE: redid this for the renamed VCF files, this time also split into CHIHUAHUAN and chihuahuan populations
+#cd /home/kprovost/nas3/EVERY_PLATE/fusca
+cd /home/kprovost/nas3/EVERY_PLATE/dedup_bam/fusca/CHIHUAHUAN
+
+
+echo
+echo
+echo Combine GVCFs
+echo
+echo
+
+time java -jar /home/kprovost/nas3/genomeresequencingFromLucas/GenomeAnalysisTK-3.8-1-0-gf15c1c3ef/GenomeAnalysisTK.jar \
+-T GenotypeGVCFs \
+-R $ref \
+--variant AMN_245107_P01_WG02_fusca.raw.g.vcf \
+--variant AMN_245109_P002_WB01_fusca.raw.g.vcf \
+--variant AMN_245109_P002_WC01_fusca.raw.g.vcf \
+--variant AMN_245109_P002_WG04_fusca.raw.g.vcf \
+--variant AMN_245109_P002_WH04_fusca.raw.g.vcf \
+-o allsamples_batch2_CHIHUAHUAN_fusca.raw.vcf
+#-nt 64
+##### nt not there originally, didn't have slash before
+#30 oct 2018: removed -nt to see if would fix the memory issues
+
+

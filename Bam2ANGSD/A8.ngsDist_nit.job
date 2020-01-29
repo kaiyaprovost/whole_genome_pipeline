@@ -1,0 +1,46 @@
+#!/bin/bash
+#PBS -l select=1:ncpus=16
+#PBS -l walltime=5000:00:00
+#PBS -N nit_ngsdist
+#PBS -j oe
+#PBS -m ae
+#PBS -M kprovost@amnh.org
+#PBS -k oe
+
+# change to the working directory
+cd $PBS_O_WORKDIR
+echo "pbsworkdir"
+echo $PBS_O_WORKDIR
+EXECDIR=`pwd`
+export PATH=./:$PATH
+echo $PATH
+
+#Arguments:
+## GL = genotype likehood file (Beagle format)
+GL=/vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/BEAGLE/Phainopepla-nitens.beagle.gz
+lines=`zcat $GL | wc -l`
+sites="$(($lines-1))"
+
+cd /vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/
+
+date
+time
+
+/home/lmoreira/programs/ngsTools/ngsDist/ngsDist \
+--n_threads 16 \
+--geno $GL \
+--n_ind 20 \
+--n_sites $sites \
+--n_boot_rep 300 \
+--boot_block_size 500 \
+--out Phainopepla-nitens_ngsdist > Phainopepla-nitens_ngsdist.dist 2>ngsdist > Phainopepla-nitens_ngsdist.dist1 2>&1
+
+## sites is how many sites in GL file zcat <file> | wc -l (-1 because of header)
+## 10084942
+## SUSPICIOUS -- SAME AS MEL/NIT
+
+## changed to $GL from the raw format itself
+
+# =====
+# ERROR: [read_geno] wrong GENO file format. Less fields than expected!
+# =====

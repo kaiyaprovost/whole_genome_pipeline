@@ -1,0 +1,310 @@
+#!/bin/bash
+#PBS -l select=1:ncpus=32:mem=32gb
+#PBS -l walltime=5000:00:00
+#PBS -N sin_S1.Z.Fil_BWA_align
+#PBS -j oe
+#PBS -m ae
+#PBS -M kprovost@amnh.org
+#PBS -k oe
+
+
+# change to the working directory
+cd $PBS_O_WORKDIR
+echo "pbsworkdir"
+echo $PBS_O_WORKDIR
+EXECDIR=`pwd`
+export PATH=./:$PATH
+echo $PATH
+
+##References:
+##Corvus -- Vireo bellii
+##Parus -- Auriparus flaviceps
+##Sturnus -- Toxostoma curvirostre, Toxostoma crissale, Campylorhynchus brunneicapillus, Polioptila bilineata, Phainopepla nitens
+##Zonotrichia -- Amphispiza bilineata, Pipilo fuscus
+##Geospiza -- Cardinalis cardinalis, Cardinalis sinuatus
+
+## /home/kprovost/nas3/genomeresequencingFromLucas
+## Corv_chrom/  Corv_chrom_parus/  Geos_chrom/  Geos_chrom_parus/  Paru_chrom/  Paru_chrom_parus/  Stur_chrom/  Stur_chrom_parus/  Zono_chrom/  Zono_chrom_parus/
+# pseudochromosomesSHORT.fasta 
+
+spp="sinuatus"
+
+#ref=/home/kprovost/nas3/genomeresequencingFromLucas/Corv_chrom/pseudochromosomesSHORT.fasta
+ref=/home/kprovost/nas3/genomeresequencingFromLucas/Geos_chrom/pseudochromosomesSHORT.fasta
+#ref=/home/kprovost/nas3/genomeresequencingFromLucas/Paru_chrom/pseudochromosomesSHORT.fasta
+#ref=/home/kprovost/nas3/genomeresequencingFromLucas/Stur_chrom/pseudochromosomesSHORT.fasta
+#ref=/home/kprovost/nas3/genomeresequencingFromLucas/Zono_chrom/pseudochromosomesSHORT.fasta
+
+#ref=/home/kprovost/nas3/genomeresequencingFromLucas/Melo_chrom/pseudochromosomesSHORT.fasta
+
+cd /vz-nas1-active/RawGenomicReads/FASTQ_SCREEN_RESULTS/$spp
+
+date
+time
+
+module load bwa-0.7.15
+module load fastqc-0.11.5
+module load R-3.4.1
+#source activate stampy ## NEWLY ADDED from lucas
+
+
+#for i in */; do  
+#	namei="${i///}" ## not there for lucas
+#	cd $i; ## not there for lucas
+for read1 in RAPiD-Genomics_*_R1_*.tagged_filter.fastq.gz; do 
+name2=${read1%_R1_*} ## edited from lucas's
+name=${name2#"RAPiD-Genomics_"}.$spp.zf.fil  ## edited from lucas's
+read2=${read1%_R1_*}_R2_*.tagged_filter.fastq.gz  ## edited from lucas's		
+header=`zcat $read1 | head -1`
+IFS=':' read -a header <<< "$header"
+INSTRUMENT=${header[0]}
+RUN_ID=${header[1]}
+FLOWCELL_BARCODE=${header[2]}
+LANE=${header[3]}
+ID=$FLOWCELL_BARCODE.$LANE
+PU=$FLOWCELL_BARCODE.$LANE.$name
+SM=$name
+PL=ILLUMINA
+LB=TrueSeq
+echo $name $read1 $read2 $ID $PU $SM $PL $LB >> ${spp}_bwalog.txt 2>&1 
+
+echo ""  >> ${spp}_bwalog.txt 2>&1 
+echo "#######################"  >> ${spp}_bwalog.txt 2>&1  
+echo $name  >> ${spp}_bwalog.txt 2>&1 
+echo "#######################"  >> ${spp}_bwalog.txt 2>&1  
+
+##ADDED TO DEAL WITH THE MISMATCHED PAIRS 	
+echo ""  >> ${spp}_bwalog.txt 2>&1 
+echo ""  >> ${spp}_bwalog.txt 2>&1 
+echo Separating unpaired >> ${spp}_bwalog.txt 2>&1 
+echo ""  >> ${spp}_bwalog.txt 2>&1 
+echo ""  >> ${spp}_bwalog.txt 2>&1 
+
+echo "~~~unzip\n"
+gunzip -v $read1 >> ${spp}_bwalog.txt 2>&1 
+gunzip -v $read2 >> ${spp}_bwalog.txt 2>&1 
+echo "~~~pairs\n"
+/home/kprovost/nas3/fastq_pair ${read1%*.gz} ${read2%*.gz} >> ${spp}_bwalog.txt 2>&1 
+echo "~~~zip\n"
+gzip -v ${read1%*.gz}.paired.fq >> ${spp}_bwalog.txt 2>&1 
+gzip -v ${read1%*.gz}.single.fq >> ${spp}_bwalog.txt 2>&1 
+gzip -v ${read1%*.gz} >> ${spp}_bwalog.txt 2>&1 
+gzip -v ${read2%*.gz}.paired.fq >> ${spp}_bwalog.txt 2>&1 
+gzip -v ${read2%*.gz}.single.fq >> ${spp}_bwalog.txt 2>&1 
+gzip -v ${read2%*.gz} >> ${spp}_bwalog.txt 2>&1 
+
+
+echo >> ${spp}_bwalog.txt 2>&1  
+echo >> ${spp}_bwalog.txt 2>&1  
+echo Trimming adapters >> ${spp}_bwalog.txt 2>&1  
+echo >> ${spp}_bwalog.txt 2>&1   
+echo >> ${spp}_bwalog.txt 2>&1  
+
+## edited from lucas's, his includes the raw_reads folder 
+time java -jar /home/kprovost/nas3/genomeresequencingFromLucas/Trimmomatic-0.36/trimmomatic-0.36.jar \
+PE ${read1%*.gz}.paired.fq.gz ${read2%*.gz}.paired.fq.gz \
+$name.forward_paired.fq.gz \
+$name.forward_unpaired.fq.gz \
+$name.reverse_paired.fq.gz \
+$name.reverse_unpaired.fq.gz \
+ILLUMINACLIP:/home/kprovost/nas3/genomeresequencingFromLucas/Trimmomatic-0.36/adapters/TruSeq3-PE-2.fa:2:30:10:8:true \
+>> ${spp}_bwalog.txt 2>&1  
+## FOR ABOVE: CHANGED #PE $read1 $read2 TO BE THE FIXED PAIRED ONES
+
+echo >> ${spp}_bwalog.txt 2>&1  
+echo	 >> ${spp}_bwalog.txt 2>&1 
+echo Quality assessment >> ${spp}_bwalog.txt 2>&1 
+echo >> ${spp}_bwalog.txt 2>&1 
+echo >> ${spp}_bwalog.txt 2>&1 
+
+## edited from lucas's, his includes the raw_reads folder 
+time fastqc $name.forward_paired.fq.gz >> ${spp}_bwalog.txt 2>&1 
+time fastqc $name.reverse_paired.fq.gz >> ${spp}_bwalog.txt 2>&1 
+
+echo >> ${spp}_bwalog.txt 2>&1 
+echo	 >> ${spp}_bwalog.txt 2>&1 
+echo Running BWA alignment >> ${spp}_bwalog.txt 2>&1 
+echo >> ${spp}_bwalog.txt 2>&1 
+echo >> ${spp}_bwalog.txt 2>&1 
+
+if [ ! -d "BAM_files/" ]; then mkdir BAM_files; fi ## added from lucas's 
+time bwa mem \
+-M \
+-t 28 \
+$ref \
+$name.forward_paired.fq.gz \
+$name.reverse_paired.fq.gz \
+> BAM_files/$name.sam ## added from lucas's 
+
+## CHECK IF THE SAM FILE IS BLANK 
+if [ -s "BAM_files/$name.sam" ] 
+then
+echo "BAM_files/$name.sam has some data."  >> ${spp}_bwalog.txt 2>&1 
+check_sam=`~/nas3/samtools/samtools view BAM_files/$name.sam | head`
+if [ -z "$check_sam" ]
+then
+echo "Error: THE SAM FILE HAS NO DATA"   >> ${spp}_bwalog.txt 2>&1 
+echo "###################################################################"  >> ${spp}_bwalog.txt 2>&1 
+break
+else
+echo "sam file has data. Moving on" >> ${spp}_bwalog.txt 2>&1 
+fi
+# do something as file has data
+else
+echo "Error: BAM_files/$name.sam is empty.\nEXITING"  >> ${spp}_bwalog.txt 2>&1 
+echo "###################################################################"  >> ${spp}_bwalog.txt 2>&1 
+break
+fi
+
+echo	 >> ${spp}_bwalog.txt 2>&1 
+echo >> ${spp}_bwalog.txt 2>&1 
+echo Converting SAM to sorted BAM >> ${spp}_bwalog.txt 2>&1 
+echo >> ${spp}_bwalog.txt 2>&1 
+echo	 >> ${spp}_bwalog.txt 2>&1 
+
+## added the BAM_files folders 
+mkdir tmp
+time java -jar /home/kprovost/nas3/genomeresequencingFromLucas/picard.jar SortSam \
+INPUT=BAM_files/$name.sam \
+OUTPUT=BAM_files/$name.bam \
+SORT_ORDER=coordinate \
+TMP_DIR=`pwd`/tmp  >> ${spp}_bwalog.txt 2>&1 
+rm -r tmp/
+rm BAM_files/$name.sam ## added from lucas's 
+
+## CHECK IF THE BAM FILE HAS INPUT AT ALL 
+
+check_bam=`~/nas3/samtools/samtools view BAM_files/$name.bam | head`
+if [ -z "$check_bam" ]
+then
+echo "Error: THE BAM FILE HAS NO DATA"   >> ${spp}_bwalog.txt 2>&1 
+echo "###################################################################"  >> ${spp}_bwalog.txt 2>&1 
+break
+else
+echo "Bam file has data. Moving on" >> ${spp}_bwalog.txt 2>&1 
+fi
+
+# this whole section added from lucas in case need to use STAMPY to do anything, but is commented out on his
+
+## LUCAS'S PIPELINE HAS ADDING READ GROUP AND DEDUPLICATION BEFORE THIS POINT 
+
+echo >> ${spp}_bwalog.txt 2>&1 
+echo >> ${spp}_bwalog.txt 2>&1 
+echo Adding Read Group >> ${spp}_bwalog.txt 2>&1 
+echo >> ${spp}_bwalog.txt 2>&1 
+echo >> ${spp}_bwalog.txt 2>&1 
+
+if [ ! -d "BAM_groupsAdded/" ]; then mkdir BAM_groupsAdded; fi ## added from lucas's 
+
+## added folders from Lucas 
+time java -jar /home/kprovost/nas3/genomeresequencingFromLucas/picard.jar AddOrReplaceReadGroups \
+I=BAM_files/$name.bam \
+O=BAM_groupsAdded/$name.groups_added.bam \
+RGID=$ID \
+RGLB=$LB \
+RGPL=$PL \
+RGPU=$PU \
+RGSM=$SM  >> ${spp}_bwalog.txt 2>&1 
+#rm BAM_files/$name.bam
+
+echo >> ${spp}_bwalog.txt 2>&1 
+echo >> ${spp}_bwalog.txt 2>&1 
+echo Deduplication >> ${spp}_bwalog.txt 2>&1 
+echo >> ${spp}_bwalog.txt 2>&1 
+echo >> ${spp}_bwalog.txt 2>&1 
+
+if [ ! -d "Stats/" ]; then mkdir Stats; fi
+if [ ! -d "BAM_dedup/" ]; then mkdir BAM_dedup; fi ## added from lucas's 
+
+## added folders from lucas 
+time java -jar /home/kprovost/nas3/genomeresequencingFromLucas/picard.jar MarkDuplicates \
+TMP_DIR=tmp \
+I=BAM_groupsAdded/$name.groups_added.bam \
+O=BAM_dedup/$name.dedup.bam \
+METRICS_FILE=Stats/$name.dedup.metrics.txt \
+REMOVE_DUPLICATES=false \
+MAX_FILE_HANDLES_FOR_READ_ENDS_MAP=1024 \
+TAGGING_POLICY=All  >> ${spp}_bwalog.txt 2>&1 
+#rm -r tmp/
+#rm BAM_groupsAdded/$name.groups_added.bam
+
+echo	 >> ${spp}_bwalog.txt 2>&1 
+echo >> ${spp}_bwalog.txt 2>&1 
+echo Collecting alignment metrics >> ${spp}_bwalog.txt 2>&1 
+echo >> ${spp}_bwalog.txt 2>&1 
+echo >> ${spp}_bwalog.txt 2>&1 
+
+## add this from lucas's 
+
+## add folders to this 
+time java -jar /home/kprovost/nas3/genomeresequencingFromLucas/picard.jar CollectAlignmentSummaryMetrics \
+INPUT=BAM_files/$name.bam \
+OUTPUT=Stats/$name.alignment_metrics.txt \
+R=$ref \
+METRIC_ACCUMULATION_LEVEL=SAMPLE \
+METRIC_ACCUMULATION_LEVEL=READ_GROUP  >> ${spp}_bwalog.txt 2>&1 
+
+echo >> ${spp}_bwalog.txt 2>&1 
+echo >> ${spp}_bwalog.txt 2>&1 
+echo Collect Insert Size Metrics >> ${spp}_bwalog.txt 2>&1 
+echo >> ${spp}_bwalog.txt 2>&1 
+echo >> ${spp}_bwalog.txt 2>&1 
+## add folders to this
+time java -jar /home/kprovost/nas3/genomeresequencingFromLucas/picard.jar CollectInsertSizeMetrics \
+INPUT=BAM_files/$name.bam \
+OUTPUT=Stats/$name.insert_metrics.txt \
+HISTOGRAM_FILE=Stats/$name.insert_size_histogram.pdf  >> ${spp}_bwalog.txt 2>&1 
+
+echo >> ${spp}_bwalog.txt 2>&1 
+echo >> ${spp}_bwalog.txt 2>&1 
+echo Collect Coverage Metrics >> ${spp}_bwalog.txt 2>&1 
+echo >> ${spp}_bwalog.txt 2>&1 
+echo >> ${spp}_bwalog.txt 2>&1 
+## add folders to this
+time java -jar /home/kprovost/nas3/genomeresequencingFromLucas/picard.jar CollectRawWgsMetrics \
+I=BAM_files/$name.bam \
+O=Stats/$name.raw_wgs_metrics.txt \
+R=$ref \
+INCLUDE_BQ_HISTOGRAM=true  >> ${spp}_bwalog.txt 2>&1 
+
+#rm $name.sam
+#rm $name.bam
+
+## AFTER THIS STEP LUCAS RUNS INDEXING AND QUALIMAP 
+
+echo >> ${spp}_bwalog.txt 2>&1 
+echo >> ${spp}_bwalog.txt 2>&1 
+echo Indexing BAM >> ${spp}_bwalog.txt 2>&1 
+echo >> ${spp}_bwalog.txt 2>&1 
+echo >> ${spp}_bwalog.txt 2>&1 
+
+time java -jar /home/kprovost/nas3/genomeresequencingFromLucas/picard.jar BuildBamIndex \
+I=BAM_dedup/$name.dedup.bam  >> ${spp}_bwalog.txt 2>&1  ## folder added from lucas
+
+echo >> ${spp}_bwalog.txt 2>&1 
+echo >> ${spp}_bwalog.txt 2>&1 
+echo Running QUALIMAP >> ${spp}_bwalog.txt 2>&1 
+echo >> ${spp}_bwalog.txt 2>&1 
+echo >> ${spp}_bwalog.txt 2>&1 
+
+## copied from lucas 
+time qualimap bamqc -nt 8 -bam BAM_dedup/$name.dedup.bam -outdir Stats/$name.QUALIMAP --java-mem-size=8G   >> ${spp}_bwalog.txt 2>&1 
+
+echo >> ${spp}_bwalog.txt 2>&1 
+echo "#######################" >> ${spp}_bwalog.txt 2>&1 
+echo $name DONE! >> ${spp}_bwalog.txt 2>&1 
+echo "#######################" >> ${spp}_bwalog.txt 2>&1 
+echo >> ${spp}_bwalog.txt 2>&1 
+echo >> ${spp}_bwalog.txt 2>&1 
+
+done
+
+
+if [ ! -d "paired/" ]; then mkdir paired; fi ## added from lucas's 
+mv *paired.* ./paired/  >> ${spp}_bwalog.txt 2>&1 
+
+#cd ..
+
+#done
+
+

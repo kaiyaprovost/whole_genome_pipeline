@@ -1,0 +1,70 @@
+#!/bin/bash
+#PBS -l select=1:ncpus=32
+#PBS -l walltime=5000:00:00
+#PBS -N bil109_6_GATKSNPBQSR
+#PBS -j oe
+#PBS -m ae
+#PBS -M kprovost@amnh.org
+#PBS -k oe
+
+# change to the working directory
+cd $PBS_O_WORKDIR
+echo "pbsworkdir"
+echo $PBS_O_WORKDIR
+EXECDIR=`pwd`
+export PATH=./:$PATH
+echo $PATH
+
+#Arguments:
+## ref=reference sequence
+ref=/home/kprovost/nas3/genomeresequencingFromLucas/Zonotrichia_albicollis_GCF_000385455.1_Zonotrichia_albicollis-1.0.1_genomic.fna
+#ref=/home/kprovost/nas3/genomeresequencingFromLucas/Strunus_vulgaris_GCF_001447265.1_Sturnus_vulgaris-1.0_genomic.fna
+#ref=/home/kprovost/nas3/genomeresequencingFromLucas/Geospiza_fortis_GCF_000277835.1_GeoFor_1.0_genomic.fna 
+##References:
+##Corvus -- Vireo
+##Parus -- Auriparus
+##Sturnus -- Toxostoma Campylorhynchus
+		  ## Polioptila, Phainopepla
+##Zonotrichia -- Amphispiza, Pipilo/Melozone
+##Geospiza -- Cardinalis
+
+## bam=bam file
+## NOTE: this runs on a job by job basis 
+
+cd /home/kprovost/nas3/EVERY_PLATE/dedup_bam/bilineata
+
+name=$(echo $bam | cut -f 1 -d '.')
+
+echo
+echo "#######################"
+echo $name
+echo "#######################"
+
+echo
+echo
+echo BQSR
+echo
+echo
+
+time java -jar /home/kprovost/nas3/genomeresequencingFromLucas/GenomeAnalysisTK-3.8-1-0-gf15c1c3ef/GenomeAnalysisTK.jar -T BaseRecalibrator \
+-R $ref \
+-I $bam \
+-knownSites /home/kprovost/nas3/EVERY_PLATE/bilineata/bilineata_batch2.combined.db.vcf \
+-o $name.recal_data.grp \
+-nct 32
+
+echo
+echo
+echo Producing recalibrated VCF file
+echo
+echo
+
+time java -jar /home/kprovost/nas3/genomeresequencingFromLucas/GenomeAnalysisTK-3.8-1-0-gf15c1c3ef/GenomeAnalysisTK.jar -T HaplotypeCaller \
+-R $ref \
+-I $bam \
+-o $name.recal.raw.g.vcf \
+--emitRefConfidence GVCF \
+-minPruning 1 \
+-minDanglingBranchLength 1 \
+-BQSR $name.recal_data.grp \
+-nct 32

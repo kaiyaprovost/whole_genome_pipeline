@@ -1,0 +1,43 @@
+#!/bin/bash
+#PBS -l select=1:ncpus=1
+#PBS -l walltime=999999:00:00
+#PBS -N make_tar_gz_107
+#PBS -j oe
+#PBS -m ae
+#PBS -M kprovost@amnh.org
+#PBS -k oe
+
+# change to the working directory
+cd $PBS_O_WORKDIR
+echo "pbsworkdir"
+echo $PBS_O_WORKDIR
+EXECDIR=`pwd`
+export PATH=./:$PATH
+echo $PATH
+
+date
+time
+
+echo "DO AMN_245107"
+cd /vz-nas1-active/ProcessedGenomicReads/AMN_245107/
+
+echo "BIL"
+cd ./bilineata
+tar -cvzf old_processed_files_bilineata_107.tar.gz old_processed_files_bilineata_107/
+cd ../
+
+echo "BRU"
+cd ./brunneicapillus
+tar -cvzf old_processed_files_brunneicapillus_107.tar.gz old_processed_files_brunneicapillus_107/
+cd ../
+
+echo "FUS"
+cd ./fusca
+tar -cvzf old_processed_files_fusca_107.tar.gz old_processed_files_fusca_107/
+cd ../
+
+echo "SIN"
+cd ./sinuatus
+tar -cvzf old_processed_sinuatus_107.tar.gz old_processed_sinuatus_107/
+cd ../
+

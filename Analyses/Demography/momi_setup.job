@@ -1,0 +1,22 @@
+#!/bin/bash
+#PBS -l select=1:ncpus=1
+#PBS -l walltime=9999999:00:00
+#PBS -N setup_momi
+#PBS -j oe
+#PBS -m ae
+#PBS -M kprovost@amnh.org
+#PBS -k oe
+
+# change to the working directory
+cd $PBS_O_WORKDIR
+echo "pbsworkdir"
+echo $PBS_O_WORKDIR
+EXECDIR=`pwd`
+export PATH=./:$PATH
+echo $PATH
+
+cd /home/kprovost/nas4/DEMOGRAPHY
+
+echo "start"
+sh /home/kprovost/nas4/DEMOGRAPHY/momi_setup_hux.sh
+echo "done"

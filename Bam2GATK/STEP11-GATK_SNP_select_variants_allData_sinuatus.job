@@ -1,0 +1,50 @@
+#!/bin/bash
+#PBS -l select=1:ncpus=16
+#PBS -l walltime=5000:00:00
+#PBS -N GATKsnpSelVARSsinuatus
+#PBS -j oe
+#PBS -m ae
+#PBS -M kprovost@amnh.org
+#PBS -k oe
+
+# change to the working directory
+cd $PBS_O_WORKDIR
+echo "pbsworkdir"
+echo $PBS_O_WORKDIR
+EXECDIR=`pwd`
+export PATH=./:$PATH
+echo $PATH
+
+#Arguments:
+## vcf
+
+vcf=/home/kprovost/nas3/AMN_245107/sequences/sinuatus/sinuatus.allsamples_filtered.vcf
+
+cd /home/kprovost/nas3/AMN_245107/sequences/sinuatus/
+
+
+echo
+echo "#######################"
+echo $vcf
+echo "#######################"
+
+echo
+echo
+echo Selecting Variants
+echo
+echo
+
+/home/kprovost/opt/bin/vcftools \
+--vcf $vcf \
+--remove-indels \
+--remove-filtered-all \
+--min-meanDP 2 \
+--max-meanDP 10 \
+--max-maf 0.05 \
+--max-missing 0 \
+--hwe 0.01 \
+--min-alleles 2 \
+--max-alleles 2 \
+--recode \
+--recode-INFO-all \
+--out sinuatus-SNP-only_alldata

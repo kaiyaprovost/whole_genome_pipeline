@@ -1,0 +1,39 @@
+#!/bin/bash
+#PBS -l select=1:ncpus=2
+#PBS -l walltime=5000:00:00
+#PBS -N melDXY_ANGSD_GL_p
+#PBS -j oe
+#PBS -m ae
+#PBS -M kprovost@amnh.org
+#PBS -k oe
+
+# change to the working directory
+cd $PBS_O_WORKDIR
+echo "pbsworkdir"
+echo $PBS_O_WORKDIR
+EXECDIR=`pwd`
+export PATH=./:$PATH
+echo $PATH
+
+#Arguments:
+## bam_list = list of BAM files
+## the indlists for son and chi work for this
+bamlist=/home/kprovost/nas3/ANGSD_pipeline/Polioptila-melanura_parus.bamlist
+
+cd /vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/REALIGNED_BAMS
+date
+time
+
+time /home/kprovost/nas3/angsd/angsd -GL 2 \
+-doMajorMinor 1 \
+-doMaf 3 \
+-doGlf 2 \
+-minMaf 0.05 \
+-SNP_pval 0.01 \
+-skipTriallelic \
+-minInd 4 \
+-minMapQ 20 \
+-minQ 20 \
+-nThreads 16 \
+-bam $bamlist \
+-out Polioptila-melanura-DXY11-parus

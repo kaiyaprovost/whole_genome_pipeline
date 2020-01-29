@@ -1,0 +1,53 @@
+#!/bin/bash
+#PBS -l select=1:ncpus=64
+#PBS -l walltime=5000:00:00
+#PBS -N bru109_7_GATKsnpGVCF
+#PBS -j oe
+#PBS -m ae
+#PBS -M kprovost@amnh.org
+#PBS -k oe
+
+# change to the working directory
+cd $PBS_O_WORKDIR
+echo "pbsworkdir"
+echo $PBS_O_WORKDIR
+EXECDIR=`pwd`
+export PATH=./:$PATH
+echo $PATH
+
+#Arguments:
+## ref=reference sequence
+#ref=/home/kprovost/nas3/genomeresequencingFromLucas/Zonotrichia_albicollis_GCF_000385455.1_Zonotrichia_albicollis-1.0.1_genomic.fna
+ref=/home/kprovost/nas3/genomeresequencingFromLucas/Strunus_vulgaris_GCF_001447265.1_Sturnus_vulgaris-1.0_genomic.fna
+#ref=/home/kprovost/nas3/genomeresequencingFromLucas/Geospiza_fortis_GCF_000277835.1_GeoFor_1.0_genomic.fna 
+##References:
+##Corvus -- Vireo
+##Parus -- Auriparus
+##Sturnus -- Toxostoma Campylorhynchus
+		  ## Polioptila, Phainopepla
+##Zonotrichia -- Amphispiza, Pipilo/Melozone
+##Geospiza -- Cardinalis
+
+cd /home/kprovost/nas3/EVERY_PLATE/dedup_bam/brunneicapillus
+
+
+echo
+echo
+echo Combine GVCFs
+echo
+echo
+
+time java -jar /home/kprovost/nas3/genomeresequencingFromLucas/GenomeAnalysisTK-3.8-1-0-gf15c1c3ef/GenomeAnalysisTK.jar \
+-T GenotypeGVCFs \
+-R $ref \
+--variant AMN_245107_P01_WA02_brunneicapillus.recal.raw.g.vcf \
+--variant AMN_245107_P01_WB02_brunneicapillus.recal.raw.g.vcf \
+--variant AMN_245107_P01_WF01_brunneicapillus.recal.raw.g.vcf \
+--variant AMN_245107_P01_WG01_brunneicapillus.recal.raw.g.vcf \
+--variant AMN_245107_P01_WH01_brunneicapillus.recal.raw.g.vcf \
+--variant AMN_245109_P002_WE03_brunneicapillus.recal.raw.g.vcf \
+--variant AMN_245109_P002_WE06_brunneicapillus.recal.raw.g.vcf \
+--variant AMN_245109_P002_WF04_brunneicapillus.recal.raw.g.vcf \
+-o brunneicapillus_batch2.allsamples.recal.raw.vcf
+#-nt 64
+##### nt not there originally, didn't have slash before

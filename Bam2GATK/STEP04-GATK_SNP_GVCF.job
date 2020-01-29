@@ -1,0 +1,52 @@
+#!/bin/bash
+#PBS -l select=1:ncpus=64
+#PBS -l walltime=5000:00:00
+#PBS -N GATK_SNP_GVCF
+#PBS -j oe
+#PBS -m ae
+#PBS -M lmoreira@amnh.org
+#PBS -k oe
+
+# change to the working directory
+cd $PBS_O_WORKDIR
+echo "pbsworkdir"
+echo $PBS_O_WORKDIR
+EXECDIR=`pwd`
+export PATH=./:$PATH
+echo $PATH
+
+#Arguments:
+## ref=reference sequence
+
+echo
+echo
+echo Combine GVCFs
+echo
+echo
+
+time java -jar /home/lmoreira/programs/GenomeAnalysisTK-3.8-1-0-gf15c1c3ef/GenomeAnalysisTK.jar \
+-T GenotypeGVCFs \
+-R $ref \
+--variant PP-AK-10.raw.g.vcf \
+--variant PP-AK-1.raw.g.vcf \
+--variant PP-AK-2.raw.g.vcf \
+--variant PP-AK-3.raw.g.vcf \
+--variant PP-AK-4.raw.g.vcf \
+--variant PP-AK-5.raw.g.vcf \
+--variant PP-AK-6.raw.g.vcf \
+--variant PP-AK-7.raw.g.vcf \
+--variant PP-AK-8.raw.g.vcf \
+--variant PP-AK-9.raw.g.vcf \
+--variant PP-NE-26.raw.g.vcf \
+--variant PP-NE-37.raw.g.vcf \
+--variant PP-NE-38.raw.g.vcf \
+--variant PP-NE-39.raw.g.vcf \
+--variant PP-NE-40.raw.g.vcf \
+--variant PP-NE-42.raw.g.vcf \
+--variant PP-NE-43.raw.g.vcf \
+--variant PP-NE-47.raw.g.vcf \
+--variant PP-NE-48.raw.g.vcf \
+--variant PP-NE-49.raw.g.vcf \
+-o allsamples.raw.vcf \
+-nt 64
+##### nt not there originally, didn't have slash before

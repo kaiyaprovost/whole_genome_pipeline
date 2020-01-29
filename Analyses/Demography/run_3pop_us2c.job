@@ -1,0 +1,33 @@
+#!/bin/bash
+#PBS -l select=1:ncpus=4
+#PBS -l walltime=5000:00:00
+#PBS -N momi_3pop_us2c
+#PBS -j oe
+#PBS -m ae
+#PBS -M kprovost@amnh.org
+#PBS -k oe
+
+# change to the working directory
+cd $PBS_O_WORKDIR
+echo "pbsworkdir"
+echo $PBS_O_WORKDIR
+EXECDIR=`pwd`
+#export PATH=./:$PATH
+echo $PATH
+
+echo "Start"
+date
+time
+
+echo "Move"
+cd /home/kprovost/nas1/momi2/
+
+echo "Activate Conda"
+source activate py36
+
+echo "Run Python"
+python -u pop3_momi_us2c.py >> output_momi_pop3_us2c.txt 2>&1
+
+echo "End"
+date
+time

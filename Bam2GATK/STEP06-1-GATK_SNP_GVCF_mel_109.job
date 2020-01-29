@@ -1,0 +1,34 @@
+#!/bin/bash
+#PBS -l select=1:ncpus=1
+#PBS -l walltime=5000:00:00
+#PBS -N mel109_6-1_GATKsnpGVCF
+#PBS -j oe
+#PBS -m ae
+#PBS -M kprovost@amnh.org
+#PBS -k oe
+
+# change to the working directory
+cd $PBS_O_WORKDIR
+echo "pbsworkdir"
+echo $PBS_O_WORKDIR
+EXECDIR=`pwd`
+export PATH=./:$PATH
+echo $PATH
+
+cd /home/kprovost/nas3/EVERY_PLATE/dedup_bam/melanura
+
+#### GOTTA FIX THE NAMES WITH THE PYTHON SCRIPT
+
+echo
+echo
+echo Fix Names
+echo
+echo
+
+for i in ls AMN_*recal.raw.g.vcf; do
+	echo "start renaming $i"
+	python /home/kprovost/nas3/genomeresequencingFromLucas/for_AMN_245109/fix_vcf_headers.py $i
+	echo "done"
+done 
+
+
