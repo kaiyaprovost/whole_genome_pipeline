@@ -1,0 +1,55 @@
+#!/bin/bash
+#PBS -l select=1:ncpus=1
+#PBS -l walltime=99999:00:00
+#PBS -N vcf2pedresamp
+#PBS -j oe
+#PBS -m ae
+#PBS -M kprovost@amnh.org
+#PBS -k oe
+
+# change to the working directory
+#cd $PBS_O_WORKDIR
+#echo "pbsworkdir"
+#echo $PBS_O_WORKDIR
+#EXECDIR=`pwd`
+#export PATH=./:$PATH
+#echo $PATH
+
+##/home/kprovost/nas3/plink-1.07-x86_64/plink/ 
+## --recode-structure 
+
+## arguments
+## vcf
+
+##/home/kprovost/nas3/plink --vcf $vcf --recode structure --out ${vcf}.str
+## qsub -v vcf=$i,suffix=$j <jobname> 
+
+
+module load R-3.4.1
+
+output="/vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE"
+
+cd $output
+
+Rscript /home/kprovost/nas3/vcf_resample_snps.R $output $vcf $suffix
+
+# qsub -v vcf=bellii_unfiltered_BOTH-SNP-only_alldata.recode.vcf,suffix=belBOTHalldata_resamp /home/kprovost/nas3/vcf2ped_resamp.job
+# qsub -v vcf=bellii_unfiltered_BOTH-SNP-only_no-missing-max25dp.recode.vcf,suffix=belBOTHnomiss_resamp /home/kprovost/nas3/vcf2ped_resamp.job
+# qsub -v vcf=bilineata_unfiltered_BOTH-SNP-only_alldata.recode.vcf,suffix=bilBOTHalldata_resamp /home/kprovost/nas3/vcf2ped_resamp.job
+# qsub -v vcf=bilineata_unfiltered_BOTH-SNP-only_no-missing-max25dp.recode.vcf,suffix=bilBOTHnomiss_resamp /home/kprovost/nas3/vcf2ped_resamp.job
+# qsub -v vcf=brunneicapillus_unfiltered_BOTH-SNP-only_alldata.recode.vcf,suffix=bruBOTHalldata_resamp /home/kprovost/nas3/vcf2ped_resamp.job
+# qsub -v vcf=brunneicapillus_unfiltered_BOTH-SNP-only_no-missing-max25dp.recode.vcf,suffix=bruBOTHnomiss_resamp /home/kprovost/nas3/vcf2ped_resamp.job
+# qsub -v vcf=crissale_unfiltered_BOTH-SNP-only_alldata.recode.vcf,suffix=criBOTHalldata_resamp /home/kprovost/nas3/vcf2ped_resamp.job
+# qsub -v vcf=crissale_unfiltered_BOTH-SNP-only_no-missing-max25dp.recode.vcf,suffix=criBOTHnomiss_resamp /home/kprovost/nas3/vcf2ped_resamp.job
+# qsub -v vcf=curvirostre_unfiltered_BOTH-SNP-only_alldata.recode.vcf,suffix=curBOTHalldata_resamp /home/kprovost/nas3/vcf2ped_resamp.job
+# qsub -v vcf=curvirostre_unfiltered_BOTH-SNP-only_no-missing-max25dp.recode.vcf,suffix=curBOTHnomiss_resamp /home/kprovost/nas3/vcf2ped_resamp.job
+# qsub -v vcf=flaviceps_unfiltered_BOTH-SNP-only_alldata.recode.vcf,suffix=flaBOTHalldata_resamp /home/kprovost/nas3/vcf2ped_resamp.job
+# qsub -v vcf=flaviceps_unfiltered_BOTH-SNP-only_no-missing-max25dp.recode.vcf,suffix=flaBOTHnomiss_resamp /home/kprovost/nas3/vcf2ped_resamp.job
+# qsub -v vcf=fusca_unfiltered_BOTH-SNP-only_alldata.recode.vcf,suffix=fusBOTHalldata_resamp /home/kprovost/nas3/vcf2ped_resamp.job
+# qsub -v vcf=fusca_unfiltered_BOTH-SNP-only_no-missing-max25dp.recode.vcf,suffix=fusBOTHnomiss_resamp /home/kprovost/nas3/vcf2ped_resamp.job
+# qsub -v vcf=melanura_unfiltered_BOTH-SNP-only_alldata.recode.vcf,suffix=melBOTHalldata_resamp /home/kprovost/nas3/vcf2ped_resamp.job
+# qsub -v vcf=melanura_unfiltered_BOTH-SNP-only_no-missing-max25dp.recode.vcf,suffix=melBOTHnomiss_resamp /home/kprovost/nas3/vcf2ped_resamp.job
+# qsub -v vcf=sinuatus_unfiltered_BOTH-SNP-only_alldata.recode.vcf,suffix=sinBOTHalldata_resamp /home/kprovost/nas3/vcf2ped_resamp.job
+# qsub -v vcf=sinuatus_unfiltered_BOTH-SNP-only_no-missing-max25dp.recode.vcf,suffix=sinBOTHnomiss_resamp /home/kprovost/nas3/vcf2ped_resamp.job
+
+

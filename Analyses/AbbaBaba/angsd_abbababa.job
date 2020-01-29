@@ -1,0 +1,48 @@
+#!/bin/bash
+#PBS -l select=1:ncpus=1:mem=32gb
+#PBS -l walltime=5000:00:00
+#PBS -N Par_abbababa
+#PBS -j oe
+#PBS -m ae
+#PBS -M kprovost@amnh.org
+#PBS -k oe
+
+# change to the working directory
+cd $PBS_O_WORKDIR
+echo "pbsworkdir"
+echo $PBS_O_WORKDIR
+EXECDIR=`pwd`
+export PATH=./:$PATH
+echo $PATH
+
+
+## Alisterus is the OG, need to pick four individuals 
+## The expected ancient introgression is between Aprosmictus and P. alexandrae
+## P. swainsoni and P. anthopeplus are sister
+
+spp="Parrots"
+
+cd /vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/ABBABABA/
+
+module load R-3.4.1 
+
+bamlist=/home/kprovost/nas3/ANGSD_pipeline/Parrots.bamlist.abbababa
+ref=/home/kprovost/nas3/genomeresequencingFromLucas/Melo_chrom/pseudochromosomesSHORT.fasta
+
+
+#./angsd -doAbbababa
+# --------------
+# abcDstat.cpp:
+# 	-doAbbababa		0	run the abbababa analysis
+# 	-rmTrans		0	remove transitions
+# 	-blockSize		5000000	size of each block in bases
+# 	-enhance		0	outgroup must have same base for all reads
+# 	-ans			(null)	fasta file with outgroup
+# 	-useLast		0	use the last individuals as outgroup instead of -anc
+
+# run angsd
+#time /home/kprovost/nas3/angsd/angsd -out Parrots_abbababa -doAbbababa 1 -bam $bamlist -doCounts 1 -anc $ref
+time /home/kprovost/nas3/angsd/angsd -out Parrots_abbababa2 -doAbbababa 1 -bam $bamlist -doCounts 1 -useLast 1
+ 
+# estimate Z score
+time Rscript /home/kprovost/nas3/angsd/R/jackKnife.R file=Parrots_abbababa2.abbababa indNames=$bamlist outfile=Parrots_abbababa2_jackknife

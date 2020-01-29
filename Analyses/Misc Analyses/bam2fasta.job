@@ -1,0 +1,61 @@
+#!/bin/bash
+#PBS -l select=1:ncpus=1:mem=32gb
+#PBS -l walltime=5000:00:00
+#PBS -N Par_bam2fasta
+#PBS -j oe
+#PBS -m ae
+#PBS -M kprovost@amnh.org
+#PBS -k oe
+
+# change to the working directory
+cd $PBS_O_WORKDIR
+echo "pbsworkdir"
+echo $PBS_O_WORKDIR
+EXECDIR=`pwd`
+export PATH=./:$PATH
+echo $PATH
+
+spp="Parrots"
+
+ref=/home/kprovost/nas3/genomeresequencingFromLucas/Melo_chrom/pseudochromosomesSHORT.fasta
+
+#bamlist=/home/kprovost/nas3/ANGSD_pipeline/Parrots.bamlist
+
+cd /vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/REALIGNED_BAMS/Parrots/
+
+time /home/kprovost/nas3/angsd/angsd -i AMN_245113_P001_WA01_Parrots.merged.zf.fil.dedup.bam.clipped.realigned.bam -doFasta 4 -out AMN_245113_P001_WA01_Parrots.merged.zf.fil.dedup.bam.clipped.realigned.bam.fasta 
+
+time /home/kprovost/nas3/angsd/angsd -i AMN_245113_P001_WA05_Parrots.merged.zf.fil.dedup.bam.clipped.realigned.bam -doFasta 4 -out AMN_245113_P001_WA05_Parrots.merged.zf.fil.dedup.bam.clipped.realigned.bam.fasta 
+
+time /home/kprovost/nas3/angsd/angsd -i AMN_245113_P001_WA06_Parrots.merged.zf.fil.dedup.bam.clipped.realigned.bam -doFasta 4 -out AMN_245113_P001_WA06_Parrots.merged.zf.fil.dedup.bam.clipped.realigned.bam.fasta 
+
+time /home/kprovost/nas3/angsd/angsd -i AMN_245113_P001_WB01_Parrots.merged.zf.fil.dedup.bam.clipped.realigned.bam -doFasta 4 -out AMN_245113_P001_WB01_Parrots.merged.zf.fil.dedup.bam.clipped.realigned.bam.fasta 
+
+time /home/kprovost/nas3/angsd/angsd -i AMN_245113_P001_WB05_Parrots.merged.zf.fil.dedup.bam.clipped.realigned.bam -doFasta 4 -out AMN_245113_P001_WB05_Parrots.merged.zf.fil.dedup.bam.clipped.realigned.bam.fasta 
+
+time /home/kprovost/nas3/angsd/angsd -i AMN_245113_P001_WB06_Parrots.merged.zf.fil.dedup.bam.clipped.realigned.bam -doFasta 4 -out AMN_245113_P001_WB06_Parrots.merged.zf.fil.dedup.bam.clipped.realigned.bam.fasta 
+
+time /home/kprovost/nas3/angsd/angsd -i AMN_245113_P001_WC05_Parrots.merged.zf.fil.dedup.bam.clipped.realigned.bam -doFasta 4 -out AMN_245113_P001_WC05_Parrots.merged.zf.fil.dedup.bam.clipped.realigned.bam.fasta 
+
+time /home/kprovost/nas3/angsd/angsd -i AMN_245113_P001_WC06_Parrots.merged.zf.fil.dedup.bam.clipped.realigned.bam -doFasta 4 -out AMN_245113_P001_WC06_Parrots.merged.zf.fil.dedup.bam.clipped.realigned.bam.fasta 
+
+time /home/kprovost/nas3/angsd/angsd -i AMN_245113_P001_WD01_Parrots.merged.zf.fil.dedup.bam.clipped.realigned.bam -doFasta 4 -out AMN_245113_P001_WD01_Parrots.merged.zf.fil.dedup.bam.clipped.realigned.bam.fasta 
+
+time /home/kprovost/nas3/angsd/angsd -i AMN_245113_P001_WD05_Parrots.merged.zf.fil.dedup.bam.clipped.realigned.bam -doFasta 4 -out AMN_245113_P001_WD05_Parrots.merged.zf.fil.dedup.bam.clipped.realigned.bam.fasta 
+
+time /home/kprovost/nas3/angsd/angsd -i AMN_245113_P001_WD06_Parrots.merged.zf.fil.dedup.bam.clipped.realigned.bam -doFasta 4 -out AMN_245113_P001_WD06_Parrots.merged.zf.fil.dedup.bam.clipped.realigned.bam.fasta 
+
+time /home/kprovost/nas3/angsd/angsd -i AMN_245113_P001_WE01_Parrots.merged.zf.fil.dedup.bam.clipped.realigned.bam -doFasta 4 -out AMN_245113_P001_WE01_Parrots.merged.zf.fil.dedup.bam.clipped.realigned.bam.fasta 
+
+time /home/kprovost/nas3/angsd/angsd -i AMN_245113_P001_WE05_Parrots.merged.zf.fil.dedup.bam.clipped.realigned.bam -doFasta 4 -out AMN_245113_P001_WE05_Parrots.merged.zf.fil.dedup.bam.clipped.realigned.bam.fasta 
+
+time /home/kprovost/nas3/angsd/angsd -i AMN_245113_P001_WF01_Parrots.merged.zf.fil.dedup.bam.clipped.realigned.bam -doFasta 4 -out AMN_245113_P001_WF01_Parrots.merged.zf.fil.dedup.bam.clipped.realigned.bam.fasta 
+
+time /home/kprovost/nas3/angsd/angsd -i AMN_245113_P001_WF05_Parrots.merged.zf.fil.dedup.bam.clipped.realigned.bam -doFasta 4 -out AMN_245113_P001_WF05_Parrots.merged.zf.fil.dedup.bam.clipped.realigned.bam.fasta 
+
+time /home/kprovost/nas3/angsd/angsd -i AMN_245113_P001_WG01_Parrots.merged.zf.fil.dedup.bam.clipped.realigned.bam -doFasta 4 -out AMN_245113_P001_WG01_Parrots.merged.zf.fil.dedup.bam.clipped.realigned.bam.fasta 
+
+time /home/kprovost/nas3/angsd/angsd -i AMN_245113_P001_WG05_Parrots.merged.zf.fil.dedup.bam.clipped.realigned.bam -doFasta 4 -out AMN_245113_P001_WG05_Parrots.merged.zf.fil.dedup.bam.clipped.realigned.bam.fasta 
+
+time /home/kprovost/nas3/angsd/angsd -i AMN_245113_P001_WH05_Parrots.merged.zf.fil.dedup.bam.clipped.realigned.bam -doFasta 4 -out AMN_245113_P001_WH05_Parrots.merged.zf.fil.dedup.bam.clipped.realigned.bam.fasta 
+

@@ -1,0 +1,24 @@
+#!/bin/bash
+#PBS -l select=1:ncpus=1
+#PBS -l walltime=99999:00:00
+#PBS -N plink
+#PBS -j oe
+#PBS -m ae
+#PBS -M kprovost@amnh.org
+#PBS -k oe
+
+# change to the working directory
+#cd $PBS_O_WORKDIR
+#echo "pbsworkdir"
+#echo $PBS_O_WORKDIR
+#EXECDIR=`pwd`
+#export PATH=./:$PATH
+#echo $PATH
+
+##/home/kprovost/nas3/plink-1.07-x86_64/plink/ 
+## --recode-structure 
+
+## arguments
+## vcf
+
+##/home/kprovost/nas3/plink --vcf $vcf --recode structure --out ${vcf}.str
