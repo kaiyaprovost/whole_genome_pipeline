@@ -1,0 +1,55 @@
+#!/bin/bash
+#PBS -l select=1:ncpus=16
+#PBS -l walltime=5000:00:00
+#PBS -N bel111_S1.1_merge_bam
+#PBS -j oe
+#PBS -m ae
+#PBS -M kprovost@amnh.org
+#PBS -k oe
+
+# change to the working directory
+cd $PBS_O_WORKDIR
+echo "pbsworkdir"
+echo $PBS_O_WORKDIR
+EXECDIR=`pwd`
+export PATH=./:$PATH
+echo $PATH
+
+if [ -d "/vz-nas1-active/RawGenomicReads/AMN_245113/bellii/BAM_dedup/" ]
+then 
+mv "/vz-nas1-active/RawGenomicReads/AMN_245113/bellii/BAM_dedup/" "/vz-nas1-active/ProcessedGenomicReads/AMN_245113/bellii/"
+fi
+
+cd /vz-nas1-active/ProcessedGenomicReads/AMN_245113/bellii/BAM_dedup
+
+prefix="F098" ## 111
+	
+suffix=".dedup.bam";
+for bam in $prefix*$suffix; do 
+name=$(echo $bam | cut -d "_" -f 2-5); 
+
+echo
+echo "#######################"
+echo $name
+echo "#######################"
+
+echo
+echo
+echo Merging Bam Files
+echo
+echo
+
+command="time java -jar /home/kprovost/nas3/genomeresequencingFromLucas/picard.jar MergeSamFiles ";
+for i in *$name*$suffix; do command="${command}I=${i} "; 
+done; 
+#echo $command;
+merged="${name}_bellii${suffix}"
+command="${command} O=${merged}"
+echo
+echo
+echo "COMMAND IS:"
+echo $command
+echo
+echo
+eval $command
+done;

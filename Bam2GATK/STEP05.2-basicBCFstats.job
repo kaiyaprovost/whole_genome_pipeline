@@ -1,0 +1,29 @@
+#!/bin/bash
+#PBS -l select=1:ncpus=1
+#PBS -l walltime=99999:00:00
+#PBS -N S5.2_bcfstats
+#PBS -j oe
+#PBS -m ae
+#PBS -M kprovost@amnh.org
+#PBS -k oe
+
+# change to the working directory
+cd $PBS_O_WORKDIR
+echo "pbsworkdir"
+echo $PBS_O_WORKDIR
+EXECDIR=`pwd`
+export PATH=./:$PATH
+echo $PATH
+
+## arguemnts:
+## vcf 
+
+cd /vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/
+
+echo
+echo "#######################"
+echo $vcf
+echo "#######################"
+
+/home/kprovost/nas3/bcftools/bcftools stats -v $vcf > ${vcf}.bcfstats.verbose
+
