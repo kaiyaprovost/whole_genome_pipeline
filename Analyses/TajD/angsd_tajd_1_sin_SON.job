@@ -30,12 +30,15 @@ ref=/home/kprovost/nas3/genomeresequencingFromLucas/OLD_GENOMES/Geospiza_fortis_
 ##Sturnus -- Toxostoma, Campylorhynchus, Polioptila, Phainopepla
 ##Zonotrichia -- Amphispiza, Pipilo
 
+for i in /vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/REALIGNED_BAMS/sinuatus/*gz; do
+echo $i; gunzip $i; done
+
 ## bam_list = list of BAM files
 bamlist=/home/kprovost/nas3/ANGSD_pipeline/SON_Vireo_bellii.indlist
 # chilist=/home/kprovost/nas3/ANGSD_pipeline/CHI_Vireo_bellii.indlist
 # bamlist=/home/kprovost/nas3/ANGSD_pipeline/Cardinalis-sinuatus.bamlist
 
-cd /vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/
+cd /vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/SAFS/
 
 date
 time

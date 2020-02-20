@@ -31,11 +31,14 @@ ref=/home/kprovost/nas3/genomeresequencingFromLucas/OLD_GENOMES/Zonotrichia_albi
 ##Zonotrichia -- Amphispiza, Pipilo
 
 ## bam_list = list of BAM files
-bamlist=/home/kprovost/nas3/ANGSD_pipeline/CHI_Vireo_bellii.indlist
-# chilist=/home/kprovost/nas3/ANGSD_pipeline/CHI_Vireo_bellii.indlist
-# bamlist=/home/kprovost/nas3/ANGSD_pipeline/Amphispiza-bilineata.bamlist
+#bamlist=/home/kprovost/nas3/ANGSD_pipeline/CHI_Vireo_bellii.indlist
+chilist=/home/kprovost/nas3/ANGSD_pipeline/CHI_Vireo_bellii.indlist
+bamlist=/home/kprovost/nas3/ANGSD_pipeline/Amphispiza-bilineata.bamlist
 
-cd /vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/
+for i in /vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/REALIGNED_BAMS/bilineata/*gz; do
+echo $i; gunzip $i; done
+
+cd /vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/SAFS/
 
 date
 time

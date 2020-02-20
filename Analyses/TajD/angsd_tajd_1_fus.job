@@ -1,5 +1,5 @@
 #!/bin/bash
-#PBS -l select=1:ncpus=4
+#PBS -l select=1:ncpus=32
 #PBS -l walltime=5000:00:00
 #PBS -N fus_taj1
 #PBS -j oe
@@ -19,6 +19,9 @@ echo $PATH
 ## ref=reference sequence
 ref=/home/kprovost/nas3/genomeresequencingFromLucas/Zono_chrom/pseudochromosomesSHORT.fasta
 
+for i in /vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/REALIGNED_BAMS/fusca/*gz; do
+echo $i; gunzip $i; done
+
 ##References:
 ##Corvus -- Vireo
 ##Geospiza -- Cardinalis
@@ -31,7 +34,7 @@ ref=/home/kprovost/nas3/genomeresequencingFromLucas/Zono_chrom/pseudochromosomes
 # chilist=/home/kprovost/nas3/ANGSD_pipeline/CHI_Vireo_bellii.indlist
 bamlist=/home/kprovost/nas3/ANGSD_pipeline/Melozone-fusca.bamlist
 
-cd /vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/
+cd /vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/SAFS/
 
 date
 time

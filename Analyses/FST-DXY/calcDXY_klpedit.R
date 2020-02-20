@@ -11,7 +11,7 @@
 
 # NOTES
 # * Prior to calculating Dxy the following steps are recommended:
-#   1. Run ANGSD with all populations with a -SNP_pval and -skipTriallelic flags.
+#   1. Run ANGSD with all populations with a -SNP_pval and -skipTriallelic flags. -- DONE
 #   2. Rerun ANGSD per population 
 #       Use the -sites flag with a file corresponding to the recovered SNPs.
 #       This will guarantee that sites with an allele fixed in one population is still included.

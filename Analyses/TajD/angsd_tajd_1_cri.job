@@ -1,5 +1,5 @@
 #!/bin/bash
-#PBS -l select=1:ncpus=4
+#PBS -l select=1:ncpus=32
 #PBS -l walltime=5000:00:00
 #PBS -N cri_taj1
 #PBS -j oe
@@ -14,6 +14,9 @@ echo $PBS_O_WORKDIR
 EXECDIR=`pwd`
 export PATH=./:$PATH
 echo $PATH
+
+for i in /vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/REALIGNED_BAMS/crissale/*gz; do
+echo $i; gunzip $i; done
 
 #Arguments:
 ## ref=reference sequence
@@ -31,7 +34,7 @@ ref=/home/kprovost/nas3/genomeresequencingFromLucas/Stur_chrom/pseudochromosomes
 # chilist=/home/kprovost/nas3/ANGSD_pipeline/CHI_Vireo_bellii.indlist
 bamlist=/home/kprovost/nas3/ANGSD_pipeline/Toxostoma-crissale.bamlist
 
-cd /vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/
+cd /vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/SAFS/
 
 date
 time

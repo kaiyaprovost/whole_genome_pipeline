@@ -35,7 +35,10 @@ bamlist=/home/kprovost/nas3/ANGSD_pipeline/CHI_Vireo_bellii.indlist
 # chilist=/home/kprovost/nas3/ANGSD_pipeline/CHI_Vireo_bellii.indlist
 # bamlist=/home/kprovost/nas3/ANGSD_pipeline/Phainopepla-nitens-NOWEIRD.bamlist
 
-cd /vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/
+for i in /vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/REALIGNED_BAMS/nitens/*gz; do
+echo $i; gunzip $i; done
+
+cd /vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/SAFS/
 
 date
 time

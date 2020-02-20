@@ -23,6 +23,9 @@ echo $PATH
 ref=/home/kprovost/nas3/genomeresequencingFromLucas/OLD_GENOMES/Strunus_vulgaris_GCF_001447265.1_Sturnus_vulgaris-1.0_genomic.fna
 #ref=/home/kprovost/nas3/genomeresequencingFromLucas/OLD_GENOMES/Zonotrichia_albicollis_GCF_000385455.1_Zonotrichia_albicollis-1.0.1_genomic.fna
 
+for i in /vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/REALIGNED_BAMS/melanura/*gz; do
+echo $i; gunzip $i; done
+
 ##References:
 ##Corvus -- Vireo
 ##Geospiza -- Cardinalis
@@ -35,7 +38,7 @@ bamlist=/home/kprovost/nas3/ANGSD_pipeline/SON_Vireo_bellii.indlist
 # chilist=/home/kprovost/nas3/ANGSD_pipeline/CHI_Vireo_bellii.indlist
 # bamlist=/home/kprovost/nas3/ANGSD_pipeline/Polioptila-melanura.bamlist
 
-cd /vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/
+cd /vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/SAFS/
 
 date
 time

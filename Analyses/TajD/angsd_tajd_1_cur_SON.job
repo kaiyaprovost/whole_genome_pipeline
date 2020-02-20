@@ -1,7 +1,7 @@
 #!/bin/bash
 #PBS -l select=1:ncpus=32
 #PBS -l walltime=5000:00:00
-#PBS -N cur_taj1
+#PBS -N cur_SONtaj1
 #PBS -j oe
 #PBS -m ae
 #PBS -M kprovost@amnh.org
@@ -14,6 +14,9 @@ echo $PBS_O_WORKDIR
 EXECDIR=`pwd`
 export PATH=./:$PATH
 echo $PATH
+
+for i in /vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/REALIGNED_BAMS/curvirostre/*gz; do
+echo $i; gunzip $i; done
 
 #Arguments:
 ## ref=reference sequence
@@ -35,7 +38,7 @@ bamlist=/home/kprovost/nas3/ANGSD_pipeline/SON_Vireo_bellii.indlist
 # chilist=/home/kprovost/nas3/ANGSD_pipeline/CHI_Vireo_bellii.indlist
 # bamlist=/home/kprovost/nas3/ANGSD_pipeline/Toxostoma-curvirostre.bamlist
 
-cd /vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/
+cd /vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/SAFS/
 
 date
 time

@@ -1,0 +1,71 @@
+#!/bin/bash
+#PBS -l select=1:ncpus=2
+#PBS -l walltime=5000:00:00
+#PBS -N bel-NOWEIRD_SON_ANGSD_GL
+#PBS -j oe
+#PBS -m ae
+#PBS -M kprovost@amnh.org
+#PBS -k oe
+
+# change to the working directory
+cd $PBS_O_WORKDIR
+echo "pbsworkdir"
+echo $PBS_O_WORKDIR
+EXECDIR=`pwd`
+export PATH=./:$PATH
+echo $PATH
+
+#Arguments:
+## bam_list = list of BAM files
+## the indlists for son and chi work for this
+bamlist=/home/kprovost/nas3/ANGSD_pipeline/SON_Vireo_bellii-NOWEIRD.indlist
+
+cd /vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/
+
+## https://github.com/mfumagalli/ngsPopGen/blob/master/sbelpts/calcDxy.R
+
+#Arguments:
+## ref=reference sequence
+ref=/home/kprovost/nas3/genomeresequencingFromLucas/Corv_chrom/pseudochromosomesSHORT.fasta
+
+##References:
+##Corvus -- Vireo
+##Geospiza -- Cardinalis
+##Parus -- Auriparus
+##Sturnus -- Toxostoma, Campylorhynchus, Polioptila, Phainopepla
+##Zonotrichia -- Amphispiza, Pipilo
+
+date
+time
+
+echo "index file"
+
+# for i in Vireo-bellii-NOWEIRD.*; do
+# echo $i
+# sitesfile=$i
+# time /home/kprovost/nas3/angsd/angsd sites index $sitesfile
+# echo "" 
+
+echo "run for son"
+
+time /home/kprovost/nas3/angsd/angsd -GL 2 \
+-doMajorMinor 1 \
+-doMaf 11 -doCounts 1 \
+-doGlf 2 \
+-minMaf 0.05 \
+-skipTriallelic \
+-ref $ref \
+-minMapQ 20 \
+-minQ 20 \
+-nThreads 16 \
+-bam $bamlist \
+-out Vireo-bellii-NOWEIRD-SONDXY
+
+## took out: #-sites /vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/Vireo-bellii-NOWEIRD-DXY.beagle \
+## took out: #-minInd 4 \
+# taking out the following: 
+#-doGlf 2 \
+#-minMaf 0.05 \
+#-minMapQ 20 \
+#-minQ 20 \
+

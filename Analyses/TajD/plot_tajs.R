@@ -2,77 +2,87 @@
 ## to get an average for a window, need to divide by window size -- does one for each BP
 
 
-specieslist=c("Auriparus-flaviceps","Cardinalis-sinuatus","Phainopepla-nitens",
-              "Polioptila-melanura","Toxostoma-crissale","Toxostoma-curvirostre",
-              "Vireo-bellii","Amphispiza-bilineata","Melozone-fusca",
-              "Campylorhynchus-brunneicapillus")
+specieslist=c("Vireo-bellii",
+  "Amphispiza-bilineata",
+  "Melozone-fusca",
+  "Campylorhynchus-brunneicapillus",
+  "Auriparus-flaviceps",
+  "Cardinalis-sinuatus",
+  "Phainopepla-nitens",
+  "Polioptila-melanura",
+  "Toxostoma-crissale",
+  "Toxostoma-curvirostre"
+)
 
-#bigtaj = NULL
+bigtaj = NULL
 
 for (speciesname in specieslist) {
   
   print(speciesname)
   shortspp=substr(strsplit(speciesname,"-")[[1]][2],1,3)
   
-  #file = paste("/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ANALYSIS/tajimas/",speciesname,"-taj2.thetasWindow.gz.pestPG",sep="")
-  #tajs = read.table(file,header=T)
-  #print(head(tajs))
-  #print(names(tajs)[2:length(tajs)])
+  file = paste("/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ANALYSIS/tajimas/",speciesname,"-taj2.thetasWindow.gz.pestPG",sep="")
+  tajs = read.table(file,header=T)
+  print(head(tajs))
+  print(names(tajs)[2:length(tajs)])
   
-  #tajs = (tajs[order(tajs$Chr,tajs$WinCenter),])
+  tajs = (tajs[order(tajs$Chr,tajs$WinCenter),])
   
-  #tajs$species=shortspp
+  tajs$species=shortspp
   
   #bigplot = read.csv("/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ANALYSIS/DXY/textfiles/bigplot.txt")
   #bigplotorder = unique(bigplot$chr[bigplot$species==shortspp])
   
   #tajs = tajs[order(match(tajs$Chr, bigplotorder)),]
   
-  #palette(  c(    "red",    "cyan",    "goldenrod",    "green",    "blue",    "purple",    "blue",    "black",    "brown",    "magenta"  ))
+  palette(  c(    "red",    "cyan",    "goldenrod",    "green",    "blue",    "purple",    "blue",    "black",    "brown",    "magenta"  ))
   
-#  for (colnam in names(tajs)[4:length(tajs)]) {
-#    print(colnam)
-#    png(paste(speciesname,colnam,".png",sep=""),width=800,height=300)
-#    
-#    plot(tajs[,colnam],col=as.numeric(as.factor(tajs$Chr)),cex=0.2,
-#         main=speciesname,xlab="Window (Scaffold)",ylab=colnam)
-#    
-#    if (colnam == "Tajima") {
-#      abline(h=2,col="grey")
-#      abline(h=-2,col="grey")
-#    }
-#    
-#    dev.off()
-#  }
+  for (colnam in names(tajs)[1:length(tajs)]) {
+    print(colnam)
+    png(paste("/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ANALYSIS/tajimas/",speciesname,colnam,".png",sep=""),width=800,height=300)
+    
+    toplot=as.numeric(as.character(tajs[,colnam]))
+    
+    if(sum(!is.na(toplot))!=0) {
+      plot(as.numeric(as.character(tajs[,colnam])),col=as.numeric(as.factor(tajs$Chr)),cex=0.2,
+           main=speciesname,xlab="Window (Scaffold)",ylab=colnam)
+      
+      if (colnam == "Tajima") {
+        abline(h=2,col="grey")
+        abline(h=-2,col="grey")
+      }
+      
+      dev.off()
+    }
+  }
   
   ## merge tajs with bigplot eventually 
   
-  #if(is.null(bigtaj)){
-  #	bigtaj = tajs
-  #} else {
-  #	bigtaj = rbind(bigtaj,tajs)
-  #}
-  
+  if(is.null(bigtaj)){
+    bigtaj = tajs
+  } else {
+    bigtaj = rbind(bigtaj,tajs)
+  }
 }
 
-#write.csv(bigtaj,"/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ANALYSIS/DXY/textfiles/bigtaj.txt",row.names=F)
+write.csv(bigtaj,"/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ANALYSIS/DXY/textfiles/bigtaj.new.temp",row.names=F)
 
 bigtaj = read.csv("/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ANALYSIS/DXY/textfiles/bigtaj.txt")
 colnames(bigtaj) = c("windowinfo",
-"chr",
-"midPos",
-"tW",
-"tP-pi",
-"tF",
-"tH",
-"tL",
-"Tajima",
-"fuf",
-"fud",
-"fayh",
-"zeng",
-"nSites",
-"species"
+                     "chr",
+                     "midPos",
+                     "tW",
+                     "tP-pi",
+                     "tF",
+                     "tH",
+                     "tL",
+                     "Tajima",
+                     "fuf",
+                     "fud",
+                     "fayh",
+                     "zeng",
+                     "nSites",
+                     "species"
 )
 
 #bigplot = read.csv("/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ANALYSIS/DXY/textfiles/bigplot.txt")
@@ -116,9 +126,9 @@ for (s in unique(bigplot2$species)) {
   palette(  c(    "red",    "cyan",    "goldenrod",    "green",    "blue",    "purple",    "blue",    "black",    "brown",    "magenta"  ))
   png(paste(s,"est_ne_221e9_averageThetas.png",sep=""),width=800,height=300)
   plot(tajs$est_ne_221e9[tajs$species==s],col=as.numeric(as.factor(tajs$chr[tajs$species==s])),cex=0.2,
-           main=paste(s,"average value Ne_est:",
-                      formatC(mean(tajs$est_ne_221e9[tajs$species==s]),format="e",digits=2),sep=" "),
-                      xlab="Window (Scaffold)",ylab="average theta scaled by 50000")
+       main=paste(s,"average value Ne_est:",
+                  formatC(mean(tajs$est_ne_221e9[tajs$species==s]),format="e",digits=2),sep=" "),
+       xlab="Window (Scaffold)",ylab="average theta scaled by 50000")
   dev.off()
   
   png(paste(s,"est_ne_221e9_th_calc.png",sep=""),width=800,height=300)

@@ -1,7 +1,7 @@
 #!/bin/bash
 #PBS -l select=1:ncpus=32
 #PBS -l walltime=5000:00:00
-#PBS -N bru_taj1
+#PBS -N bru_SONtaj1
 #PBS -j oe
 #PBS -m ae
 #PBS -M kprovost@amnh.org
@@ -35,7 +35,10 @@ bamlist=/home/kprovost/nas3/ANGSD_pipeline/SON_Vireo_bellii.indlist
 # chilist=/home/kprovost/nas3/ANGSD_pipeline/CHI_Vireo_bellii.indlist
 # bamlist=/home/kprovost/nas3/ANGSD_pipeline/Campylorhynchus-brunneicapillus.bamlist
 
-cd /vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/
+for i in /vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/REALIGNED_BAMS/brunneicapillus/*gz; do
+echo $i; gunzip $i; done
+
+cd /vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/SAFS/
 
 date
 time

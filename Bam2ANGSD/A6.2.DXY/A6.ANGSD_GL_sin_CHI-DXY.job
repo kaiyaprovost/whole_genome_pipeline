@@ -1,0 +1,68 @@
+#!/bin/bash
+#PBS -l select=1:ncpus=2
+#PBS -l walltime=5000:00:00
+#PBS -N sinCHI_ANGSD_GL
+#PBS -j oe
+#PBS -m ae
+#PBS -M kprovost@amnh.org
+#PBS -k oe
+
+# change to the working directory
+cd $PBS_O_WORKDIR
+echo "pbsworkdir"
+echo $PBS_O_WORKDIR
+EXECDIR=`pwd`
+export PATH=./:$PATH
+echo $PATH
+
+#Arguments:
+## bam_list = list of BAM files
+## the indlists for CHI and chi work for this
+bamlist=/home/kprovost/nas3/ANGSD_pipeline/CHI_Cardinalis_sinuatus.indlist
+
+cd /vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/
+
+## https://github.com/mfumagalli/ngsPopGen/blob/master/ssinpts/calcDxy.R
+
+#Arguments:
+## ref=reference sequence
+ref=/home/kprovost/nas3/genomeresequencingFromLucas/Geos_chrom/pseudochromosomesSHORT.fasta
+
+##References:
+##Corvus -- Vireo
+##Geospiza -- Cardinalis
+##Parus -- Auriparus
+##Sturnus -- Toxostoma, Campylorhynchus, Polioptila, Phainopepla
+##Zonotrichia -- Amphispiza, Pipilo
+
+date
+time
+
+echo "index file"
+
+# for i in Cardinalis-sinuatus.*; do
+# echo $i
+# sitesfile=$i
+# time /home/kprovost/nas3/angsd/angsd sites index $sitesfile
+# echo "" 
+
+echo "run for CHI"
+
+time /home/kprovost/nas3/angsd/angsd -GL 2 \
+-doMaf 11 -doCounts 1 \
+-doMajorMinor 1 \
+-skipTriallelic \
+-ref $ref \
+-sites /home/kprovost/nas3/ANGSD_pipeline/CHROMS_FROM_DXY_RAWSIZES.txt \
+-nThreads 16 \
+-bam $bamlist \
+-out Cardinalis-sinuatus-CHIDXY4
+
+## took out: #-sites /vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/Cardinalis-sinuatus-DXY.beagle \
+## took out: #-minInd 4 \
+# taking out the following: 
+#-doGlf 2 \
+#-minMaf 0.05 \
+#-minMapQ 20 \
+#-minQ 20 \
+

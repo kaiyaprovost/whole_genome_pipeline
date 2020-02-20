@@ -15,6 +15,9 @@ EXECDIR=`pwd`
 export PATH=./:$PATH
 echo $PATH
 
+for i in /vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/REALIGNED_BAMS/crissale/*gz; do
+echo $i; gunzip $i; done
+
 #Arguments:
 ## ref=reference sequence
 #ref=/home/kprovost/nas3/genomeresequencingFromLucas/OLD_GENOMES/Corvus_brachyrhynchus_GCF_000691975.1_ASM69197v1_genomic.fna
@@ -35,7 +38,7 @@ bamlist=/home/kprovost/nas3/ANGSD_pipeline/CHI_Vireo_bellii.indlist
 # chilist=/home/kprovost/nas3/ANGSD_pipeline/CHI_Vireo_bellii.indlist
 # bamlist=/home/kprovost/nas3/ANGSD_pipeline/Toxostoma-crissale.bamlist
 
-cd /vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/
+cd /vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/SAFS/
 
 date
 time
