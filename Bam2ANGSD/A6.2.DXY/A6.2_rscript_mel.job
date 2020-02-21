@@ -30,15 +30,15 @@ echo "chi maf file is: ${chimaf}"
 echo "length: ${chilen}"
 
 module load R-3.4.1
-gunzip $sonmaf.gz
-gunzip $chimaf.gz
+gunzip -f $sonmaf.gz
+gunzip -f $chimaf.gz
 
 Rscript /home/kprovost/nas3/ANGSD_pipeline/ngsTools/ngsPopGen/scripts/calcDxy.R \
 --popA $sonmaf \
 --popB $chimaf \
---totLen $sonlen
+--totLen $sonlen > log_mel.txt 2>&1
 
-mv Dxy_persite.txt mel_SON_4_Dxy_persite.txt
+mv Dxy_persite.txt sin_SON_4_Dxy_persite.txt
 
 # Rscript /home/kprovost/nas3/ANGSD_pipeline/ngsTools/ngsPopGen/scripts/calcDxy.R \
 # --popA $chimaf \

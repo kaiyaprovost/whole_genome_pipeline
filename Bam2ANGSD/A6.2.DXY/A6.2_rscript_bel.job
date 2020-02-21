@@ -23,8 +23,8 @@ sonlen=`cat $sonmaf | wc -l`
 chilen=`cat $chimaf | wc -l`
 
 module load R-3.4.1
-gunzip $sonmaf.gz
-gunzip $chimaf.gz
+gunzip -f $sonmaf.gz
+gunzip -f $chimaf.gz
 
 ## don't think you need totLen to generate the Dxy thing 
 
@@ -36,9 +36,9 @@ echo "length: ${chilen}"
 Rscript /home/kprovost/nas3/ANGSD_pipeline/ngsTools/ngsPopGen/scripts/calcDxy.R \
 --popA $sonmaf \
 --popB $chimaf \
---totLen $sonlen
+--totLen $sonlen > log_bel2.txt 2>&1
 
-mv Dxy_persite.txt bel_SON_4_Dxy_persite.txt
+mv Dxy_persite.txt sin_SON_4_Dxy_persite.txt
 
 # Rscript /home/kprovost/nas3/ANGSD_pipeline/ngsTools/ngsPopGen/scripts/calcDxy.R \
 # --popA $chimaf \
