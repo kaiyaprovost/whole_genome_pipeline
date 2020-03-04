@@ -50,7 +50,7 @@ Rscript /home/kprovost/nas3/ANGSD_pipeline/ngsTools/ngsPopGen/scripts/calcDxy.R 
 --popB $chimaf \
 --totLen $sonlen > log_fla.txt 2>&1
 
-mv Dxy_persite.txt sin_SON_4_Dxy_persite.txt
+mv Dxy_persite.txt fla_SON_4_Dxy_persite.txt
 
 # Rscript /home/kprovost/nas3/ANGSD_pipeline/ngsTools/ngsPopGen/scripts/calcDxy.R \
 # --popA $chimaf \

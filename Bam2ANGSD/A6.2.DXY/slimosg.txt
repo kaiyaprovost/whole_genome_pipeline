@@ -1,0 +1,52 @@
+universe     = vanilla 
+
+requirements = OSGVO_OS_STRING == "RHEL 7" && Arch == "X86_64" && HAS_MODULES == True 
+request_cpus = 1 
+request_memory = 100 MB 
+request_disk = 1 GB 
+
+#Resubmit job if exit code of executable is =/= 0
+max_retries = 5
+
+#Remove jobs that have been running for longer than 60 secs
+#periodic_remove = (JobStatus == 2) && ( (CurrentTime - EnteredCurrentStatus) > 60 )
+
+#executable = wrapper.sh
+executable = slim_run_osg.job
+
+## #!/bin/bash
+## tar xzf python_build.tgz
+## python_build/bin/python3 fib.py $1
+
+#arguments = $(fib)
+arguments = $(M) $(Nf) $(m) $(O) $(i) $(v) $(B) $(r)
+
+#transfer_input_files = fib.py, python_build.tgz
+transfer_input_files = slim, 0.twopopulations_variable_parameters.slim, vireotest_slim_TRANSITION_57x87_coarse.txt, 1.run_slim_2pop_recpacitate.sh
+
+output = fib-wrapper-$(Cluster).$(Process).out 
+error = fib-wrapper-$(Cluster).$(Process).err 
+log = fib-wrapper-$(Cluster).$(Process).log 
+
+should_transfer_files = YES 
+when_to_transfer_output = ON_EXIT 
+
+notification = Always
+notify_user = kprovost@amnh.org
+
++ProjectName = "AMNH" 
+
+#Submit one job per number in parentheisis and assign the number to the variable fib.
+#If you wish to queue multiple jobs per variable then change the number after queue
+
+queue 10 M,Nf,m,O,i,v,B,r from slim_models_osg_params.txt
+
+#queue 1 fib in (
+#0
+#25
+#80
+#110
+#250
+#3000
+#)
+

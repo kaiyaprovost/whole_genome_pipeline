@@ -1,0 +1,90 @@
+#!/bin/bash
+#PBS -l select=1:ncpus=16
+#PBS -l walltime=5000:00:00
+#PBS -N rscript_chrom_loop
+#PBS -j oe
+#PBS -m ae
+#PBS -M kprovost@amnh.org
+#PBS -k oe
+
+# change to the working directory
+cd $PBS_O_WORKDIR
+echo "pbsworkdir"
+echo $PBS_O_WORKDIR
+EXECDIR=`pwd`
+export PATH=./:$PATH
+echo $PATH
+
+cd /vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/MAFS/
+
+module load R-3.4.1
+
+spplist=("Amphispiza-bilineata" "Campylorhynchus-brunneicapillus" "Toxostoma-crissale" "Toxostoma-curvirostre" "Auriparus-flaviceps" "Melozone-fusca" "Polioptila-melanura" "Phainopepla-nitens" "Cardinalis-sinuatus")
+
+chromlist=("mtDNA" "1B" "8" "25" "22" "27" "28" "26" "21" "23" "24" "19" "18" "17" "15" "20" "13" "14" "Z" "4A" "10" "11" "12" "9" "6" "7" "5" "4" "1A" "3" "1" "2")
+
+for chrom in ${chromlist[@]}; do
+echo $chrom
+
+for spp in ${spplist[@]}; do
+echo $spp
+
+shortname=`echo $spp | cut -f2 -d"-" | head -c3`
+
+ls *${spp}*DXY4*chr*${chrom}*.*
+
+## check if son and chi files exist
+
+for sonmaf in *${spp}*SONDXY4*chr*${chrom}*; do
+for chimaf in *${spp}*CHIDXY4*chr*${chrom}*; do
+
+if [ -f "${chimaf}" ]; then
+echo "$chimaf exist"
+
+if [ -f "${sonmaf}" ]; then
+echo "$sonmaf exist"
+
+sonlen=`cat $sonmaf | wc -l`
+chilen=`cat $chimaf | wc -l`
+
+## don't think you need totLen to generate the Dxy thing 
+
+echo "son maf file is: ${sonmaf}"
+echo "length: ${sonlen}"
+echo "chi maf file is: ${chimaf}"
+echo "length: ${chilen}"
+
+#gunzip -f $sonmaf.gz
+#gunzip -f $chimaf.gz
+
+Rscript /home/kprovost/nas3/ANGSD_pipeline/ngsTools/ngsPopGen/scripts/calcDxy.R \
+--popA $sonmaf \
+--popB $chimaf \
+--totLen $sonlen > log_${shortname}_${chrom}.txt 2>&1
+
+mv Dxy_persite.txt ${shortname}_${chrom}_SON_4_Dxy_persite.txt
+
+Rscript /home/kprovost/nas3/ANGSD_pipeline/ngsTools/ngsPopGen/scripts/calcDxy.R \
+--popA $sonmaf \
+--popB $chimaf \
+--totLen $chilen >> log_${shortname}_${chrom}.txt 2>&1
+
+mv Dxy_persite.txt ${shortname}_${chrom}_CHI_4_Dxy_persite.txt
+
+mv ${shortname}_${chrom}_???_4_Dxy_persite.txt /vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/DXY/
+
+else
+echo "no $sonmaf"
+fi
+else
+echo "no $chimaf"
+fi
+
+done
+done
+
+echo "xxxxxxxxxx"
+done
+done
+
+
