@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+## Made by Kaiya L Provost
+## Last updated 20 January 2020
 
 import sys
 import glob

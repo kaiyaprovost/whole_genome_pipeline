@@ -1,0 +1,33 @@
+universe     = vanilla 
+
+requirements = OSGVO_OS_STRING == "RHEL 7" && Arch == "X86_64" && HAS_MODULES == True 
+request_cpus = 1 
+request_memory = 100 MB 
+request_disk = 1 GB 
+
+#Resubmit job if exit code of executable is =/= 0
+max_retries = 5
+
+executable = run_pyslim_osg.job
+
+arguments = $(f)
+
+transfer_input_files = run_pyslim_osg.job, py2pack.tar.gz, Overlaying_neutral_mutations_AND_recapitate_klp.py, $(f), 5.testingPopgenome_VCF.R
+transfer_output_files = working
+
+output = $(Cluster).$(Process).out 
+error = $(Cluster).$(Process).err 
+log = $(Cluster).$(Process).log 
+
+should_transfer_files = YES 
+when_to_transfer_output = ON_EXIT 
+
+notification = Error
+notify_user = kprovost@amnh.org
+
++ProjectName = "AMNH" 
+
+#Submit one job per number in parentheisis and assign the number to the variable fib.
+#If you wish to queue multiple jobs per variable then change the number after queue
+
+queue 1 f from treesfiles.txt

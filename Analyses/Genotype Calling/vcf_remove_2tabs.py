@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+## Made by Kaiya L Provost
+## Last updated 4 November 2019
 
 import sys
 

@@ -18,5 +18,7 @@
 ## arguments
 ## filename
 
-echo $filename
-gzip $filename
+for filename in /vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/REALIGNED_BAMS/*/*bam; do
+#echo $filename
+gzip -f $filename
+done 

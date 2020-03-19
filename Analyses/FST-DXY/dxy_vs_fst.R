@@ -2,13 +2,13 @@
 
 library(AICcmodavg)
 
-steps=c(2:11) ## up to 11
+steps=c(1:2) ## up to 11
 
 setwd("/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ANALYSIS/DXY/")
 
-specieslist = c(#"bil","fla",  "fus",  
-  "cur",  "bru",  "cri",  "mel"#,"nit"#,
-  #"sin",  "bel"
+specieslist = c("bil",#"fla",
+                "fus","cur",  "bru",  "cri",  "mel","nit",
+                "sin"#,  "bel"
 )
 size = 100
 
@@ -187,15 +187,10 @@ if(1 %in% steps) {
       print(fullspecies)
       
       dxyfile = paste(
-        "/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ANALYSIS/DXY/textfiles/scaff_",
-        size,
-        "/",
-        spp,
-        "_SON_Dxy_WINDOWS_",
-        size,
-        ".txt",
-        sep = ""
-      )
+        #"/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ANALYSIS/DXY/textfiles/scaff_",
+        #size,"/",spp,"_SON_Dxy_WINDOWS_",size,".txt",
+        "/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ANALYSIS/DXY/",spp,"_4_SON_Dxy_WINDOWS_chrfix_1-ALL.txt",
+        sep = "")
       fstfile = paste(
         "/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ANALYSIS/FST/3.slidingWindowJobs/SON_CHI_",
         fullspecies,
@@ -214,64 +209,41 @@ if(1 %in% steps) {
       
       outfile = paste(
         "/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ANALYSIS/DXY/textfiles/scaff_",
-        size,"/",spp,
-        "_bothFST_DXY_",
-        size,
-        ".txt",
+        spp,"_bothFST_DXY_ALL.txt",
         sep = ""
       )
       pngfile0 = paste(
         "/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ANALYSIS/DXY/images/scaff_",
-        size,"/",
-        spp,"/",
-        spp,
-        "_corDXYFST_",
-        size,
-        ".png",
+        spp,"_corDXYFST_ALL.png",
         sep = ""
       )
       pngfile1 = paste(
         "/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ANALYSIS/DXY/images/scaff_",
-        size,"/",
-        spp,"/",
-        spp,
-        "_DXYdivFST_",
-        size,
-        ".png",
+        spp,"_DXYdivFST_ALL.png",
         sep = ""
       )
       pngfile2 = paste(
         "/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ANALYSIS/DXY/images/scaff_",
-        size,"/",
-        spp,"/",
-        spp,
-        "_FSTdivDXY_",
-        size,
-        ".png",
+        spp,"_FSTdivDXY_ALL.png",
         sep = ""
       )
       pngfile3 = paste(
         "/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ANALYSIS/DXY/",
-        spp,
-        "_panelFSTDXY_",
-        size,
-        ".png",
+        spp,"_panelFSTDXY_ALL.png",
         sep = ""
       )
       pngfile4 = paste(
         "/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ANALYSIS/DXY/images/scaff_",
-        size,"/",
-        spp,"/",
-        spp,
-        "_panelFSTDXYsums_",
-        size,
-        ".png",
+        spp,"_panelFSTDXYsums_ALL.png",
         sep = ""
       )
       
       print("reading")
-      dxy = read.csv(dxyfile, sep = " ")
+      dxy = read.csv(dxyfile, sep = " ",row.names = NULL)
+      dxy=dxy[,c("scafs","starts","means","stdvs","snps","sums")]
       
+      newscafs=sapply(as.character(dxy$scafs),FUN=function(x){strsplit(x,"_")[[1]][4]},simplify = T)
+      dxy$scafs=newscafs    
       
       lines = readLines(fstfile)
       end = substr(lines[1],
@@ -538,12 +510,7 @@ if(2 %in% steps) {
       print(spp)
       testfile = paste(
         "/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ANALYSIS/DXY/textfiles/scaff_",
-        size,
-        "/",
-        spp,
-        "_bothFST_DXY_",
-        size,
-        ".txt",
+        spp,"_bothFST_DXY_ALL.txt",
         sep = ""
       )
       #testfile = "/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ANALYSIS/DXY/sin_bothFST_DXY_1.txt"
@@ -591,9 +558,7 @@ if(2 %in% steps) {
         paste(
           "/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ANALYSIS/DXY/",
           spp,
-          "_fstVSdxy_quantilemap_",
-          size,
-          ".png",
+          "_fstVSdxy_quantilemap_ALL.png",
           sep = ""
         ), height=700,width=700
       )
@@ -654,9 +619,7 @@ if(2 %in% steps) {
         paste(
           "/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ANALYSIS/DXY/",
           spp,
-          "_fstVSdxy_panelquantile_",
-          size,
-          ".png",
+          "_fstVSdxy_panelquantile_ALL.png",
           sep = ""
         ),
         width = 700,
@@ -689,17 +652,28 @@ if(2 %in% steps) {
       
       
       freq = as.data.frame(table(test$sumquantile))
-      freq$VarNames = c(
-        "NONE",
-        "LOW_FST",
-        "HIGH_FST",
-        "LOW_DXY",
-        "BOTH_LOW",
-        "HIGH_FST_LOW_DXY",
-        "HIGH_DXY",
-        "LOW_FST_HIGH_DXY",
-        "BOTH_HIGH"
-      )
+      # freq$VarNames = c(
+      #   "NONE",
+      #   "LOW_FST",
+      #   "HIGH_FST",
+      #   "LOW_DXY",
+      #   "BOTH_LOW",
+      #   "HIGH_FST_LOW_DXY",
+      #   "HIGH_DXY",
+      #   "LOW_FST_HIGH_DXY",
+      #   "BOTH_HIGH"
+      # )
+      freq$VarNames=as.character(freq$Var1)
+      freq$VarNames[freq$Var1==9]="NONE"
+      freq$VarNames[freq$Var1==10]="LOW_FST"
+      freq$VarNames[freq$Var1==12]="HIGH_FST"
+      freq$VarNames[freq$Var1==17]="LOW_DXY"
+      freq$VarNames[freq$Var1==18]="BOTH_LOW"
+      freq$VarNames[freq$Var1==20]="HIGH_FST_LOW_DXY"
+      freq$VarNames[freq$Var1==33]="HIGH_DXY"
+      freq$VarNames[freq$Var1==34]="LOW_FST_HIGH_DXY"
+      freq$VarNames[freq$Var1==36]="BOTH_HIGH"
+      
       ## 9  = 1+8  = fst not outlier, dxy not outlier
       ## 10 = 2+8  = fst low,         dxy not outlier
       ## 12 = 4+8  = fst high,        dxy not outlier
@@ -715,9 +689,7 @@ if(2 %in% steps) {
         paste(
           "/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ANALYSIS/DXY/",
           spp,
-          "_fstVSdxy_lognumoutliers_",
-          size,
-          ".png",
+          "_fstVSdxy_lognumoutliers_ALL.png",
           sep = ""
         )
       )
@@ -782,7 +754,7 @@ if(2 %in% steps) {
       highD_midF = dxyhigh[dxyhigh$quantileFST == 1, ]
       
       lowD_lowF = dxylow[dxylow$quantileFST == 2, ]
-      islanS = dxylow[dxylow$quantileFST == 4, ]
+      SWEEPS = dxylow[dxylow$quantileFST == 4, ]
       lowD_midF = dxylow[dxylow$quantileFST == 1, ]
       
       midD_lowF = dxymid[dxymid$quantileFST == 2, ]
@@ -792,7 +764,7 @@ if(2 %in% steps) {
       notISLANDS = rbind(dxymid, dxylow,
                          highD_lowF, highD_midF)
       
-      notislanS = rbind(dxymid, dxyhigh,
+      notSWEEPS = rbind(dxymid, dxyhigh,
                         lowD_lowF, lowD_midF)
       
       
@@ -802,9 +774,7 @@ if(2 %in% steps) {
         paste(
           "/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ANALYSIS/DXY/",
           spp,
-          "_boxplotsIslandsislans_",
-          size,
-          ".png",
+          "_boxplotsIslandsSweeps_ALL.png",
           sep = ""
         )
       )
@@ -819,26 +789,26 @@ if(2 %in% steps) {
       boxplot(
         ISLANDS$dxymeans,
         notISLANDS$dxymeans,
-        islanS$dxymeans,
-        notislanS$dxymeans,
+        SWEEPS$dxymeans,
+        notSWEEPS$dxymeans,
         main = spp,
         ylab = "mean DXY",
         ylim = c(0, 0.5),
         names = c("ISLANDS", "NOT ISLANDS",
-                  "islanS", "NOT islanS"),
+                  "SWEEPS", "NOT SWEEPS"),
         las = 2
       )
       
       boxplot(
         ISLANDS$Fst,
         notISLANDS$Fst,
-        islanS$Fst,
-        notislanS$Fst,
+        SWEEPS$Fst,
+        notSWEEPS$Fst,
         main = spp,
         ylab = "mean FST",
         ylim = c(0, 0.4),
         names = c("ISLANDS", "NOT ISLANDS",
-                  "islanS", "NOT islanS"),
+                  "SWEEPS", "NOT SWEEPS"),
         las = 2
       )
       #par(ask=F)
@@ -847,16 +817,14 @@ if(2 %in% steps) {
       
       
       
-      islanfile = paste(
+      sweepfile = paste(
         "/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ANALYSIS/DXY/",
         spp,
-        "_islans_",
-        size,
-        ".png",
+        "_sweeps_ALL.png",
         sep = ""
       )
       
-      png(islanfile)
+      png(sweepfile)
       par(
         bg = NA,
         col.axis = "white",
@@ -907,21 +875,15 @@ if(3 %in% steps) {
       print("step 3")
       infile = paste(
         "/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ANALYSIS/DXY/textfiles/scaff_",
-        size,
-        "/",
         spp,
-        "_bothFST_DXY_",
-        size,
-        ".txt",
+        "_bothFST_DXY_ALL.txt",
         sep = ""
       )
       
       outfile = paste(
         "/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ANALYSIS/DXY/",
         spp,
-        "_bothFST_DXY_",
-        size,
-        ".png",
+        "_bothFST_DXY_ALL.png",
         sep = ""
       )
       
@@ -985,12 +947,8 @@ if(4 %in% steps) {
       print("step 4")
       testfile = paste(
         "/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ANALYSIS/DXY/textfiles/scaff_",
-        size,
-        "/",
         spp,
-        "_bothFST_DXY_",
-        size,
-        ".txt",
+        "_bothFST_DXY_ALL.txt",
         sep = ""
       )
       #testfile = "/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ANALYSIS/DXY/sin_bothFST_DXY_1.txt"
@@ -1087,7 +1045,8 @@ if(5 %in% steps) {
       col.lab = "white",
       col.main = "white"
     )
-    plot(bigplot$dxymeans, bigplot$Fst,xlim=c(0,1),ylim=c(0,1))
+    plot(bigplot$dxymeans, bigplot$Fst#,xlim=c(0,1),ylim=c(0,1)
+         )
     dev.off()
     
     bigplot$globalquantileFST = 1 ## middle
@@ -1105,7 +1064,8 @@ if(5 %in% steps) {
       col.lab = "white",
       col.main = "white"
     )
-    plot(bigplot$dxymeans, bigplot$Fst, col = as.numeric(bigplot$quancolor),xlim=c(0,1),ylim=c(0,1))
+    plot(bigplot$dxymeans, bigplot$Fst, col = as.numeric(bigplot$quancolor)#,xlim=c(0,1),ylim=c(0,1)
+         )
     dev.off()
     
     bigplot$globalsumquantile = bigplot$globalquantiledxymeans + bigplot$globalquantileFST
@@ -1128,7 +1088,8 @@ if(5 %in% steps) {
       col.lab = "white",
       col.main = "white"
     )
-    plot(bigplot$dxymeans, bigplot$Fst, col = as.numeric(bigplot$quancolor),xlim=c(0,1),ylim=c(0,1))
+    plot(bigplot$dxymeans, bigplot$Fst, col = as.numeric(bigplot$quancolor)#,xlim=c(0,1),ylim=c(0,1)
+         )
     dev.off()
     
     png("bigplot_globalcolor_biglim.png",width=1200)
@@ -1141,7 +1102,8 @@ if(5 %in% steps) {
     )
     plot(bigplot$dxymeans,
          bigplot$Fst,
-         col = as.numeric(bigplot$globalquancolor),xlim=c(0,1),ylim=c(0,1))
+         col = as.numeric(bigplot$globalquancolor)#,xlim=c(0,1),ylim=c(0,1)
+         )
     dev.off()
     
     ## 9  = 1+8  = fst not outlier, dxy not outlier
@@ -1162,7 +1124,8 @@ if(5 %in% steps) {
       col.lab = "white",
       col.main = "white"
     )
-    plot(bigplot$sumquantile, bigplot$globalsumquantile,xlim=c(0,1),ylim=c(0,1))
+    plot(bigplot$sumquantile, bigplot$globalsumquantile#,xlim=c(0,1),ylim=c(0,1)
+         )
     dev.off()
     
     palette(c("white", "pink"))
@@ -1474,7 +1437,7 @@ if(6 %in% steps) {
       "HighFST",
       "LowDXY",
       "LowBoth",
-      "islan",
+      "Sweep",
       "HighDxy",
       "LowFSTHighDXY",
       "Island"
@@ -1583,7 +1546,9 @@ if(6 %in% steps) {
     dev.off()
     
     div_swpIsl = div[c(6, 9),]
-    div_swpIsl = div_swpIsl[, c(1, 4, 5, 6, 7, 2, 3, 8, 9, 10)]
+    #div_swpIsl = div_swpIsl[, c("bel", "cri", "cur", "fla", "fus", "bil", "bru", "mel", "nit", "sin")]
+    div_swpIsl = div_swpIsl[, c("cri", "cur", "fus", "bil", "bru", "mel", "nit", "sin")]
+    
     div_swpIsl = as.matrix(div_swpIsl)
     png("bigplot_sitestack_per_spp.png",
         width = 700,

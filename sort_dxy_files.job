@@ -1,0 +1,27 @@
+#!/bin/bash
+#PBS -l select=1:ncpus=1:mem=32gb
+#PBS -l walltime=999999:00:00
+#PBS -N sort_dxy_files
+#PBS -j oe
+#PBS -m ae
+#PBS -M kprovost@amnh.org
+#PBS -k oe
+
+cd /vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/DXY/DONE
+
+for i in *persite.txt; do
+echo $i;
+sort -u $i > $i.temp
+done
+
+cd /vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/DXY/DONE/MERGED
+
+for i in *persite.txt.gz; do
+echo $i;
+zcat $i | sort -u > $i.temp
+done
+
+for i in *WIND*.txt.gz; do
+echo $i;
+zcat $i | sort -u > $i.temp
+done
