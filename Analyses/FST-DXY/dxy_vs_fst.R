@@ -650,6 +650,24 @@ if(2 %in% steps) {
       
       
       
+      png(paste("/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ANALYSIS/DXY/",
+        spp,"_fstVSdxy_panelquantile_legible.png",sep = ""),
+        width = 700,height = 700)
+      palette(c("black",
+          "red",          "darkred",
+          "blue",          "purple",
+          "magenta",          "darkblue",
+          "orange",          "cyan"        )      )
+      par(mfrow = c(2, 1))
+      par(mar=c(3,4,0,0))
+      plot(test$dxymeans,col = as.numeric(as.factor(test$chr)),
+        pch = as.numeric(test$quancolor),main = "",
+        ylab="DXY",xlab="")
+      plot(test$Fst, col = as.numeric(as.factor(test$chr)),
+        pch = as.numeric(test$quancolor),main = "",ylab="FST",xlab="Window\n")
+      dev.off()
+      
+      
       
       freq = as.data.frame(table(test$sumquantile))
       # freq$VarNames = c(
@@ -731,9 +749,9 @@ if(2 %in% steps) {
       
       
       
-      hist(test$sumquantile)
-      hist(test$quantiledxymeans)
-      hist(test$quantileFST)
+      #hist(test$sumquantile)
+      #hist(test$quantiledxymeans)
+      #hist(test$quantileFST)
       
       ## 9  = 1+8  = fst not outlier, dxy not outlier
       ## 10 = 2+8  = fst low,         dxy not outlier
@@ -862,6 +880,115 @@ if(2 %in% steps) {
              pch = 16)
       
       dev.off()
+      
+      
+      ## sweeps including the burgundy ones 
+      sweepexpfile = paste(
+        "/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ANALYSIS/DXY/",
+        spp,
+        "_sweeps_expanded_ALL.png",
+        sep = ""
+      )
+      
+      png(sweepexpfile)
+            par(mar = c(4.5, 4, 0, 0),
+          mfrow = c(3, 1))
+      
+      palette(c("grey","darkgrey"))
+      plot(
+        as.numeric(test[, "Fst"]),
+        col = as.numeric(as.factor(test[,"chr"])),
+        cex = 0.2,
+        ylab = "Fst",
+        type = "p"
+      )
+      palette(c(rgb(0, 0, 0, 0), "cyan"))
+      points(as.numeric(test[, "Fst"]),
+             col = 1 + as.numeric(test[, "sumquantile"] == 36),
+             pch = 16)
+      
+      palette(c("grey","darkgrey"))
+      plot(
+        as.numeric(test[, "Fst"]),
+        col = as.numeric(as.factor(test[,"chr"])),
+        cex = 0.2,
+        ylab = "Fst",
+        type = "p"
+      )
+      palette(c(rgb(0, 0, 0, 0), "magenta"))
+      points(as.numeric(test[, "Fst"]),
+             col = 1 + as.numeric(test[, "sumquantile"] == 20),
+             pch = 16)
+      
+      palette(c("grey","darkgrey"))
+      plot(
+        as.numeric(test[, "Fst"]),
+        col = as.numeric(as.factor(test[,"chr"])),
+        cex = 0.2,
+        ylab = "Fst",
+        type = "p"
+      )
+      palette(c(rgb(0, 0, 0, 0), "darkred"))
+      points(as.numeric(test[, "Fst"]),
+             col = 1 + as.numeric(test[, "sumquantile"] == 12),
+             pch = 16)
+      
+      dev.off()
+      
+      
+      ## sweeps with dxy
+      sweepdxyfile = paste(
+        "/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ANALYSIS/DXY/",
+        spp,
+        "_sweeps_dxy_ALL.png",
+        sep = ""
+      )
+      
+      png(sweepdxyfile)
+      par(mar = c(4.5, 4, 0, 0),
+          mfrow = c(3, 1))
+      
+      palette(c("grey","darkgrey"))
+      plot(
+        as.numeric(test[, "dxymeans"]),
+        col = as.numeric(as.factor(test[,"chr"])),
+        cex = 0.2,
+        ylab = "DXY",
+        type = "p"
+      )
+      palette(c(rgb(0, 0, 0, 0), "cyan"))
+      points(as.numeric(test[, "dxymeans"]),
+             col = 1 + as.numeric(test[, "sumquantile"] == 36),
+             pch = 16)
+      
+      palette(c("grey","darkgrey"))
+      plot(
+        as.numeric(test[, "dxymeans"]),
+        col = as.numeric(as.factor(test[,"chr"])),
+        cex = 0.2,
+        ylab = "Dxy",
+        type = "p"
+      )
+      palette(c(rgb(0, 0, 0, 0), "magenta"))
+      points(as.numeric(test[, "dxymeans"]),
+             col = 1 + as.numeric(test[, "sumquantile"] == 20),
+             pch = 16)
+      
+      palette(c("grey","darkgrey"))
+      plot(
+        as.numeric(test[, "dxymeans"]),
+        col = as.numeric(as.factor(test[,"chr"])),
+        cex = 0.2,
+        ylab = "Dxy",
+        type = "p"
+      )
+      palette(c(rgb(0, 0, 0, 0), "darkred"))
+      points(as.numeric(test[, "dxymeans"]),
+             col = 1 + as.numeric(test[, "sumquantile"] == 12),
+             pch = 16)
+      
+      dev.off()
+      
       
       
     }

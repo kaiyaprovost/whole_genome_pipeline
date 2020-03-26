@@ -27,6 +27,49 @@ pcadata = cbind(good_notnum,pca$x)
 plot(pcadata$PC1,pcadata$PC2,col=as.numeric(as.factor(pcadata$demog))-1,
      pch=as.numeric(as.factor(pcadata$species)))
 
+par(mfrow=c(3,4))
+for(spp in unique(pcadata$species)){
+  toplot = pcadata[pcadata$species==spp,]
+  plot(pcadata$PC1,pcadata$PC2,main=spp,col="lightgrey")
+  points(toplot$PC1,toplot$PC2,col="red")
+}
+
+palette(c("white","red","orange","goldenrod","green",
+          "cyan","blue","magenta","white","purple",
+          "brown","black","grey","darkred"))
+
+emponly = pcadata[pcadata$species!="simulation",]
+emponly = emponly[emponly$species!="",]
+plot(emponly$PC1,emponly$PC2,col=as.numeric(as.factor(emponly$species)),
+     pch=as.numeric(as.factor(emponly$species)))
+legend("topleft",legend=unique(as.factor(emponly$species)),col=unique(as.numeric(as.factor(emponly$species))),
+       pch=unique(as.numeric(as.factor(emponly$species))),
+       bty="n",cex=0.75)
+
+par(mfrow=c(3,4))
+for(spp in unique(emponly$species)){
+  toplot = emponly[emponly$species==spp,]
+  plot(emponly$PC1,emponly$PC2,main=spp,col="lightgrey")
+  points(toplot$PC1,toplot$PC2,col="red")
+}
+
+
+good_for_emp = emps[,c(1:37)]
+good_for_emp = good_for_emp[complete.cases(good_for_emp),]
+good_emp = good_for_emp[,c(8:12,15:37)]
+good_empnot = good_for_emp[,c(1:7,13:14)]
+pcaemp = prcomp(good_emp,center=T,scale. = T)
+summary(pcaemp)
+pcadataemp = cbind(good_empnot,pcaemp$x)
+plot(pcadataemp$PC1,pcadataemp$PC2,col=as.numeric(as.factor(pcadataemp$species)),
+     pch=as.numeric(as.factor(pcadataemp$species)),
+     ylim=c(-7,10),xlim=c(-10,10))
+legend("topleft",legend=unique(as.factor(pcadataemp$species)),
+       col=unique(as.numeric(as.factor(pcadataemp$species))),
+       pch=unique(as.numeric(as.factor(pcadataemp$species))),
+       bty="n",cex=0.75)
+
+
 #####
 
 trimmed = "/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ANALYSIS/called_geno/merged_empirical_stats_same_cols_TRIMMED_extra.txt"
