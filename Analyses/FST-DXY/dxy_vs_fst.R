@@ -2,14 +2,11 @@
 
 library(AICcmodavg)
 
-steps=c(1:2) ## up to 11
+steps=c(1:11) ## up to 11
 
 setwd("/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ANALYSIS/DXY/")
 
-specieslist = c("bil",#"fla",
-                "fus","cur",  "bru",  "cri",  "mel","nit",
-                "sin"#,  "bel"
-)
+specieslist = sort(c("bil","fla","fus","cur","bru","cri","mel","nit","sin","bel"))
 size = 100
 
 makedxyplot = function(speciesname,variable1num=4,variable2num=10,colvarnum=19,dat=bigplot,plotsize="SMALL",
@@ -164,7 +161,7 @@ if(1 %in% steps) {
       print(spp)
       
       if (spp == "bel") {
-        fullspecies = "Vireo_bellii_OLD"
+        fullspecies = "Vireo_bellii-NOWEIRD"
       } else if (spp == "bil") {
         fullspecies = "Amphispiza_bilineata"
       } else if (spp == "bru") {
@@ -174,7 +171,7 @@ if(1 %in% steps) {
       } else if (spp == "cur") {
         fullspecies = "Toxostoma_curvirostre"
       } else if (spp == "fla") {
-        fullspecies = "Auriparus_flaviceps"
+        fullspecies = "Auriparus_flaviceps-NOWEIRD22"
       } else if (spp == "fus") {
         fullspecies = "Melozone_fusca"
       } else if (spp == "mel") {
@@ -189,7 +186,7 @@ if(1 %in% steps) {
       dxyfile = paste(
         #"/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ANALYSIS/DXY/textfiles/scaff_",
         #size,"/",spp,"_SON_Dxy_WINDOWS_",size,".txt",
-        "/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ANALYSIS/DXY/",spp,"_4_SON_Dxy_WINDOWS_chrfix_1-ALL.txt",
+        "/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ANALYSIS/DXY/textfiles/scaff_chromosomes/",spp,"_4_SON_Dxy_WINDOWS_chrfix_1-ALL.txt",
         sep = "")
       fstfile = paste(
         "/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ANALYSIS/FST/3.slidingWindowJobs/SON_CHI_",
@@ -242,8 +239,8 @@ if(1 %in% steps) {
       dxy = read.csv(dxyfile, sep = " ",row.names = NULL)
       dxy=dxy[,c("scafs","starts","means","stdvs","snps","sums")]
       
-      newscafs=sapply(as.character(dxy$scafs),FUN=function(x){strsplit(x,"_")[[1]][4]},simplify = T)
-      dxy$scafs=newscafs    
+      #newscafs=sapply(as.character(dxy$scafs),FUN=function(x){strsplit(x,"_")[[1]][4]},simplify = T)
+      #dxy$scafs=newscafs    
       
       lines = readLines(fstfile)
       end = substr(lines[1],
@@ -266,6 +263,8 @@ if(1 %in% steps) {
       
       if (length(intersect(dxy$chr,fst$chr)) == 0) {
         print("CHROMS DO NOT MATCH")
+        print(unique(dxy$chr))
+        print(unique(fst$chr))
       } else {
         
         
@@ -274,7 +273,7 @@ if(1 %in% steps) {
         both_dxyfst = merge(dxy, fst, by = c("chr", "midPos"))
         if (nrow(both_dxyfst) <= 0) {
           dxy$midPos = dxy$starts + 59999 ## won't work now? 
-          both_dxyfst = merge(dxy, fst, by = c("chr", "midPos"))
+          both_dxyfst = merge(dxy, fst, by = c("chr", "midPos"),all=T)
         }
         both_dxyfst$dxy_div_fst = both_dxyfst$dxymeans / both_dxyfst$Fst
         both_dxyfst$fst_div_dxy = both_dxyfst$Fst / both_dxyfst$dxymeans ## USE THIS?
@@ -289,208 +288,229 @@ if(1 %in% steps) {
         both_dxyfst$chr = factor(both_dxyfst$chr , levels = orderneeded)
         both_dxyfst = (both_dxyfst[order(both_dxyfst$chr, both_dxyfst$midPos),])
         
-        print("png0")
-        png(pngfile0, width = 700, height = 700)
-        par(
-          bg = NA,
-          col.axis = "white",
-          fg = "white",
-          col.lab = "white",
-          col.main = "white"
-        )
-        plot(
-          both_dxyfst$Fst,
-          both_dxyfst$dxymeans,
-          ylim = c(0, 1),
-          xlim = c(0, 1),
-          main = paste(spp, "DXY vs FST")
-        )
-        abline(a = 0, b = 1, col = "red")
-        dev.off()
-        
-        print("png1")
-        png(pngfile1, width = 700, height = 350)
-        par(
-          bg = NA,
-          col.axis = "white",
-          fg = "white",
-          col.lab = "white",
-          col.main = "white"
-        )
-        palette(
-          c(
-            "red",
-            "cyan",
-            "goldenrod",
-            "green",
-            "blue",
-            "purple",
-            "blue",
-            "black",
-            "brown",
-            "magenta"
+        print("png0"); {
+          png(pngfile0, width = 700, height = 700)
+          par(
+            bg = NA,
+            col.axis = "white",
+            fg = "white",
+            col.lab = "white",
+            col.main = "white"
           )
-        )
-        plot(
-          as.numeric(both_dxyfst$dxy_div_fst),
-          col = as.numeric(as.factor(both_dxyfst$chr)),
-          cex = 0.2,
-          main = spp,
-          xlab = "Window (Scaffold)",
-          ylab = "DXY div FST"
-        )
-        dev.off()
-        
-        print("png2")
-        png(pngfile2, width = 700, height = 350)
-        par(
-          bg = NA,
-          col.axis = "white",
-          fg = "white",
-          col.lab = "white",
-          col.main = "white"
-        )
-        palette(
-          c(
-            "red",
-            "cyan",
-            "goldenrod",
-            "green",
-            "blue",
-            "purple",
-            "blue",
-            "black",
-            "brown",
-            "magenta"
+          plot(
+            both_dxyfst$Fst,
+            both_dxyfst$dxymeans,
+            ylim = c(0, 1),
+            xlim = c(0, 1),
+            main = paste(spp, "DXY vs FST")
           )
-        )
-        plot(
-          as.numeric(both_dxyfst$fst_div_dxy),
-          col = as.numeric(as.factor(both_dxyfst$chr)),
-          cex = 0.2,
-          main = spp,
-          xlab = "Window (Scaffold)",
-          ylab = "FST div DXY"
-        )
-        dev.off()
+          abline(a = 0, b = 1, col = "red")
+          dev.off() }
         
-        print("png3")
-        png(pngfile3, width = 700, height = 700)
-        par(
-          bg = NA,
-          col.axis = "white",
-          fg = "white",
-          col.lab = "white",
-          col.main = "white"
-        )
-        par(mfrow = c(4, 1))
-        palette(
-          c(
-            "red",
-            "cyan",
-            "goldenrod",
-            "green",
-            "blue",
-            "purple",
-            "blue",
-            "black",
-            "brown",
-            "magenta"
+        print("png1");
+        if (sum(!(is.na(as.numeric(both_dxyfst$dxy_div_fst)))) > 0) {
+          png(pngfile1, width = 700, height = 350)
+          par(
+            bg = NA,
+            col.axis = "white",
+            fg = "white",
+            col.lab = "white",
+            col.main = "white"
           )
-        )
-        plot(
-          as.numeric(both_dxyfst$dxymeans),
-          col = as.numeric(as.factor(both_dxyfst$chr)),
-          cex = 0.2,
-          main = spp,
-          xlab = "Window (Scaffold)",
-          ylab = "DXY only",
-          ylim = c(0, 1)
-        )
-        plot(
-          as.numeric(both_dxyfst$Fst),
-          col = as.numeric(as.factor(both_dxyfst$chr)),
-          cex = 0.2,
-          main = spp,
-          xlab = "Window (Scaffold)",
-          ylab = "FST only",
-          ylim = c(0, 1)
-        )
-        plot(
-          as.numeric(both_dxyfst$dxy_div_fst),
-          col = as.numeric(as.factor(both_dxyfst$chr)),
-          cex = 0.2,
-          main = spp,
-          xlab = "Window (Scaffold)",
-          ylab = "DXY div FST"
-        )
-        plot(
-          as.numeric(both_dxyfst$fst_div_dxy),
-          col = as.numeric(as.factor(both_dxyfst$chr)),
-          cex = 0.2,
-          main = spp,
-          xlab = "Window (Scaffold)",
-          ylab = "FST div DXY"
-        )
-        dev.off()
+          palette(
+            c(
+              "red",
+              "cyan",
+              "goldenrod",
+              "green",
+              "blue",
+              "purple",
+              "blue",
+              "black",
+              "brown",
+              "magenta"
+            )
+          )
+          plot(
+            as.numeric(both_dxyfst$dxy_div_fst),
+            col = as.numeric(as.factor(both_dxyfst$chr)),
+            cex = 0.2,
+            main = spp,
+            xlab = "Window (Scaffold)",
+            ylab = "DXY div FST"
+          )
+          dev.off()
+        }
         
-        print("png4")
-        png(pngfile4, width = 700, height = 700)
-        par(mfrow = c(4, 1))
-        par(
-          bg = NA,
-          col.axis = "white",
-          fg = "white",
-          col.lab = "white",
-          col.main = "white"
-        )
-        palette(
-          c(
-            "red",
-            "cyan",
-            "goldenrod",
-            "green",
-            "blue",
-            "purple",
-            "blue",
-            "black",
-            "brown",
-            "magenta"
+        print("png2"); 
+        if (sum(!(is.na(as.numeric(both_dxyfst$fst_div_dxy)))) > 0) {
+          
+          png(pngfile2, width = 700, height = 350)
+          par(
+            bg = NA,
+            col.axis = "white",
+            fg = "white",
+            col.lab = "white",
+            col.main = "white"
           )
-        )
-        plot(
-          as.numeric(both_dxyfst$sums),
-          col = as.numeric(as.factor(both_dxyfst$chr)),
-          cex = 0.2,
-          main = spp,
-          xlab = "Window (Scaffold)",
-          ylab = "DXYsums only"
-        )
-        plot(
-          as.numeric(both_dxyfst$Fst),
-          col = as.numeric(as.factor(both_dxyfst$chr)),
-          cex = 0.2,
-          main = spp,
-          xlab = "Window (Scaffold)",
-          ylab = "FST only",
-          ylim = c(0, 1)
-        )
-        plot(
-          as.numeric(both_dxyfst$dxysum_div_fst),
-          col = as.numeric(as.factor(both_dxyfst$chr)),
-          cex = 0.2,
-          main = spp,
-          xlab = "Window (Scaffold)",
-          ylab = "DXYsums div FST"
-        )
-        plot(
-          as.numeric(both_dxyfst$fst_div_dxysum),
-          col = as.numeric(as.factor(both_dxyfst$chr)),
-          cex = 0.2,
-          main = spp,
-          xlab = "Window (Scaffold)",
-          ylab = "FST div DXYsums"
-        )
+          palette(
+            c(
+              "red",
+              "cyan",
+              "goldenrod",
+              "green",
+              "blue",
+              "purple",
+              "blue",
+              "black",
+              "brown",
+              "magenta"
+            )
+          )
+          plot(
+            as.numeric(both_dxyfst$fst_div_dxy),
+            col = as.numeric(as.factor(both_dxyfst$chr)),
+            cex = 0.2,
+            main = spp,
+            xlab = "Window (Scaffold)",
+            ylab = "FST div DXY"
+          )
+          dev.off()
+        }
+        
+        print("png3"); {
+          png(pngfile3, width = 700, height = 700)
+          par(
+            bg = NA,
+            col.axis = "white",
+            fg = "white",
+            col.lab = "white",
+            col.main = "white"
+          )
+          
+          if (sum(!(is.na(as.numeric(both_dxyfst$fst_div_dxy)))) > 0) {
+            par(mfrow = c(4, 1)) 
+          } else {
+            par(mfrow = c(2, 1)) 
+          }
+          palette(
+            c(
+              "red",
+              "cyan",
+              "goldenrod",
+              "green",
+              "blue",
+              "purple",
+              "blue",
+              "black",
+              "brown",
+              "magenta"
+            )
+          )
+          plot(
+            as.numeric(both_dxyfst$dxymeans),
+            col = as.numeric(as.factor(both_dxyfst$chr)),
+            cex = 0.2,
+            main = spp,
+            xlab = "Window (Scaffold)",
+            #ylim = c(0, 1),
+            ylab = "DXY only"
+            
+          )
+          plot(
+            as.numeric(both_dxyfst$Fst),
+            col = as.numeric(as.factor(both_dxyfst$chr)),
+            cex = 0.2,
+            main = spp,
+            xlab = "Window (Scaffold)",
+            #ylim = c(0, 1),
+            ylab = "FST only"
+          )
+          if (sum(!(is.na(as.numeric(both_dxyfst$fst_div_dxy)))) > 0) {
+            plot(
+              as.numeric(both_dxyfst$dxy_div_fst),
+              col = as.numeric(as.factor(both_dxyfst$chr)),
+              cex = 0.2,
+              main = spp,
+              xlab = "Window (Scaffold)",
+              ylab = "DXY div FST"
+            )
+            plot(
+              as.numeric(both_dxyfst$fst_div_dxy),
+              col = as.numeric(as.factor(both_dxyfst$chr)),
+              cex = 0.2,
+              main = spp,
+              xlab = "Window (Scaffold)",
+              ylab = "FST div DXY"
+            )
+          }
+          dev.off()
+        }
+        
+        print("png4"); {
+          png(pngfile4, width = 700, height = 700)
+          if (sum(!(is.na(as.numeric(both_dxyfst$fst_div_dxysum)))) > 0) {
+            par(mfrow = c(4, 1)) 
+          } else {
+            par(mfrow = c(2, 1)) 
+          }
+          par(
+            bg = NA,
+            col.axis = "white",
+            fg = "white",
+            col.lab = "white",
+            col.main = "white"
+          )
+          palette(
+            c(
+              "red",
+              "cyan",
+              "goldenrod",
+              "green",
+              "blue",
+              "purple",
+              "blue",
+              "black",
+              "brown",
+              "magenta"
+            )
+          )
+          plot(
+            as.numeric(both_dxyfst$sums),
+            col = as.numeric(as.factor(both_dxyfst$chr)),
+            cex = 0.2,
+            main = spp,
+            xlab = "Window (Scaffold)",
+            ylab = "DXYsums only"
+          )
+          plot(
+            as.numeric(both_dxyfst$Fst),
+            col = as.numeric(as.factor(both_dxyfst$chr)),
+            cex = 0.2,
+            main = spp,
+            xlab = "Window (Scaffold)",
+            #ylim = c(0, 1),
+            ylab = "FST only"
+          )
+          if (sum(!(is.na(as.numeric(both_dxyfst$fst_div_dxysum)))) > 0) {
+            plot(
+              as.numeric(both_dxyfst$dxysum_div_fst),
+              col = as.numeric(as.factor(both_dxyfst$chr)),
+              cex = 0.2,
+              main = spp,
+              xlab = "Window (Scaffold)",
+              ylab = "DXYsums div FST"
+            )
+            plot(
+              as.numeric(both_dxyfst$fst_div_dxysum),
+              col = as.numeric(as.factor(both_dxyfst$chr)),
+              cex = 0.2,
+              main = spp,
+              xlab = "Window (Scaffold)",
+              ylab = "FST div DXYsums"
+            )
+          }
+        }
         dev.off()
         
         #plot(both_dxyfst$dxymeans,ylim=c(0,1))
@@ -515,17 +535,17 @@ if(2 %in% steps) {
       )
       #testfile = "/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ANALYSIS/DXY/sin_bothFST_DXY_1.txt"
       test = read.csv(testfile, sep = " ")
-      test = test[complete.cases(test), ]
+      #test = test[complete.cases(test), ]
       summary(test)
-      quan1 = quantile(test$Fst, 0.05)
-      quan2 = quantile(test$Fst, 0.95)
+      quan1 = quantile(test$Fst, 0.05,na.rm=T)
+      quan2 = quantile(test$Fst, 0.95,na.rm=T)
       test$quantileFST = 1 ## middle
       test$quantileFST[test$Fst <= quan1] = 2 ## bottom
       test$quantileFST[test$Fst >= quan2] = 4 ## top
       #plot(test$Fst,col=as.numeric(test$quantileFST),pch=as.numeric(test$quantileFST))
       
-      quan3 = quantile(test$dxymeans, 0.05)
-      quan4 = quantile(test$dxymeans, 0.95)
+      quan3 = quantile(test$dxymeans, 0.05,na.rm=T)
+      quan4 = quantile(test$dxymeans, 0.95,na.rm=T)
       test$quantiledxymeans = 8
       test$quantiledxymeans[test$dxymeans <= quan3] = 16
       test$quantiledxymeans[test$dxymeans >= quan4] = 32
@@ -651,20 +671,20 @@ if(2 %in% steps) {
       
       
       png(paste("/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ANALYSIS/DXY/",
-        spp,"_fstVSdxy_panelquantile_legible.png",sep = ""),
-        width = 700,height = 700)
+                spp,"_fstVSdxy_panelquantile_legible.png",sep = ""),
+          width = 700,height = 700)
       palette(c("black",
-          "red",          "darkred",
-          "blue",          "purple",
-          "magenta",          "darkblue",
-          "orange",          "cyan"        )      )
+                "red",          "darkred",
+                "blue",          "purple",
+                "magenta",          "darkblue",
+                "orange",          "cyan"        )      )
       par(mfrow = c(2, 1))
       par(mar=c(3,4,0,0))
       plot(test$dxymeans,col = as.numeric(as.factor(test$chr)),
-        pch = as.numeric(test$quancolor),main = "",
-        ylab="DXY",xlab="")
+           pch = as.numeric(test$quancolor),main = "",
+           ylab="DXY",xlab="")
       plot(test$Fst, col = as.numeric(as.factor(test$chr)),
-        pch = as.numeric(test$quancolor),main = "",ylab="FST",xlab="Window\n")
+           pch = as.numeric(test$quancolor),main = "",ylab="FST",xlab="Window\n")
       dev.off()
       
       
@@ -891,7 +911,7 @@ if(2 %in% steps) {
       )
       
       png(sweepexpfile)
-            par(mar = c(4.5, 4, 0, 0),
+      par(mar = c(4.5, 4, 0, 0),
           mfrow = c(3, 1))
       
       palette(c("grey","darkgrey"))
@@ -1140,10 +1160,10 @@ if(5 %in% steps) {
     
     summary(bigplot$dxymeans)
     
-    quan1 = quantile(bigplot$Fst, 0.05)
-    quan2 = quantile(bigplot$Fst, 0.95)
-    quan3 = quantile(bigplot$dxymeans, 0.05)
-    quan4 = quantile(bigplot$dxymeans, 0.95)
+    quan1 = quantile(bigplot$Fst, 0.05,na.rm=T)
+    quan2 = quantile(bigplot$Fst, 0.95,na.rm=T)
+    quan3 = quantile(bigplot$dxymeans, 0.05,na.rm=T)
+    quan4 = quantile(bigplot$dxymeans, 0.95,na.rm=T)
     
     
     morphcolors = rbind(
@@ -1173,7 +1193,7 @@ if(5 %in% steps) {
       col.main = "white"
     )
     plot(bigplot$dxymeans, bigplot$Fst#,xlim=c(0,1),ylim=c(0,1)
-         )
+    )
     dev.off()
     
     bigplot$globalquantileFST = 1 ## middle
@@ -1192,7 +1212,7 @@ if(5 %in% steps) {
       col.main = "white"
     )
     plot(bigplot$dxymeans, bigplot$Fst, col = as.numeric(bigplot$quancolor)#,xlim=c(0,1),ylim=c(0,1)
-         )
+    )
     dev.off()
     
     bigplot$globalsumquantile = bigplot$globalquantiledxymeans + bigplot$globalquantileFST
@@ -1216,7 +1236,7 @@ if(5 %in% steps) {
       col.main = "white"
     )
     plot(bigplot$dxymeans, bigplot$Fst, col = as.numeric(bigplot$quancolor)#,xlim=c(0,1),ylim=c(0,1)
-         )
+    )
     dev.off()
     
     png("bigplot_globalcolor_biglim.png",width=1200)
@@ -1230,7 +1250,7 @@ if(5 %in% steps) {
     plot(bigplot$dxymeans,
          bigplot$Fst,
          col = as.numeric(bigplot$globalquancolor)#,xlim=c(0,1),ylim=c(0,1)
-         )
+    )
     dev.off()
     
     ## 9  = 1+8  = fst not outlier, dxy not outlier
@@ -1252,7 +1272,7 @@ if(5 %in% steps) {
       col.main = "white"
     )
     plot(bigplot$sumquantile, bigplot$globalsumquantile#,xlim=c(0,1),ylim=c(0,1)
-         )
+    )
     dev.off()
     
     palette(c("white", "pink"))
@@ -1351,6 +1371,7 @@ if(5 %in% steps) {
       border = as.numeric(morphcolors[, 4]) + 1
     )
     dev.off()
+    
     png("bigplot_boxplotfst_islands_residualmetric.png",width=1200)
     par(
       bg = NA,
@@ -1469,6 +1490,7 @@ if(5 %in% steps) {
     dev.off()
     
     
+    if(length(bigplot$dxymeans[bigplot$globalsumquantile == 36])>0){
     png("bigplot_boxplotdxy_globalislands.png",width=1200)
     par(
       bg = NA,
@@ -1484,6 +1506,7 @@ if(5 %in% steps) {
       col = as.numeric(morphcolors[, 6]) + 1
     )
     dev.off()
+    }
     
     png("bigplot_boxplotdxy_globalnotislands.png",width=1200)
     par(
@@ -1501,7 +1524,7 @@ if(5 %in% steps) {
     )
     dev.off()
     
-    
+    if(length(bigplot$Fst[bigplot$globalsumquantile == 36])>0){
     png("bigplot_boxplotfst_globalislands.png",width=1200)
     par(
       bg = NA,
@@ -1517,6 +1540,7 @@ if(5 %in% steps) {
       col = as.numeric(morphcolors[, 6]) + 1
     )
     dev.off()
+    }
     
     png("bigplot_boxplotfst_globalnotislands.png",width=1200)
     par(
@@ -1534,10 +1558,17 @@ if(5 %in% steps) {
     )
     dev.off()
     
-    write.csv(bigplot, "bigplot.txt", row.names = F)
+    write.csv(bigplot, "/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ANALYSIS/DXY/textfiles/bigplot.txt", row.names = F)
+    
+    
+    
+  }
+}
+if(6 %in% steps) {
+  print("STEP 6 bigplot pngs"); {
     
     bigplot = read.csv(
-      "/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ANALYSIS/DXY/textfiles/bigplot2.txt"
+      "/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ANALYSIS/DXY/textfiles/bigplot.txt"
     )
     
     nummorph = c(10,
@@ -1551,10 +1582,6 @@ if(5 %in% steps) {
                  #3,
                  4)
     
-  }
-}
-if(6 %in% steps) {
-  print("STEP 6 bigplot pngs"); {
     tab = (table(bigplot$sumquantile, bigplot$species))
     sppsums = colSums(tab)
     div = t(t(tab) / sppsums * 100)
@@ -3052,17 +3079,21 @@ if(9 %in% steps) {
 if(10 %in% steps) {
   print("STEP 10 -- 5 ST DEVS"); {
     
-    #bigplot = read.csv("/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ANALYSIS/DXY/textfiles/bigplot2.txt")
+    #bigplot = read.csv("/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ANALYSIS/DXY/textfiles/bigplot.txt")
     names(bigplot)
+    
+    var1num=which(names(bigplot)=="dxymeans")
+    var2num=which(names(bigplot)=="Fst")
+    varcol=which(names(bigplot)=="quancolor")
     
     for (spp in specieslist) {
       print(spp)
       
-      makedxyplot(speciesname=spp,variable1num=5,variable2num=11,colvarnum=19,dat=bigplot,plotsize="SMALL",
+      makedxyplot(speciesname=spp,variable1num=var1num,variable2num=var2num,colvarnum=varcol,dat=bigplot,plotsize="SMALL",
                   lowquan1=0.05,highquan1=0.95,lowquan2=0.05,highquan2=0.95)
       for (i in 1:5) {
         print(i)
-        makedxyplotSTDEV(speciesname=spp,variable1num=5,variable2num=11,colvarnum=19,dat=bigplot,plotsize="SMALL",numsd=i)
+        makedxyplotSTDEV(speciesname=spp,variable1num=var1num,variable2num=var2num,colvarnum=varcol,dat=bigplot,plotsize="SMALL",numsd=i)
       }  
     }
     
@@ -3071,9 +3102,290 @@ if(10 %in% steps) {
 if(11 %in% steps) {
   print("STEP 11 -- DXYPLOTS"); {
     for (spp in specieslist) {
+      
+      var1num=which(names(bigplot)=="dxymeans")
+      var2num=which(names(bigplot)=="Fst")
+      varcol=which(names(bigplot)=="quancolor")
+      
       print(spp)
-      makedxyplot(speciesname=spp,variable1num=4,variable2num=10,colvarnum=19,dat=bigplot,plotsize="LARGE")
-      makedxyplot(speciesname=spp,variable1num=4,variable2num=10,colvarnum=19,dat=bigplot,plotsize="SMALL")
+      makedxyplot(speciesname=spp,variable1num=var1num,variable2num=var2num,colvarnum=varcol,dat=bigplot,plotsize="LARGE")
+      makedxyplot(speciesname=spp,variable1num=var1num,variable2num=var2num,colvarnum=varcol,dat=bigplot,plotsize="SMALL")
     }
   }
 }
+
+## overlaying bigplots over one another
+bigplot=read.table("/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ANALYSIS/DXY/textfiles/bigplot.txt",
+                   sep=",",header=T)
+png("testbigplotoverlay.png",height=1000,width=800)
+bigplot = bigplot[order(bigplot$chr,bigplot$starts),]
+bigplot$chrpos = paste(bigplot$chr,bigplot$starts)
+bigplot$chrpos = as.numeric(as.factor(bigplot$chrpos))
+par(mfrow=c(10,1),mar=c(0,3,0,0))
+for (i in 1:length(unique(bigplot$species))){
+  spp=sort(unique(bigplot$species))[i]
+  temp = bigplot[bigplot$species==spp,]
+  temp$zfst = (temp$Fst-mean(temp$Fst,na.rm=T))/sd(temp$Fst,na.rm=T)
+  print(max(temp$zfst,na.rm=T))
+  print(min(temp$zfst,na.rm=T))
+  plot(temp$chrpos,temp$zfst,col=as.numeric(as.factor(temp$chr)),pch=16,ylim=c(-15,75),xlim=c(0,90000),
+       cex=0.5)
+}
+dev.off()
+
+png("testbigplotoverlaydxy.png",height=1000,width=800)
+bigplot = bigplot[order(bigplot$chr,bigplot$starts),]
+bigplot$chrpos = paste(bigplot$chr,bigplot$starts)
+bigplot$chrpos = as.numeric(as.factor(bigplot$chrpos))
+par(mfrow=c(10,1),mar=c(0,3,0,0))
+for (i in 1:length(unique(bigplot$species))){
+  spp=sort(unique(bigplot$species))[i]
+  temp = bigplot[bigplot$species==spp,]
+  temp$zfst = (temp$dxymeans-mean(temp$dxymeans,na.rm=T))/sd(temp$dxymeans,na.rm=T)
+  print(max(temp$zfst,na.rm=T))
+  print(min(temp$zfst,na.rm=T))
+  plot(temp$chrpos,temp$zfst,col=as.numeric(as.factor(temp$chr)),pch=16,ylim=c(-15,75),xlim=c(0,90000),
+       cex=0.5)
+}
+dev.off()
+
+## combine by species  -- fst, dxy, nsites
+bigplot = bigplot[order(bigplot$chr,bigplot$starts),]
+bigplot$chrpos = paste(bigplot$chr,bigplot$starts)
+bigplot$chrpos = as.numeric(as.factor(bigplot$chrpos))
+btemp=c()
+for (i in 1:length(unique(bigplot$species))){
+  spp=sort(unique(bigplot$species))[i]
+  temp = bigplot[bigplot$species==spp,]
+  temp=temp[,c("chr","starts","dxymeans","Fst","Nsites","chrpos")]
+  colnames(temp)[3:5] = paste(colnames(temp)[3:5],spp,sep=".")
+  if(is.null(btemp)){
+    btemp=temp
+  } else {
+    btemp=merge(btemp,temp,by=c("chr","starts","chrpos"),all=T)
+  }
+}
+
+dim(btemp)
+
+dxys=c(seq(4,33,by=3))
+fsts=c(seq(5,33,by=3))
+nsit=c(seq(6,33,by=3))
+
+dcor=cor(btemp[,dxys],use="pairwise.complete.obs")
+fcor=cor(btemp[,fsts],use="pairwise.complete.obs")
+ncor=cor(btemp[,nsit],use="pairwise.complete.obs")
+
+listspp=unlist(strsplit(colnames(dcor),"\\."))[seq(2,length(colnames(dcor))*2,2)]
+colnames(dcor)=listspp
+rownames(dcor)=listspp
+listspp=unlist(strsplit(colnames(fcor),"\\."))[seq(2,length(colnames(fcor))*2,2)]
+colnames(fcor)=listspp
+rownames(fcor)=listspp
+listspp=unlist(strsplit(colnames(ncor),"\\."))[seq(2,length(colnames(ncor))*2,2)]
+colnames(ncor)=listspp
+rownames(ncor)=listspp
+
+pdf("dxy_fst_nsites_corr_fullgenome.pdf",height=1.5,width=3)
+par(mfrow=c(1,3))
+corrplot::corrplot(dcor,
+                   method="ellipse",diag=F,order="alphabet",
+                   tl.cex=0.5,cl.cex=0.5,number.cex=0.5,pch.cex=0.5,
+                   title="\ndxy",
+                   type="upper",
+                   mar=c(0,0,0,0))
+corrplot::corrplot(fcor,
+                   method="ellipse",diag=F,order="alphabet",
+                   tl.cex=0.5,cl.cex=0.5,number.cex=0.5,pch.cex=0.5,
+                   title="\nfsts",
+                   type="upper",
+                   mar=c(0,0,0,0))
+corrplot::corrplot(ncor,
+                   method="ellipse",diag=F,order="alphabet",
+                   tl.cex=0.5,cl.cex=0.5,number.cex=0.5,pch.cex=0.5,
+                   title="\nnsites",
+                   type="upper",
+                   mar=c(0,0,0,0))
+dev.off()
+
+
+corrplot::corrplot(cor(btemp[,dxys],use="pairwise.complete.obs"),
+                   method="number",diag=T,order="hclust")
+## sin and bel dxys are 100% correlated -- probably wrong
+corrplot::corrplot(cor(btemp[,fsts],use="pairwise.complete.obs"),
+                   method="number",diag=T,order="hclust")
+corrplot::corrplot(cor(btemp[,nsit],use="pairwise.complete.obs"),
+                   method="number",diag=T,order="hclust")
+
+
+pdf("dxy_corrs_chroms.pdf",height=5,width=8)
+par(mfrow=c(4,7))
+for(i in 1:length(unique(btemp$chr))) {
+  print(i)
+  thischr=unique(btemp$chr)[i]
+  thisset=btemp[btemp$chr==thischr,]
+  thiscorr=cor(thisset[,dxys],use="pairwise.complete.obs")
+  if(sum(is.na(thiscorr)) >= 100){
+    print("BAD")
+    frame()
+    text(0.5,0.5,paste("\ndxy chr",thischr))
+  } else {
+    
+    blank=which(rowSums(is.na(thiscorr))==10)
+    if (length(blank) > 0){
+      thiscorr=thiscorr[-blank,-blank]
+    }
+    
+    listspp=unlist(strsplit(colnames(thiscorr),"\\."))[seq(2,length(colnames(thiscorr))*2,2)]
+    colnames(thiscorr)=listspp
+    rownames(thiscorr)=listspp
+    
+  corrplot::corrplot(thiscorr,
+                     method="ellipse",diag=F,order="alphabet",
+                     tl.cex=0.5,cl.cex=0.5,number.cex=0.5,pch.cex=0.5,
+                     title=paste("\ndxy chr",thischr),
+                     type="upper",
+                     mar=c(0,0,0,0))
+  }
+}
+dev.off()
+
+pdf("fst_corrs_chroms.pdf",height=5,width=8)
+par(mfrow=c(4,7))
+for(i in 1:length(unique(btemp$chr))) {
+  print(i)
+  thischr=unique(btemp$chr)[i]
+  thisset=btemp[btemp$chr==thischr,]
+  thiscorr=cor(thisset[,fsts],use="pairwise.complete.obs")
+  if(sum(is.na(thiscorr)) >= 100){
+    print("BAD")
+    frame()
+    text(0.5,0.5,paste("\nfst chr",thischr))
+  } else {
+    
+    blank=which(rowSums(is.na(thiscorr))==10)
+    if (length(blank) > 0){
+      thiscorr=thiscorr[-blank,-blank]
+    }
+    
+    listspp=unlist(strsplit(colnames(thiscorr),"\\."))[seq(2,length(colnames(thiscorr))*2,2)]
+    colnames(thiscorr)=listspp
+    rownames(thiscorr)=listspp
+    
+    corrplot::corrplot(thiscorr,
+                       method="ellipse",diag=F,order="alphabet",
+                       tl.cex=0.5,cl.cex=0.5,number.cex=0.5,pch.cex=0.5,
+                       title=paste("\nfst chr",thischr),
+                       type="upper",
+                       mar=c(0,0,0,0))
+  }
+}
+dev.off()
+
+pdf("nsites_corrs_chroms.pdf",height=5,width=8)
+par(mfrow=c(4,7))
+for(i in 1:length(unique(btemp$chr))) {
+  print(i)
+  thischr=unique(btemp$chr)[i]
+  thisset=btemp[btemp$chr==thischr,]
+  thiscorr=cor(thisset[,nsit],use="pairwise.complete.obs")
+  if(sum(is.na(thiscorr)) >= 100){
+    print("BAD")
+    frame()
+    text(0.5,0.5,paste("\nnsites chr",thischr))
+  } else {
+    
+    blank=which(rowSums(is.na(thiscorr))==10)
+    if (length(blank) > 0){
+      thiscorr=thiscorr[-blank,-blank]
+    }
+    
+    listspp=unlist(strsplit(colnames(thiscorr),"\\."))[seq(2,length(colnames(thiscorr))*2,2)]
+    colnames(thiscorr)=listspp
+    rownames(thiscorr)=listspp
+    
+    corrplot::corrplot(thiscorr,
+                       method="ellipse",diag=F,order="alphabet",
+                       tl.cex=0.5,cl.cex=0.5,number.cex=0.5,pch.cex=0.5,
+                       title=paste("\nnsites chr",thischr),
+                       type="upper",
+                       mar=c(0,0,0,0))
+  }
+}
+dev.off()
+
+
+## combine by species -- relative dxy and fst
+## combine by species 
+bigplot = bigplot[order(bigplot$chr,bigplot$starts),]
+bigplot$chrpos = paste(bigplot$chr,bigplot$starts)
+bigplot$chrpos = as.numeric(as.factor(bigplot$chrpos))
+
+
+qtab=table(bigplot[,c("species","sumquantile")])
+ftab=table(bigplot[,c("species","quantileFST")])
+dtab=table(bigplot[,c("species","quantiledxymeans")])
+
+btemp=c()
+for (i in 1:length(unique(bigplot$species))){
+  spp=sort(unique(bigplot$species))[i]
+  temp = bigplot[bigplot$species==spp,]
+  temp=temp[,c("chr","starts","quantiledxymeans","quantileFST","sumquantile","chrpos")]
+  colnames(temp)[3:5] = paste(colnames(temp)[3:5],spp,sep=".")
+  if(is.null(btemp)){
+    btemp=temp
+  } else {
+    btemp=merge(btemp,temp,by=c("chr","starts","chrpos"),all=T)
+  }
+}
+
+dim(btemp)
+
+dxys=c(seq(4,33,by=3))
+fsts=c(seq(5,33,by=3))
+nsit=c(seq(6,33,by=3))
+
+dcor=cor(btemp[,dxys],use="pairwise.complete.obs")
+fcor=cor(btemp[,fsts],use="pairwise.complete.obs")
+ncor=cor(btemp[,nsit],use="pairwise.complete.obs")
+
+listspp=unlist(strsplit(colnames(dcor),"\\."))[seq(2,length(colnames(dcor))*2,2)]
+colnames(dcor)=listspp
+rownames(dcor)=listspp
+listspp=unlist(strsplit(colnames(fcor),"\\."))[seq(2,length(colnames(fcor))*2,2)]
+colnames(fcor)=listspp
+rownames(fcor)=listspp
+listspp=unlist(strsplit(colnames(ncor),"\\."))[seq(2,length(colnames(ncor))*2,2)]
+colnames(ncor)=listspp
+rownames(ncor)=listspp
+
+png("dxy_quan_corrplot_data.png")
+plot(btemp[,dxys])
+dev.off()
+
+pdf("quans_corr_fullgenome.pdf",height=1.5,width=3)
+par(mfrow=c(1,3))
+corrplot::corrplot(dcor,
+                   method="ellipse",diag=F,order="alphabet",
+                   tl.cex=0.5,cl.cex=0.5,number.cex=0.5,pch.cex=0.5,
+                   title="\ndxy",
+                   type="upper",
+                   mar=c(0,0,0,0))
+corrplot::corrplot(fcor,
+                   method="ellipse",diag=F,order="alphabet",
+                   tl.cex=0.5,cl.cex=0.5,number.cex=0.5,pch.cex=0.5,
+                   title="\nfsts",
+                   type="upper",
+                   mar=c(0,0,0,0))
+corrplot::corrplot(ncor,
+                   method="ellipse",diag=F,order="alphabet",
+                   tl.cex=0.5,cl.cex=0.5,number.cex=0.5,pch.cex=0.5,
+                   title="\nnsites",
+                   type="upper",
+                   mar=c(0,0,0,0))
+dev.off()
+
+
+chisq.test(qtab)
+chisq.test(ftab)
+chisq.test(dtab)

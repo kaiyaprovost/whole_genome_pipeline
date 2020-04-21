@@ -32,7 +32,7 @@ ref=/home/kprovost/nas3/genomeresequencingFromLucas/Corvus_brachyrhynchus_GCF_00
 
 ## bam_list = list of BAM files
 sonlist=/home/kprovost/nas3/ANGSD_pipeline/SON_Vireo_bellii-NOWEIRD.indlist
-chilist=/home/kprovost/nas3/ANGSD_pipeline/SON_Vireo_bellii-NOWEIRD.indlist
+chilist=/home/kprovost/nas3/ANGSD_pipeline/CHI_Vireo_bellii-NOWEIRD.indlist
 
 cd /vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/
 

@@ -2,15 +2,15 @@ path = "/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ANALYSIS/FS
 setwd(path)
 
 species = c("Amphispiza_bilineata",
-            #"Auriparus_flaviceps",
+            "Auriparus_flaviceps-NOWEIRDMIN1C",
             "Campylorhynchus_brunneicapillus",
             "Cardinalis_sinuatus",
             "Melozone_fusca",
             "Phainopepla_nitens",
             "Polioptila_melanura",
             "Toxostoma_crissale",
-            "Toxostoma_curvirostre"#,
-            #"Vireo_bellii"
+            "Toxostoma_curvirostre",
+            "Vireo_bellii-NOWEIRD"
 )
 
 
@@ -86,9 +86,11 @@ for (spp in species) {
   
   
   shortchr = substr(final$Chrom ,1,8)
-  only_chr = final[which(shortchr %in% "PseudoNC"),]
+  #only_chr = final[which(shortchr %in% "PseudoNC"),]
+  only_chr = final
   
-  chrnames = substr(unique(as.factor(only_chr$Chrom)),24,50)
+#  chrnames = substr(unique(as.factor(only_chr$Chrom)),24,50)
+  chrnames = (unique(as.factor(only_chr$Chrom)))
   
   
   png(paste(spp,"_windows_chrfix_chrs.png",sep=""),
@@ -315,24 +317,24 @@ write.table(outputdf,"fst_quantiles.txt",row.names = F,sep="\t",quote=F)
 
 #####
 
-testfile = "/Users/kprovost/Documents/Dissertation/CHAPTER2_GENOMES/ANALYSIS/FST/3.slidingWindowJobs/SON_CHI_Toxostoma_curvirostre_FST_slidingwindow.fst"
-test = read.csv(testfile,sep="\t")
-
-summary(test$Fst)
-avg = mean(test$Fst)
-stdev = sd(test$Fst)
-test$zscore = (test$Fst - avg) / stdev
-quan1 = quantile(test$Fst,0.05)
-quan2 = quantile(test$Fst,0.95)
-test$quantile = 1
-test$quantile[test$Fst <= quan1] = 2
-test$quantile[test$Fst >= quan2] = 3
-
-#hist(test$zscore)
-summary(test$zscore)
-test$abszscore = abs(test$zscore)
-#plot(test$Fst,test$zscore)
-
-#plot(test$Fst,col="black")
-plot(test$Fst,col=as.numeric(test$quantile))
+# testfile = "/Users/kprovost/Documents/Dissertation/CHAPTER2_GENOMES/ANALYSIS/FST/3.slidingWindowJobs/SON_CHI_Toxostoma_curvirostre_FST_slidingwindow.fst"
+# test = read.csv(testfile,sep="\t")
+# 
+# summary(test$Fst)
+# avg = mean(test$Fst)
+# stdev = sd(test$Fst)
+# test$zscore = (test$Fst - avg) / stdev
+# quan1 = quantile(test$Fst,0.05)
+# quan2 = quantile(test$Fst,0.95)
+# test$quantile = 1
+# test$quantile[test$Fst <= quan1] = 2
+# test$quantile[test$Fst >= quan2] = 3
+# 
+# #hist(test$zscore)
+# summary(test$zscore)
+# test$abszscore = abs(test$zscore)
+# #plot(test$Fst,test$zscore)
+# 
+# #plot(test$Fst,col="black")
+# plot(test$Fst,col=as.numeric(test$quantile))
 

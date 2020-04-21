@@ -2,6 +2,8 @@
 
 ## for i in *chrfix.txt; do echo $i; head -n 1 $i > $i.temp.txt; cat $i | grep "PseudoNC" | cut -d '_' -f 4 >> $i.temp.txt; done;
 
+listson_number=1
+
 overwrite=F
 rawonly=F
 
@@ -28,11 +30,28 @@ windowsize = 100000
 movesize = 10000
 printstatus = 10
 
-listsonfiles = list.files(path="/vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/DXY",
-                          pattern="???_*_???_4_Dxy_persite",full.names = T,recursive = T)
-x <- file.info(listsonfiles)
+#listsonfiles = list.files(path="/vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/DXY",
+#                          pattern="???_*_???_4_Dxy_persite",full.names = T,recursive = T)
+#x <- file.info(listsonfiles)
 #listsonfiles <- listsonfiles[order(x$size)]
-listsonfiles <- listsonfiles[order(-x$size)] ## biggest first
+#listsonfiles <- listsonfiles[order(-x$size)] ## biggest first
+
+listsonfiles=c("/vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/DXY/bel_2_SON_4_Dxy_persite.txt",
+"/vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/DXY/bel_6_SON_4_Dxy_persite.txt",
+"/vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/DXY/bel_11_SON_4_Dxy_persite.txt",
+"/vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/DXY/bel_14_SON_4_Dxy_persite.txt",
+"/vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/DXY/bil_2_SON_4_Dxy_persite.txt",
+"/vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/DXY/bil_4_SON_4_Dxy_persite.txt",
+"/vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/DXY/bil_5_SON_4_Dxy_persite.txt",
+"/vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/DXY/bil_6_SON_4_Dxy_persite.txt",
+"/vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/DXY/bru_1_SON_4_Dxy_persite.txt",
+"/vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/DXY/bru_5_SON_4_Dxy_persite.txt",
+"/vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/DXY/cri_1_SON_4_Dxy_persite.txt",
+"/vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/DXY/cri_2_SON_4_Dxy_persite.txt",
+"/vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/DXY/cri_3_SON_4_Dxy_persite.txt",
+"/vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/DXY/cur_5_SON_4_Dxy_persite.txt",
+"/vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/DXY/cur_14_SON_4_Dxy_persite.txt",
+"/vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/DXY/mel_1_SON_4_Dxy_persite.txt")
 
 
 dataset=4
@@ -46,7 +65,7 @@ num_to_keep = orig_num_to_keep
 #sonfile = paste("/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ANALYSIS/DXY/textfiles/raw/",spp,"_SON_Dxy_persite_chrfix.txt",sep="")
 #sppsonfiles = listsonfiles[grep(spp,listsonfiles)]
 
-for(sonfile in listsonfiles) {
+for(sonfile in listsonfiles[listson_number]) {
   #for(sonfile in sppsonfiles) {
   
   tempchrom=strsplit(sonfile,"/")[[1]]

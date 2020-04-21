@@ -1,31 +1,52 @@
-filename="/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ANALYSIS/called_geno/merged_empirical_stats_same_cols_TRIMMED.txt"
-df = read.csv(filename,sep="\t")
+#filename="/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ANALYSIS/called_geno/merged_empirical_stats_same_cols_TRIMMED.txt"
+filename="/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ANALYSIS/called_geno/all_merged_8_april_2020_TRIMMED_max_empirical.txt"
+df = read.csv(filename,sep="\t",stringsAsFactors = F)
 ## calculate pca 8:12,15:80
 
-df$GENOME.haplotype.diversity = as.numeric(as.character(df$GENOME.haplotype.diversity))
+#df$GENOME.haplotype.diversity = as.numeric(as.character(df$GENOME.haplotype.diversity))
 
 
-numeric = df[,c(8:12,15:80)]
-notnumeric = df[,c(1:7,13:14)] ## 1:7, 13:14
+df = df[complete.cases(df),]
 
-sims=df[df$species=="simulation",]
-emps=df[df$species!="simulation",]
+#numeric = df[,c(8:12,15:80)]
+#notnumeric = df[,c(1:7,13:14)] ## 1:7, 13:14
+
+notnumeric=df[,c(1,2,4,5,10,16,17,23,25,26,30,42,43)]
+numeric=df[,-c(1,2,4,5,10,16,17,23,25,26,30,42,43)]
+
+
+#sims=df[df$species=="simulation",]
+#emps=df[df$species!="simulation",]
 ## sims missing: 76:80, 38:48
 ## emps missing: 49:80
 
-good_for_both = df[,c(1:37)]
-good_for_both = good_for_both[complete.cases(good_for_both),]
-good_num = good_for_both[,c(8:12,15:37)]
-good_notnum = good_for_both[,c(1:7,13:14)]
+sims=df[df$SPECIES=="SIMULATION",]
+emps=df[df$SPECIES!="SIMULATION",]
 
-#summary(numeric)
-#summary(notnumeric)
+#good_for_both = df[,c(1:37)]
+#good_for_both = good_for_both[complete.cases(good_for_both),]
+#good_num = good_for_both[,c(8:12,15:37)]
+#good_notnum = good_for_both[,c(1:7,13:14)]
 
-pca = prcomp(good_num,center=T,scale. = T)
+summary(numeric)
+summary(notnumeric)
+
+#pca = prcomp(good_num,center=T,scale. = T)
+pca = prcomp(numeric,center=T,scale. = T)
+
 summary(pca)
-pcadata = cbind(good_notnum,pca$x)
-plot(pcadata$PC1,pcadata$PC2,col=as.numeric(as.factor(pcadata$demog))-1,
-     pch=as.numeric(as.factor(pcadata$species)))
+#pcadata = cbind(good_notnum,pca$x)
+pcadata = cbind(notnumeric,pca$x)
+
+palette(viridis::viridis(11))
+#plot(pcadata$PC1,pcadata$PC2,col=as.numeric(as.factor(pcadata$DEMOG))-1,
+#     pch=as.numeric(as.factor(pcadata$SPECIES)))
+plot(pcadata$PC1,pcadata$PC2,col=as.numeric(as.factor(pcadata$SPECIES)),
+     pch=as.numeric(as.factor(pcadata$SPECIES)))
+
+palette(viridis::viridis(3))
+plot(pcadata$PC1,pcadata$PC2,col=as.numeric(as.factor(pcadata$SIMDEFAULT.)),
+     pch=as.numeric(as.factor(pcadata$SPECIES)))
 
 par(mfrow=c(3,4))
 for(spp in unique(pcadata$species)){

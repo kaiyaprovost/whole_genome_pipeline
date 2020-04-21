@@ -53,5 +53,8 @@ time >> bil_sfs2.logfile 2>&1
 
 ## now get the 2d sfs for each 
 
-command="time /home/kprovost/nas3/angsd/misc/realSFS -nSites 50000000 /vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/SAFS/SON_Amphispiza_bilineata-sfs1.saf.idx /vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/SAFS/CHI_Amphispiza_bilineata-sfs1.saf.idx > SON_CHI_Amphispiza_bilineata.ml"
+command="time /home/kprovost/nas3/angsd/misc/realSFS -nSites 50000000 \
+/vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/SAFS/SON_Amphispiza_bilineata-sfs1.saf.idx \
+/vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/SAFS/CHI_Amphispiza_bilineata-sfs1.saf.idx \
+> SON_CHI_Amphispiza_bilineata.ml"
 eval $command >> bil_sfs2.logfile 2>&1

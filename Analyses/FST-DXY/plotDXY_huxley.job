@@ -23,4 +23,4 @@ done
 
 Rscript /home/kprovost/nas3/ANGSD_pipeline/plotDXY_huxley.R
 
-mv *_persite.txt ./DONE
+#mv *_persite.txt ./DONE
