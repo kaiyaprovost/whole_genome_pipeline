@@ -1,7 +1,7 @@
 #!/bin/bash
 #PBS -l select=1:ncpus=32
 #PBS -l walltime=5000:00:00
-#PBS -N mel_taj1
+#PBS -N mel_SONtaj1
 #PBS -j oe
 #PBS -m ae
 #PBS -M kprovost@amnh.org
@@ -15,13 +15,14 @@ EXECDIR=`pwd`
 export PATH=./:$PATH
 echo $PATH
 
+
+#for i in /home/kprovost/nas3/genomeresequencingFromLucas/???_chrom/pseudo*gz; do
+#gzip -f $i;
+#done;
+
 #Arguments:
 ## ref=reference sequence
-#ref=/home/kprovost/nas3/genomeresequencingFromLucas/OLD_GENOMES/Corvus_brachyrhynchus_GCF_000691975.1_ASM69197v1_genomic.fna
-#ref=/home/kprovost/nas3/genomeresequencingFromLucas/OLD_GENOMES/Geospiza_fortis_GCF_000277835.1_GeoFor_1.0_genomic.fna
-#ref=/home/kprovost/nas3/genomeresequencingFromLucas/OLD_GENOMES/Parus_major_GCF_001522545.2_Parus_major1.1_genomic.fna
-ref=/home/kprovost/nas3/genomeresequencingFromLucas/OLD_GENOMES/Strunus_vulgaris_GCF_001447265.1_Sturnus_vulgaris-1.0_genomic.fna
-#ref=/home/kprovost/nas3/genomeresequencingFromLucas/OLD_GENOMES/Zonotrichia_albicollis_GCF_000385455.1_Zonotrichia_albicollis-1.0.1_genomic.fna
+ref=/home/kprovost/nas3/genomeresequencingFromLucas/Stur_chrom/pseudochromosomesSHORT.fasta
 
 for i in /vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/REALIGNED_BAMS/melanura/*gz; do
 echo $i; gunzip $i; done
@@ -43,10 +44,10 @@ cd /vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/SAFS/
 date
 time
 
-time /home/kprovost/nas3/angsd/angsd -bam $bamlist -doSaf 1 -anc $ref -GL 1 -P 24 -out Polioptila-melanura-SON-taj1
+#time /home/kprovost/nas3/angsd/angsd -bam $bamlist -doSaf 1 -anc $ref -GL 1 -P 24 -out Polioptila-melanura-SON-taj1
 
 time /home/kprovost/nas3/angsd/misc/realSFS \
-/vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/Polioptila-melanura-SON-taj1.saf.idx \
+/vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/SAFS/Polioptila-melanura-SON-taj1.saf.idx \
 > Polioptila-melanura-SON-taj.sfs
 
 time /home/kprovost/nas3/angsd/angsd -GL 2 -bam $bamlist -doThetas 1 -doSaf 1 -pest Polioptila-melanura-SON-taj.sfs -anc $ref -out Polioptila-melanura-SON-taj2 

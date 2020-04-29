@@ -1,18 +1,83 @@
 ## values for the pestPG are sums for the windows. the theta values you see that are negative are log values. 
 ## to get an average for a window, need to divide by window size -- does one for each BP
 
-
-specieslist=c("Vireo-bellii",
-  "Amphispiza-bilineata",
-  "Melozone-fusca",
-  "Campylorhynchus-brunneicapillus",
-  "Auriparus-flaviceps",
-  "Cardinalis-sinuatus",
-  "Phainopepla-nitens",
-  "Polioptila-melanura",
-  "Toxostoma-crissale",
-  "Toxostoma-curvirostre"
+specieslist=c(
+"Amphispiza-bilineata-SON",
+"Amphispiza-bilineata",
+"Auriparus-flaviceps-CHI",
+"Auriparus-flaviceps-SON",
+"Auriparus-flaviceps",
+"Campylorhynchus-brunneicapillus",
+"Cardinalis-sinuatus-CHI",
+"Cardinalis-sinuatus-SON",
+"Cardinalis-sinuatus",
+"Melozone-fusca-CHI",
+"Melozone-fusca-SON",
+"Melozone-fusca",
+"Phainopepla-nitens",
+"Polioptila-melanura",
+"Toxostoma-crissale",
+"Toxostoma-curvirostre",
+"Vireo-bellii-CHI",
+"Vireo-bellii-NOWEIRD",
+"Vireo-bellii-SON",
+"Vireo-bellii"
 )
+
+## whole chromosomes at once
+for (speciesname in specieslist) {
+  
+  print(speciesname)
+  shortspp=substr(strsplit(speciesname,"-")[[1]][2],1,3)
+  
+  file = paste("/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ANALYSIS/tajimas/",speciesname,"-taj2.thetas.idx_CHRFIX.pestPG",sep="")
+  if(!(file.exists(file))){
+    print("NOT EXISTS")
+  } else {
+    
+    tajs = read.table(file,header=T)
+    print(head(tajs))
+    print(names(tajs)[2:length(tajs)])
+    
+    tajs = (tajs[order(tajs$Chr,tajs$WinCenter),])
+    
+    tajs$species=shortspp
+    
+    
+    
+    #bigplot = read.csv("/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ANALYSIS/DXY/textfiles/bigplot.txt")
+    #bigplotorder = unique(bigplot$chr[bigplot$species==shortspp])
+    
+    #tajs = tajs[order(match(tajs$Chr, bigplotorder)),]
+    
+    palette(  c(    "red",    "cyan",    "goldenrod",    "green",    "blue",    "purple",    "blue",    "black",    "brown",    "magenta"  ))
+    
+
+    for (colnam in names(tajs)[1:length(tajs)]) {
+      print(colnam)
+      png(paste("/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ANALYSIS/tajimas/",speciesname,"_CHROM_",colnam,".png",sep=""),width=800,height=300)
+      
+      toplot=as.numeric(as.character(tajs[,colnam]))
+      
+      if(sum(!is.na(toplot))!=0) {
+        
+        barplot(as.numeric(as.character(tajs[,colnam])),
+                col=as.numeric(as.factor(tajs$Chr)),
+                xlab="Chromosome",
+                names=as.character(as.factor(tajs$Chr)),
+                las=2)
+        
+        dev.off()
+      }
+    }
+    
+    ## merge tajs with bigplot eventually 
+    
+    
+  }
+}
+
+
 
 bigtaj = NULL
 
@@ -21,7 +86,11 @@ for (speciesname in specieslist) {
   print(speciesname)
   shortspp=substr(strsplit(speciesname,"-")[[1]][2],1,3)
   
-  file = paste("/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ANALYSIS/tajimas/",speciesname,"-taj2.thetasWindow.gz.pestPG",sep="")
+  file = paste("/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ANALYSIS/tajimas/",speciesname,"-taj2.thetasWindow.gz_CHRFIX.pestPG",sep="")
+  if(!(file.exists(file))){
+  print("NOT EXISTS")
+  } else {
+  
   tajs = read.table(file,header=T)
   print(head(tajs))
   print(names(tajs)[2:length(tajs)])
@@ -64,10 +133,11 @@ for (speciesname in specieslist) {
     bigtaj = rbind(bigtaj,tajs)
   }
 }
+}
 
 write.csv(bigtaj,"/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ANALYSIS/DXY/textfiles/bigtaj.new.temp",row.names=F)
 
-bigtaj = read.csv("/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ANALYSIS/DXY/textfiles/bigtaj.txt")
+bigtaj = read.csv("/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ANALYSIS/DXY/textfiles/bigtaj.new.txt")
 colnames(bigtaj) = c("windowinfo",
                      "chr",
                      "midPos",
@@ -85,7 +155,7 @@ colnames(bigtaj) = c("windowinfo",
                      "species"
 )
 
-#bigplot = read.csv("/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ANALYSIS/DXY/textfiles/bigplot.txt")
+bigplot = read.csv("/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ANALYSIS/DXY/textfiles/bigplot.txt")
 
 #bigplot2 = merge(bigplot, bigtaj, by = c("chr","midPos","species"))
 

@@ -7,7 +7,6 @@
 #PBS -M kprovost@amnh.org
 #PBS -k oe
 
-
 # change to the working directory
 cd $PBS_O_WORKDIR
 echo "pbsworkdir"
@@ -16,24 +15,7 @@ EXECDIR=`pwd`
 export PATH=./:$PATH
 echo $PATH
 
-##References:
-##Corvus -- Vireo bellii
-##Parus -- Auriparus flaviceps
-##Sturnus -- Toxostoma curvirostre, Toxostoma crissale, Campylorhynchus brunneicapillus, Polioptila bilineata, Phainopepla nitens
-##Zonotrichia -- Amphispiza bilineata, Pipilo fuscus
-##Geospiza -- Cardinalis cardinalis, Cardinalis sinuatus
-
-## /home/kprovost/nas3/genomeresequencingFromLucas
-## Corv_chrom/  Corv_chrom_parus/  Geos_chrom/  Geos_chrom_parus/  Paru_chrom/  Paru_chrom_parus/  Stur_chrom/  Stur_chrom_parus/  Zono_chrom/  Zono_chrom_parus/
-# pseudochromosomesSHORT.fasta 
-
 spp="Parrots"
-
-#ref=/home/kprovost/nas3/genomeresequencingFromLucas/Corv_chrom/pseudochromosomesSHORT.fasta
-#ref=/home/kprovost/nas3/genomeresequencingFromLucas/Geos_chrom/pseudochromosomesSHORT.fasta
-#ref=/home/kprovost/nas3/genomeresequencingFromLucas/Paru_chrom/pseudochromosomesSHORT.fasta
-#ref=/home/kprovost/nas3/genomeresequencingFromLucas/Stur_chrom/pseudochromosomesSHORT.fasta
-#ref=/home/kprovost/nas3/genomeresequencingFromLucas/Zono_chrom/pseudochromosomesSHORT.fasta
 
 ref=/home/kprovost/nas3/genomeresequencingFromLucas/Melo_chrom/pseudochromosomesSHORT.fasta
 
@@ -46,7 +28,6 @@ module load bwa-0.7.15
 module load fastqc-0.11.5
 module load R-3.4.1
 #source activate stampy ## NEWLY ADDED from lucas
-
 
 #for i in */; do  
 #	namei="${i///}" ## not there for lucas
