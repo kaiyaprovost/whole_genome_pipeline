@@ -196,3 +196,20 @@ for (spp in sort(as.character(unique(megaplot$species)))) {
   points(thisspp$plotorder,thisspp$Tajima,col=as.numeric(as.factor(thisspp$chr)),add=T)
 }
 dev.off()
+
+## check which chroms are missing for which species and which analyses
+all_chr = unique(megaplot$chr)
+smallmega = unique(megaplot[,c("chr","species","Tajima","dxymeans","Fst")])
+smallmega$Tajima[!is.na(smallmega$Tajima)] = 1
+smallmega$dxymeans[!is.na(smallmega$dxymeans)] = 1
+smallmega$Fst[!is.na(smallmega$Fst)] = 1
+
+smallmega = unique(smallmega)
+
+taj = unique(smallmega[,c("chr","species","Tajima")])
+dxy = unique(smallmega[,c("chr","species","dxymeans")])
+fst = unique(smallmega[,c("chr","species","Fst")])
+
+(table(taj))
+(table(dxy))
+(table(fst))

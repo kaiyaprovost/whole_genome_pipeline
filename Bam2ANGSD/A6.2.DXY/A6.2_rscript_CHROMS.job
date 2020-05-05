@@ -19,24 +19,28 @@ cd /vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/MAFS/
 
 module load R-3.4.1
 
-spplist=("Amphispiza-bilineata" "Campylorhynchus-brunneicapillus" "Toxostoma-crissale" "Toxostoma-curvirostre" "Auriparus-flaviceps" "Melozone-fusca" "Polioptila-melanura" "Phainopepla-nitens" "Cardinalis-sinuatus")
+#spplist=("Amphispiza-bilineata" "Campylorhynchus-brunneicapillus" "Toxostoma-crissale" "Toxostoma-curvirostre" "Auriparus-flaviceps" "Melozone-fusca" "Polioptila-melanura" "Phainopepla-nitens" "Cardinalis-sinuatus" "Vireo-bellii")
 
-chromlist=("mtDNA" "1B" "8" "25" "22" "27" "28" "26" "21" "23" "24" "19" "18" "17" "15" "20" "13" "14" "Z" "4A" "10" "11" "12" "9" "6" "7" "5" "4" "1A" "3" "1" "2")
+spplist=("Campylorhynchus-brunneicapillus")
+
+#chromlist=("mtDNA" "1B" "8" "25" "22" "27" "28" "26" "21" "23" "24" "19" "18" "17" "15" "20" "13" "14" "Z" "4A" "10" "11" "12" "9" "6" "7" "5" "4" "1A" "3" "2" "1" "LG2" "LG5" "LGE22")
+
+chromlist=("10" "mtDNA" "12" "Z" "2" "5")
 
 for chrom in ${chromlist[@]}; do
 echo $chrom
 
-for spp in ${spplist[@]}; do
-echo $spp
+#for spp in ${spplist[@]}; do
+#echo $spp
 
 shortname=`echo $spp | cut -f2 -d"-" | head -c3`
 
-ls *${spp}*DXY4*chr*${chrom}*.*
+ls *${spp}*DXY4*chr*Tgut_${chrom}*.*
 
 ## check if son and chi files exist
 
-for sonmaf in *${spp}*SONDXY4*chr*${chrom}*; do
-for chimaf in *${spp}*CHIDXY4*chr*${chrom}*; do
+for sonmaf in *${spp}*SONDXY4*chr*Tgut_${chrom}*; do
+for chimaf in *${spp}*CHIDXY4*chr*Tgut_${chrom}*; do
 
 if [ -f "${chimaf}" ]; then
 echo "$chimaf exist"
