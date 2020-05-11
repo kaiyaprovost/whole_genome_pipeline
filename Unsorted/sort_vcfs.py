@@ -39,7 +39,10 @@ def vcfsort(vcffile):
 	sortedlines = ["\t".join(list(item)) for item in linestosort]
 	print("generating final lines and writing")
 	finallines = headerlines+sortedlines
-	with open(vcffile+".sorted.vcf","w") as outfile:
+	
+	sortedname=os.path.basename(vcffile)
+	sortedname=sortedname.replace(".vcf","")
+	with open(sortedname+".sorted.vcf","w") as outfile:
 		outfile.writelines(finallines)
 	print("done")
 

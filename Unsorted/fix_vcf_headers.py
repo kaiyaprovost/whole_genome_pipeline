@@ -20,7 +20,6 @@ print(splitfile)
 print(prefix)
 
 to_replace = "#CHROM\tPOS\tID\tREF\tALT\tQUAL\tFILTER\tINFO\tFORMAT\t*"
-
 replacement = "#CHROM\tPOS\tID\tREF\tALT\tQUAL\tFILTER\tINFO\tFORMAT\t"+prefix
 
 # Read in the file
@@ -30,7 +29,14 @@ with open(filepath, 'r') as file :
 
 # Replace the target string
 filedata = filedata.replace(to_replace, replacement)
-print("replaced")
+print("replaced 1")
+
+to_replace = '##fileformat=VCFv4.0\n#CHROM'
+replacement = '##fileformat=VCFv4.0\n##FORMAT=<ID=GT,Number=1,Type=String,Description="Genotype">\n#CHROM'
+
+# Replace the target string
+filedata = filedata.replace(to_replace, replacement)
+print("replaced 2")
 
 # Write the file out again
 with open(filepath, 'w') as file:

@@ -59,7 +59,7 @@ def geno2vcf1line(singleline,start=False):
 	
 	if start == True:
 		## generate the vcf header. 	## There are 8 fixed fields per record. All data lines are tab-delimited. In all cases, missing values are specified with a dot (”.”)
-		vcfheader = "##fileformat=VCFv4.0\n#CHROM\tPOS\tID\tREF\tALT\tQUAL\tFILTER\tINFO\tFORMAT\t"+"\t".join(namesinds)+"\n"
+		vcfheader = '##fileformat=VCFv4.0\n##FORMAT=<ID=GT,Number=1,Type=String,Description="Genotype">\n#CHROM\tPOS\tID\tREF\tALT\tQUAL\tFILTER\tINFO\tFORMAT\t'+'\t'.join(namesinds)+'\n'
 		return([vcflinefinal,vcfheader])
 	else:
 		return(vcflinefinal)

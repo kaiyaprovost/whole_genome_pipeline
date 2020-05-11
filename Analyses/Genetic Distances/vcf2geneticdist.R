@@ -27,7 +27,7 @@ colors=c("red","blue","orange","green","goldenrod","magenta",
          "black","grey","brown","pink","purple","darkgreen","lightblue")
 
 calcDist = F
-reloadDist = T
+reloadDist = F
 combineVcfs = F
 compareNewick = T
 

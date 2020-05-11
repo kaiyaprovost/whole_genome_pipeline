@@ -9,7 +9,8 @@ def vcf2bed2mask(vcffile):
 	bed_dict = {}
 	## iterate 
 	for line in lines:
-		if line[0] != "#":
+		if line[0] != "#" and line.strip() != "":
+			#print(line)
 			chrom,position = line.split("\t")[0:2]
 			x = bed_dict.get(chrom,None)
 			if x == None:
