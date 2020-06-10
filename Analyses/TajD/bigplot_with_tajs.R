@@ -1,11 +1,11 @@
 setwd("/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ANALYSIS/tajimas")
 
-bigplot = read.csv("/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ANALYSIS/DXY/textfiles/bigplot.txt")
-bigplot2 = read.csv("/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ANALYSIS/DXY/textfiles/bigplot.temp")
+bigplot = read.csv("/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ANALYSIS/DXY/textfiles/bigplot.may2020.txt")
+#bigplot2 = read.csv("/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ANALYSIS/DXY/textfiles/bigplot.may2020.temp")
 
 names(bigplot2)
 
-bigtaj = read.csv("/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ANALYSIS/DXY/textfiles/bigtaj.new.txt")
+bigtaj = read.csv("/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ANALYSIS/DXY/textfiles/bigtaj.new.may2020.txt")
 colnames(bigtaj) = c("windowinfo",
                      "chr",
                      "midPos",
@@ -26,7 +26,7 @@ colnames(bigtaj) = c("windowinfo",
 megaplot = merge(bigtaj,bigplot,all=T)
 megaplot=unique(megaplot)
 
-write.csv(megaplot,"/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ANALYSIS/DXY/textfiles/bigplot.fst.dxy.taj.txt",
+write.csv(megaplot,"/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ANALYSIS/DXY/textfiles/bigplot.fst.dxy.taj.may2020.txt",
           row.names = F)
 
 #bigplot2 = bigplot2[order(bigplot2$chr, bigplot2$midPos), ]
@@ -51,7 +51,7 @@ plotQuanAndStdev = function(variable=temp$Fst,chrom=temp$chr,
   if ( length(are_na) <= 1 && sum(are_na) != 0) {
     
     if(printed==T){
-      png(paste(speciesname,"_",varname,"_5stdev.png",sep=""),width=800,height=400)
+      png(paste(speciesname,"_",varname,"_5stdev.may2020.png",sep=""),width=800,height=400)
     }
     plot(0,ylab=varname,xlab="scaffold",col="white",type="n")
     if(printed==T){
@@ -68,7 +68,7 @@ plotQuanAndStdev = function(variable=temp$Fst,chrom=temp$chr,
     quan5 = quantile(variable,0.05,na.rm=T)
     
     if(printed==T){
-      png(paste(speciesname,"_",varname,"_5stdev.png",sep=""),width=800,height=400)
+      png(paste(speciesname,"_",varname,"_5stdev.may2020.png",sep=""),width=800,height=400)
     }
     plot(variable,col=as.numeric(as.factor(chrom)),ylab=varname,xlab="scaffold")
     abline(h=high5sd,col="black")
@@ -92,7 +92,7 @@ for (spp in sort(as.character(unique(megaplot$species)))) {
   #temp=bigplot2[bigplot2$species==spp,]
   temp=megaplot[megaplot$species==spp,]
   
-  png(paste(spp,"_fourpanels.png",sep=""),width=1600,height=1000)
+  png(paste(spp,"_fourpanels.may2020.png",sep=""),width=1600,height=1000)
   palette(c("red","orange","goldenrod","green","cyan","blue","magenta","purple"))
   par(mfrow=c(4,1))
   #plot(temp$Fst,col=as.numeric(as.factor(temp$chr)),xlab="Fst")
@@ -125,7 +125,7 @@ for (spp in sort(as.character(unique(megaplot$species)))) {
     
   } else {
   
-  png(paste(spp,"_taj_vs_theta.png",sep=""))
+  png(paste(spp,"_taj_vs_theta.may2020.png",sep=""))
   plot(temp$tW,temp$Tajima,xlab="Theta",ylab="Tajima")
   abline(h=quan95taj,col="red")
   abline(h=quan5taj,col="red")
@@ -139,7 +139,7 @@ for (spp in sort(as.character(unique(megaplot$species)))) {
 
 ## plot Taj vs Theta 
 
-megaplot =read.csv("/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ANALYSIS/DXY/textfiles/bigplot.fst.dxy.taj.txt",
+megaplot =read.csv("/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ANALYSIS/DXY/textfiles/bigplot.fst.dxy.taj.may2020.txt",
                      header = T)
 megaplot$plotorder = paste(megaplot$chr,megaplot$midPos)
 uniques=unique(megaplot$plotorder)
@@ -150,6 +150,9 @@ lapply(unique(megaplot$plotorder),FUN=function(x){
   megaplot$numorder[megaplot$plotorder==x] = megaplot$plotorder[megaplot$plotorder==x] = which(uniques %in% x)
 })
 
+megaplot$plotorder = factor(megaplot$plotorder, levels = unique(as.character(megaplot$plotorder)))
+megaplot$plotorder = as.numeric(as.factor(megaplot$plotorder))
+
 # for(i in 1:length(uniques)){
 #   if(i %% 1000 == 0){print(i/length(uniques))}
 #   value=uniques[i]
@@ -158,13 +161,13 @@ lapply(unique(megaplot$plotorder),FUN=function(x){
 # }
 # megaplot$plotorder = numuniques
 
-write.csv(megaplot,"/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ANALYSIS/DXY/textfiles/bigplot.fst.dxy.taj.temp",
+write.csv(megaplot,"/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ANALYSIS/DXY/textfiles/bigplot.fst.dxy.taj.may2020.txt",
                    row.names = F)
 
-megaplot =read.csv("/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ANALYSIS/DXY/textfiles/bigplot.fst.dxy.taj.txt",
+megaplot =read.csv("/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ANALYSIS/DXY/textfiles/bigplot.fst.dxy.taj.may2020.txt",
                    header = T,sep="\t")
 
-png("/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ANALYSIS/DXY/all_species_lined_up_fst.png",height=1500,width=800)
+png("/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ANALYSIS/DXY/all_species_lined_up_fst.may2020.png",height=1500,width=800)
 par(mfrow=c(10,1),mar=c(4,4,0,0))
 for (spp in sort(as.character(unique(megaplot$species)))) {
   print(spp)
@@ -175,7 +178,7 @@ for (spp in sort(as.character(unique(megaplot$species)))) {
 }
 dev.off()
 
-png("/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ANALYSIS/DXY/all_species_lined_up_dxy.png",height=1500,width=800)
+png("/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ANALYSIS/DXY/all_species_lined_up_dxy.may2020.png",height=1500,width=800)
 par(mfrow=c(10,1),mar=c(4,4,0,0))
 for (spp in sort(as.character(unique(megaplot$species)))) {
   print(spp)
@@ -186,7 +189,7 @@ for (spp in sort(as.character(unique(megaplot$species)))) {
 }
 dev.off()
 
-png("/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ANALYSIS/DXY/all_species_lined_up_tajd.png",height=1500,width=800)
+png("/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ANALYSIS/DXY/all_species_lined_up_tajd.may2020.png",height=1500,width=800)
 par(mfrow=c(10,1),mar=c(4,4,0,0))
 for (spp in sort(as.character(unique(megaplot$species)))) {
   print(spp)

@@ -390,7 +390,7 @@ barplot(values[,4],las=2,ylim=c(0,0.05))
 together_small = together[together$MOSTA.1MODEL2!="NONE",]
 
 ## final plot
-png("missing_fst_dxy_allspecies.png",width=7,height=2,units = "in",
+png("missing_fst_dxy_allspecies_27may2020.png",width=7,height=2,units = "in",
     res=300)
 par(mfrow=c(1,3))
 par(mar=c(4,4,0.5,0))

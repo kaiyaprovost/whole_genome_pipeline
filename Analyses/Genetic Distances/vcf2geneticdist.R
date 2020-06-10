@@ -1020,13 +1020,14 @@ customcorrplot=function(corr, method = c("circle", "square", "ellipse", "number"
 if(compareNewick==T) {
   print("yes")
   
-  path="/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ANALYSIS/called_geno/SPECIES/NEWICK"
+  path="/Users/kprovost/Downloads/NEWICK/"
   setwd(path)
   
   allnewicks = c(1,"1A","1B",2:4,"4A",5:28,"mtDNA","LG2","LG5","LGE22","Z","all")
   
   newickfiles1 = list.files(path,pattern="newick$",recursive = T,full.names = T)
   newickfiles1 = newickfiles1[!grepl("window",newickfiles1)]
+  newickfiles1 = newickfiles1[!grepl("converted",newickfiles1)]
 
   if(doPlots==F){
     png("all_species_rfdist_corrplots.png",#height=600,width=1000,
@@ -1035,7 +1036,7 @@ if(compareNewick==T) {
   } 
   for (spp in specieslist) {
     print(spp)
-    #outplot = paste(spp,"_corrplot.png",sep="")
+    
     
     #newickfiles2 = list.files(path,pattern=spp,recursive = T,full.names = T)
     #newickfiles = intersect(newickfiles1,newickfiles2)
@@ -1096,10 +1097,12 @@ if(compareNewick==T) {
     allcol=which(colnames(phydist)=="all")
     neworder=c(1:(allcol-1),(allcol+1):length(colnames(phydist)),allcol)
     phydist=phydist[neworder,neworder]
-    
+    write.table(phydist,paste("phydist_rfdist_",spp,".txt",sep=""),sep="\t",row.names = T)
+  
     spectralpal=colorRampPalette(c("#d7191c","#fdae61","#ffffbf","#abdda4","#2b83ba"))
     
     if(doPlots==T){
+      outplot = paste(spp,"_corrplot.png",sep="")
       png(outplot)
       corrplot::corrplot(phydist,is.corr=F,diag=T,order="original",method="color",
                          cl.lim=c(0,44),

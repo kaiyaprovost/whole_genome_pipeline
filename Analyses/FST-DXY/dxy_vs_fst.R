@@ -2,11 +2,14 @@
 
 library(AICcmodavg)
 
-steps=c(1:11) ## up to 11
+steps=c(7,8) ## up to 13
 
 setwd("/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ANALYSIS/DXY/")
 
-specieslist = sort(c("bil","fla","fus","cur","bru","cri","mel","nit","sin","bel"))
+specieslist = sort(c("bil","bel",
+  "fla",
+  "fus","cur","bru","cri",
+  "mel","nit","sin"))
 size = 100
 
 makedxyplot = function(speciesname,variable1num=4,variable2num=10,colvarnum=19,dat=bigplot,plotsize="SMALL",
@@ -14,7 +17,7 @@ makedxyplot = function(speciesname,variable1num=4,variable2num=10,colvarnum=19,d
   pngname = paste(speciesname,
                   names(dat)[variable1num],
                   names(dat)[variable2num],
-                  plotsize,".png",
+                  plotsize,".may2020.png",
                   sep="_")
   
   palette(    c(      "black",      "red",
@@ -83,7 +86,7 @@ makedxyplotSTDEV = function(speciesname,variable1num=4,variable2num=10,colvarnum
   pngname = paste(speciesname,
                   names(dat)[variable1num],
                   names(dat)[variable2num],
-                  plotsize,"STDEV",numsd,".png",
+                  plotsize,"STDEV",numsd,".may2020.png",
                   sep="_")
   
   palette(    c(      "black",      "red",
@@ -171,7 +174,7 @@ if(1 %in% steps) {
       } else if (spp == "cur") {
         fullspecies = "Toxostoma_curvirostre"
       } else if (spp == "fla") {
-        fullspecies = "Auriparus_flaviceps-NOWEIRD22"
+        fullspecies = "Auriparus_flaviceps-NOWEIRDMIN1C"
       } else if (spp == "fus") {
         fullspecies = "Melozone_fusca"
       } else if (spp == "mel") {
@@ -186,7 +189,7 @@ if(1 %in% steps) {
       dxyfile = paste(
         #"/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ANALYSIS/DXY/textfiles/scaff_",
         #size,"/",spp,"_SON_Dxy_WINDOWS_",size,".txt",
-        "/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ANALYSIS/DXY/textfiles/scaff_chromosomes/",spp,"_4_SON_Dxy_WINDOWS_chrfix_1-ALL.txt",
+        "/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ANALYSIS/DXY/textfiles/scaff_chromosomes/",spp,"/",spp,"_4_SON_Dxy_WINDOWS_chrfix_1-ALL.txt",
         sep = "")
       fstfile = paste(
         "/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ANALYSIS/FST/3.slidingWindowJobs/SON_CHI_",
@@ -206,32 +209,32 @@ if(1 %in% steps) {
       
       outfile = paste(
         "/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ANALYSIS/DXY/textfiles/scaff_",
-        spp,"_bothFST_DXY_ALL.txt",
+        spp,"_bothFST_DXY_ALL.may2020.txt",
         sep = ""
       )
       pngfile0 = paste(
         "/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ANALYSIS/DXY/images/scaff_",
-        spp,"_corDXYFST_ALL.png",
+        spp,"_corDXYFST_ALL.may2020.png",
         sep = ""
       )
       pngfile1 = paste(
         "/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ANALYSIS/DXY/images/scaff_",
-        spp,"_DXYdivFST_ALL.png",
+        spp,"_DXYdivFST_ALL.may2020.png",
         sep = ""
       )
       pngfile2 = paste(
         "/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ANALYSIS/DXY/images/scaff_",
-        spp,"_FSTdivDXY_ALL.png",
+        spp,"_FSTdivDXY_ALL.may2020.png",
         sep = ""
       )
       pngfile3 = paste(
         "/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ANALYSIS/DXY/",
-        spp,"_panelFSTDXY_ALL.png",
+        spp,"_panelFSTDXY_ALL.may2020.png",
         sep = ""
       )
       pngfile4 = paste(
         "/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ANALYSIS/DXY/images/scaff_",
-        spp,"_panelFSTDXYsums_ALL.png",
+        spp,"_panelFSTDXYsums_ALL.may2020.png",
         sep = ""
       )
       
@@ -273,6 +276,8 @@ if(1 %in% steps) {
         both_dxyfst = merge(dxy, fst, by = c("chr", "midPos"))
         if (nrow(both_dxyfst) <= 0) {
           dxy$midPos = dxy$starts + 59999 ## won't work now? 
+          both_dxyfst = merge(dxy, fst, by = c("chr", "midPos"),all=T)
+        } else {
           both_dxyfst = merge(dxy, fst, by = c("chr", "midPos"),all=T)
         }
         both_dxyfst$dxy_div_fst = both_dxyfst$dxymeans / both_dxyfst$Fst
@@ -530,7 +535,7 @@ if(2 %in% steps) {
       print(spp)
       testfile = paste(
         "/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ANALYSIS/DXY/textfiles/scaff_",
-        spp,"_bothFST_DXY_ALL.txt",
+        spp,"_bothFST_DXY_ALL.may2020.txt",
         sep = ""
       )
       #testfile = "/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ANALYSIS/DXY/sin_bothFST_DXY_1.txt"
@@ -558,10 +563,10 @@ if(2 %in% steps) {
       ## 12 = 4+8  = fst high,        dxy not outlier
       ## 17 = 1+16 = fst not outlier, dxy low
       ## 18 = 2+16 = fst low,         dxy low
-      ## 20 = 4+16 = fst high,        dxy low
+      ## 20 = 4+16 = fst high,        dxy low -- SWEEP
       ## 33 = 1+32 = fst not outlier, dxy high
       ## 34 = 2+32 = fst low,         dxy high
-      ## 36 = 4+32 = fst high,        dxy high
+      ## 36 = 4+32 = fst high,        dxy high -- ISLAND
       
       test$quancolor = test$sumquantile
       test$quancolor[test$quancolor == 9] = 1
@@ -578,23 +583,11 @@ if(2 %in% steps) {
         paste(
           "/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ANALYSIS/DXY/",
           spp,
-          "_fstVSdxy_quantilemap_ALL.png",
+          "_fstVSdxy_quantilemap_ALL.may2020.png",
           sep = ""
         ), height=700,width=700
       )
-      palette(
-        c(
-          "black",
-          "red",
-          "darkred",
-          "blue",
-          "purple",
-          "magenta",
-          "darkblue",
-          "orange",
-          "cyan"
-        )
-      )
+      palette(  c("black",  "red",  "darkred",  "blue",   "purple",    "magenta",  "darkblue", "orange",    "cyan"))
       par(
         bg = NA,
         col.axis = "white",
@@ -639,7 +632,7 @@ if(2 %in% steps) {
         paste(
           "/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ANALYSIS/DXY/",
           spp,
-          "_fstVSdxy_panelquantile_ALL.png",
+          "_fstVSdxy_panelquantile_ALL.may2020.png",
           sep = ""
         ),
         width = 700,
@@ -671,7 +664,7 @@ if(2 %in% steps) {
       
       
       png(paste("/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ANALYSIS/DXY/",
-                spp,"_fstVSdxy_panelquantile_legible.png",sep = ""),
+                spp,"_fstVSdxy_panelquantile_legible.may2020.png",sep = ""),
           width = 700,height = 700)
       palette(c("black",
                 "red",          "darkred",
@@ -727,7 +720,7 @@ if(2 %in% steps) {
         paste(
           "/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ANALYSIS/DXY/",
           spp,
-          "_fstVSdxy_lognumoutliers_ALL.png",
+          "_fstVSdxy_lognumoutliers_ALL.may2020.png",
           sep = ""
         )
       )
@@ -812,7 +805,7 @@ if(2 %in% steps) {
         paste(
           "/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ANALYSIS/DXY/",
           spp,
-          "_boxplotsIslandsSweeps_ALL.png",
+          "_boxplotsIslandsSweeps_ALL.may2020.png",
           sep = ""
         )
       )
@@ -858,7 +851,7 @@ if(2 %in% steps) {
       sweepfile = paste(
         "/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ANALYSIS/DXY/",
         spp,
-        "_sweeps_ALL.png",
+        "_sweeps_ALL.may2020.png",
         sep = ""
       )
       
@@ -906,7 +899,7 @@ if(2 %in% steps) {
       sweepexpfile = paste(
         "/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ANALYSIS/DXY/",
         spp,
-        "_sweeps_expanded_ALL.png",
+        "_sweeps_expanded_ALL.may2020.png",
         sep = ""
       )
       
@@ -960,7 +953,7 @@ if(2 %in% steps) {
       sweepdxyfile = paste(
         "/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ANALYSIS/DXY/",
         spp,
-        "_sweeps_dxy_ALL.png",
+        "_sweeps_dxy_ALL.may2020.png",
         sep = ""
       )
       
@@ -1023,14 +1016,14 @@ if(3 %in% steps) {
       infile = paste(
         "/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ANALYSIS/DXY/textfiles/scaff_",
         spp,
-        "_bothFST_DXY_ALL.txt",
+        "_bothFST_DXY_ALL.may2020.txt",
         sep = ""
       )
       
       outfile = paste(
         "/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ANALYSIS/DXY/",
         spp,
-        "_bothFST_DXY_ALL.png",
+        "_bothFST_DXY_ALL.may2020.png",
         sep = ""
       )
       
@@ -1095,7 +1088,7 @@ if(4 %in% steps) {
       testfile = paste(
         "/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ANALYSIS/DXY/textfiles/scaff_",
         spp,
-        "_bothFST_DXY_ALL.txt",
+        "_bothFST_DXY_ALL.may2020.txt",
         sep = ""
       )
       #testfile = "/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ANALYSIS/DXY/sin_bothFST_DXY_1.txt"
@@ -1184,7 +1177,7 @@ if(5 %in% steps) {
     
     #nrow(bigplot)
     #nrow(unique(bigplot))
-    png("bigplot_biglim.png",width=1200)
+    png("bigplot_biglim.may2020.png",width=1200)
     par(
       bg = NA,
       col.axis = "white",
@@ -1203,7 +1196,7 @@ if(5 %in% steps) {
     bigplot$globalquantiledxymeans[bigplot$dxymeans <= quan3] = 16
     bigplot$globalquantiledxymeans[bigplot$dxymeans >= quan4] = 32
     
-    png("bigplot_color_biglim.png",width=1200)
+    png("bigplot_color_biglim.may2020.png",width=1200)
     par(
       bg = NA,
       col.axis = "white",
@@ -1227,7 +1220,7 @@ if(5 %in% steps) {
     bigplot$globalquancolor[bigplot$globalquancolor == 34] = 8
     bigplot$globalquancolor[bigplot$globalquancolor == 36] = 9
     
-    png("bigplot_color_biglim.png",width=1200)
+    png("bigplot_color_biglim.may2020.png",width=1200)
     par(
       bg = NA,
       col.axis = "white",
@@ -1239,7 +1232,7 @@ if(5 %in% steps) {
     )
     dev.off()
     
-    png("bigplot_globalcolor_biglim.png",width=1200)
+    png("bigplot_globalcolor_biglim.may2020.png",width=1200)
     par(
       bg = NA,
       col.axis = "white",
@@ -1263,7 +1256,7 @@ if(5 %in% steps) {
     ## 34 = 2+32 = fst low,         dxy high
     ## 36 = 4+32 = fst high,        dxy high
     
-    png("bigplot_quanVSquan_biglim.png",width=1200)
+    png("bigplot_quanVSquan_biglim.may2020.png",width=1200)
     par(
       bg = NA,
       col.axis = "white",
@@ -1276,7 +1269,7 @@ if(5 %in% steps) {
     dev.off()
     
     palette(c("white", "pink"))
-    png("bigplot_boxplotdxy_islands.png",width=1200)
+    png("bigplot_boxplotdxy_islands.may2020.png",width=1200)
     par(
       bg = NA,
       col.axis = "white",
@@ -1292,7 +1285,7 @@ if(5 %in% steps) {
     )
     dev.off()
     
-    png("bigplot_boxplotdxy_notislands.png",width=1200)
+    png("bigplot_boxplotdxy_notislands.may2020.png",width=1200)
     par(
       bg = NA,
       col.axis = "white",
@@ -1322,7 +1315,7 @@ if(5 %in% steps) {
       )
     )
     
-    png("bigplot_boxplotfst_islands_majorpca.png",width=1200)
+    png("bigplot_boxplotfst_islands_majorpca.may2020.png",width=1200)
     par(
       bg = NA,
       col.axis = "white",
@@ -1339,7 +1332,7 @@ if(5 %in% steps) {
     )
     dev.off()
     
-    png("bigplot_boxplotfst_islands_allpca.png",width=1200)
+    png("bigplot_boxplotfst_islands_allpca.may2020.png",width=1200)
     par(
       bg = NA,
       col.axis = "white",
@@ -1355,7 +1348,7 @@ if(5 %in% steps) {
       border = as.numeric(morphcolors[, 3]) + 1
     )
     dev.off()
-    png("bigplot_boxplotfst_islands_rawmetric.png",width=1200)
+    png("bigplot_boxplotfst_islands_rawmetric.may2020.png",width=1200)
     par(
       bg = NA,
       col.axis = "white",
@@ -1372,7 +1365,7 @@ if(5 %in% steps) {
     )
     dev.off()
     
-    png("bigplot_boxplotfst_islands_residualmetric.png",width=1200)
+    png("bigplot_boxplotfst_islands_residualmetric.may2020.png",width=1200)
     par(
       bg = NA,
       col.axis = "white",
@@ -1390,7 +1383,7 @@ if(5 %in% steps) {
     dev.off()
     
     palette(c("white", "pink"))
-    png("bigplot_boxplotfst_notislands.png",width=1200)
+    png("bigplot_boxplotfst_notislands.may2020.png",width=1200)
     par(
       bg = NA,
       col.axis = "white",
@@ -1407,7 +1400,7 @@ if(5 %in% steps) {
     dev.off()
     
     
-    png("bigplot_boxplotDXY_islands_majorpca.png",width=1200)
+    png("bigplot_boxplotDXY_islands_majorpca.may2020.png",width=1200)
     par(
       bg = NA,
       col.axis = "white",
@@ -1423,7 +1416,7 @@ if(5 %in% steps) {
       border = as.numeric(morphcolors[, 2]) + 1
     )
     dev.off()
-    png("bigplot_boxplotDXY_islands_allpca.png",width=1200)
+    png("bigplot_boxplotDXY_islands_allpca.may2020.png",width=1200)
     par(
       bg = NA,
       col.axis = "white",
@@ -1439,7 +1432,7 @@ if(5 %in% steps) {
       border = as.numeric(morphcolors[, 3]) + 1
     )
     dev.off()
-    png("bigplot_boxplotDXY_islands_rawmetric.png",width=1200)
+    png("bigplot_boxplotDXY_islands_rawmetric.may2020.png",width=1200)
     par(
       bg = NA,
       col.axis = "white",
@@ -1455,7 +1448,7 @@ if(5 %in% steps) {
       border = as.numeric(morphcolors[, 4]) + 1
     )
     dev.off()
-    png("bigplot_boxplotDXY_islands_residualmetric.png",width=1200)
+    png("bigplot_boxplotDXY_islands_residualmetric.may2020.png",width=1200)
     par(
       bg = NA,
       col.axis = "white",
@@ -1473,7 +1466,7 @@ if(5 %in% steps) {
     dev.off()
     
     palette(c("white", "pink"))
-    png("bigplot_boxplotDXY_notislands.png",width=1200)
+    png("bigplot_boxplotDXY_notislands.may2020.png",width=1200)
     par(
       bg = NA,
       col.axis = "white",
@@ -1491,7 +1484,7 @@ if(5 %in% steps) {
     
     
     if(length(bigplot$dxymeans[bigplot$globalsumquantile == 36])>0){
-    png("bigplot_boxplotdxy_globalislands.png",width=1200)
+    png("bigplot_boxplotdxy_globalislands.may2020.png",width=1200)
     par(
       bg = NA,
       col.axis = "white",
@@ -1508,7 +1501,7 @@ if(5 %in% steps) {
     dev.off()
     }
     
-    png("bigplot_boxplotdxy_globalnotislands.png",width=1200)
+    png("bigplot_boxplotdxy_globalnotislands.may2020.png",width=1200)
     par(
       bg = NA,
       col.axis = "white",
@@ -1525,7 +1518,7 @@ if(5 %in% steps) {
     dev.off()
     
     if(length(bigplot$Fst[bigplot$globalsumquantile == 36])>0){
-    png("bigplot_boxplotfst_globalislands.png",width=1200)
+    png("bigplot_boxplotfst_globalislands.may2020.png",width=1200)
     par(
       bg = NA,
       col.axis = "white",
@@ -1542,7 +1535,7 @@ if(5 %in% steps) {
     dev.off()
     }
     
-    png("bigplot_boxplotfst_globalnotislands.png",width=1200)
+    png("bigplot_boxplotfst_globalnotislands.may2020.png",width=1200)
     par(
       bg = NA,
       col.axis = "white",
@@ -1558,7 +1551,7 @@ if(5 %in% steps) {
     )
     dev.off()
     
-    write.csv(bigplot, "/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ANALYSIS/DXY/textfiles/bigplot.txt", row.names = F)
+    write.csv(bigplot, "/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ANALYSIS/DXY/textfiles/bigplot.may2020.txt", row.names = F)
     
     
     
@@ -1568,7 +1561,7 @@ if(6 %in% steps) {
   print("STEP 6 bigplot pngs"); {
     
     bigplot = read.csv(
-      "/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ANALYSIS/DXY/textfiles/bigplot.txt"
+      "/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ANALYSIS/DXY/textfiles/bigplot.may2020.txt"
     )
     
     nummorph = c(10,
@@ -1611,7 +1604,7 @@ if(6 %in% steps) {
         "cyan"
       )
     )
-    png("bigplot_sitesperspp_local_all.png",width=1200)
+    png("bigplot_sitesperspp_local_all.may2020.png",width=1200)
     par(
       bg = NA,
       col.axis = "white",
@@ -1656,7 +1649,7 @@ if(6 %in% steps) {
     )
     dev.off()
     
-    png("bigplot_sitesperspp_local_nocommon.png",width=1200)
+    png("bigplot_sitesperspp_local_nocommon.may2020.png",width=1200)
     par(
       bg = NA,
       col.axis = "white",
@@ -1704,7 +1697,7 @@ if(6 %in% steps) {
     div_swpIsl = div_swpIsl[, c("cri", "cur", "fus", "bil", "bru", "mel", "nit", "sin")]
     
     div_swpIsl = as.matrix(div_swpIsl)
-    png("bigplot_sitestack_per_spp.png",
+    png("bigplot_sitestack_per_spp.may2020.png",
         width = 700,
         height = 300)
     par(
@@ -1755,8 +1748,8 @@ if(6 %in% steps) {
 if(7 %in% steps) {
   print("STEP 7 bigplot island size calc"); {
     for (spp in unique(bigplot$species)) {
-      print(spp)
-      print("step 7")
+      #print(spp)
+      #print("step 7")
       subbig = bigplot[bigplot$species == spp,]
       
       sequenced = (rle(as.character(subbig$sumquantile)))
@@ -1771,10 +1764,13 @@ if(7 %in% steps) {
       print(paste(numislands, "islands,", numislans, "islans for", spp))
       
       sizeislands = (names(seqvec[seqvec == "36"]))
-      hist(as.numeric(sizeislands))
+      #hist(as.numeric(sizeislands))
       
       seqtable = t(table(sequenced))
-      barplot(seqtable)
+      #barplot(seqtable)
+      
+      
+      
       
       
     }
@@ -1785,21 +1781,17 @@ if(7 %in% steps) {
 ## brif islands detour
 if(8 %in% steps) {
   print("STEP 8 plot hardcoded islands"); {
-    names = c("bel",
-              "cri",
-              "cur",
-              "fla",
-              "fus",
-              "bil",
-              "bru",
-              "mel",
-              "nit",
-              "sin")
+    names = c("bel","cri","cur","fla","fus",
+              "bil","bru","mel","nit","sin")
     names2 = c("V", "c", "T", "f", "M", "b", "A", "m", "n", "s")
-    sweep = c(25, 49, 14, 92, 212,
-              257, 72, 123, 72, 78)
-    islan = c(127, 127, 200, 123, 72,
-              55, 66, 44, 85, 69)
+    #sweep = c(25, 49, 14, 92, 212,
+    #          257, 72, 123, 72, 78)
+    sweep = c(105,172,230,12,6,
+              66,27,2,14,3)
+    #islan = c(127, 127, 200, 123, 72,
+    #          55, 66, 44, 85, 69)
+    islan = c(1,1,3,0,0,
+              1,2,1,2,6)
     str = c(1, 1, 1, 1, 1, 0, 0, 0, 0, 0)
     
     x = data.frame(names, islan, sweep)
@@ -1810,7 +1802,7 @@ if(8 %in% steps) {
     modelC = glm(str ~ islan + sweep, family = "binomial")
     AICcmodavg::AICc(modelC)
     #plot(islan,sweep,pch=names2,col=str+3) # plot with body size on x-axis and survival (0 or 1) on y-axis
-    png("sweeps_islands_structure.png",
+    png("sweeps_islands_structure.may2020.png",
         width = 700,
         height = 400)
     par(
@@ -1825,19 +1817,20 @@ if(8 %in% steps) {
     plot(
       islan,
       sweep,
-      pch = str + 16,
+      #pch = str + 16,
+      pch=names2,
       col = str + 1,
       cex = 2,
       xlab = "Number Sweeps",
-      ylab = "Number Islands",
-      xlim=c(0,200),
-      ylim=c(0,270)
+      ylab = "Number Islands"#,
+      #xlim=c(0,200),
+      #ylim=c(0,270)
     ) # plot with body size on x-axis and survival (0 or 1) on y-axis
     #points(islan, predict(modelC, newdata=x, type="response"),pch=21,bg=as.numeric(str)+2)
-    abline(a = 0,
-           b = 1,
-           col = "grey60",
-           lty = 2,lwd=2)
+    #abline(a = 0,
+    #       b = 1,
+    #       col = "grey60",
+    #       lty = 2,lwd=2)
     legend(
       "topright",
       legend = c("No Structure", "Structure"),
@@ -1854,7 +1847,7 @@ if(8 %in% steps) {
     y = as.matrix(data.frame(islan, islan))
     rownames(y) = names
     colnames(y) = c("islans", "Islands")
-    png("bigplot_regions_per_spp.png",
+    png("bigplot_regions_per_spp.may2020.png",
         width = 700,
         height = 300)
     par(
@@ -1922,9 +1915,9 @@ if(8 %in% steps) {
     corrssmall = corrssq[c(1:11), c(12:24, 36:52)]
     
     hist(corrssmall)
-    write.table(corrssq, "correlations_rsq.txt", sep = "\t")
-    write.table(corrs, "correlationsfull.txt", sep = "\t")
-    write.table(corrssmall, "correlations_rsqsmall.txt", sep = "\t")
+    write.table(corrssq, "correlations_rsq.may2020.txt", sep = "\t")
+    write.table(corrs, "correlationsfull.may2020.txt", sep = "\t")
+    write.table(corrssmall, "correlations_rsqsmall.may2020.txt", sep = "\t")
     
     
     corrplot::corrplot(
@@ -1988,7 +1981,7 @@ if(8 %in% steps) {
     vf<-diag(vcv(con3))
     
     palette(c("red", "yellow"))
-    png("fst_vs_pcs_pgls.png",width=1200)
+    png("fst_vs_pcs_pgls.may2020.png",width=1200)
     par(mfrow = c(1, 3),
         cex = 2,
         mar = c(4, 4, 1, 1))
@@ -2031,7 +2024,7 @@ if(8 %in% steps) {
     abline(model3)
     dev.off()
     
-    png("dxy_vs_pcs_pgls.png",width=1200)
+    png("dxy_vs_pcs_pgls.may2020.png",width=1200)
     par(mfrow = c(1, 3),
         cex = 2,
         mar = c(4, 4, 1, 1))
@@ -2070,7 +2063,7 @@ if(8 %in% steps) {
     abline(model3)
     dev.off()
     
-    png("sweeps_vs_pcs_pgls.png",
+    png("sweeps_vs_pcs_pgls.may2020.png",
         width = 1200)
     par(mfrow = c(1, 3),
         cex = 2,
@@ -2111,7 +2104,7 @@ if(8 %in% steps) {
     dev.off()
     
     
-    png("islands_vs_pcs_pgls.png",
+    png("islands_vs_pcs_pgls.may2020.png",
         width = 1200)
     par(mfrow = c(1, 3),
         cex = 2,
@@ -2152,7 +2145,7 @@ if(8 %in% steps) {
     dev.off()
     
     
-    png("str_vs_pcs_pgls.png",width=1200)
+    png("str_vs_pcs_pgls.may2020.png",width=1200)
     par(mfrow = c(1, 3),
         cex = 2,
         mar = c(4, 4, 1, 1))
@@ -2199,7 +2192,7 @@ if(8 %in% steps) {
     ## top 3 with str
     
     palette(c("red", "yellow"))
-    png("fst_top3_pgls.png",width=1200)
+    png("fst_top3_pgls.may2020.png",width=1200)
     par(mfrow = c(1, 3),
         cex = 2,
         mar = c(4, 4, 1, 1))
@@ -2241,7 +2234,7 @@ if(8 %in% steps) {
     abline(model3)
     dev.off()
     
-    png("dxy_top3_pgls.png",width=1200)
+    png("dxy_top3_pgls.may2020.png",width=1200)
     par(mfrow = c(1, 3),
         cex = 2,
         mar = c(4, 4, 1, 1))
@@ -2280,7 +2273,7 @@ if(8 %in% steps) {
     abline(model3)
     dev.off()
     
-    png("sweeps_top3_pgls.png",width=1200)
+    png("sweeps_top3_pgls.may2020.png",width=1200)
     par(mfrow = c(1, 3),
         cex = 2,
         mar = c(4, 4, 1, 1))
@@ -2320,7 +2313,7 @@ if(8 %in% steps) {
     dev.off()
     
     
-    png("islands_top3_pgls.png",width=1200)
+    png("islands_top3_pgls.may2020.png",width=1200)
     par(mfrow = c(1, 3),
         cex = 2,
         mar = c(4, 4, 1, 1))
@@ -2360,7 +2353,7 @@ if(8 %in% steps) {
     dev.off()
     
     
-    png("str_top3_pgls.png",width=1200)
+    png("str_top3_pgls.may2020.png",width=1200)
     par(mfrow = c(1, 3),
         cex = 2,
         mar = c(4, 4, 1, 1))
@@ -2437,13 +2430,13 @@ if(9 %in% steps) {
     corrplot::corrplot(pva_cor,is.corr=F)
     
     
-    write.table(rsq_cor,"rsquared_pgls.txt")
-    write.table(pva_cor,"pval_pgls.txt")
+    write.table(rsq_cor,"rsquared_pgls.may2020.txt")
+    write.table(pva_cor,"pval_pgls.may2020.txt")
     
     
     barplot(rsq_cor[,"Fst.mean"])
     
-    png("Barplot_morphology_vs_genetics_pcs_pgls.png")
+    png("Barplot_morphology_vs_genetics_pcs_pgls.may2020.png")
     par(
       bg = NA,
       col.axis = "white",
@@ -2469,7 +2462,7 @@ if(9 %in% steps) {
               "darkgreen","green","cyan","lightblue","blue","darkblue",
               "purple"))
     
-    png("Barplot_morphology_vs_genetics_raw_pgls.png")
+    png("Barplot_morphology_vs_genetics_raw_pgls.may2020.png")
     # par(
     #   bg = NA,
     #   col.axis = "white",
@@ -2495,7 +2488,7 @@ if(9 %in% steps) {
            bty="n")
     dev.off()
     
-    png("Barplot_morphology_vs_genetics_res_pgls.png")
+    png("Barplot_morphology_vs_genetics_res_pgls.may2020.png")
     # par(
     #   bg = NA,
     #   col.axis = "white",
@@ -2525,7 +2518,7 @@ if(9 %in% steps) {
     
     
     
-    png("Barplot_morphology_vs_fst_all_pgls.png")
+    png("Barplot_morphology_vs_fst_all_pgls.may2020.png")
     par(
       bg = NA,
       col.axis = "white",
@@ -2558,7 +2551,7 @@ if(9 %in% steps) {
     
     
     
-    png("Barplot_morphology_vs_dxy_all_pgls.png")
+    png("Barplot_morphology_vs_dxy_all_pgls.may2020.png")
     par(
       bg = NA,
       col.axis = "white",
@@ -2590,7 +2583,7 @@ if(9 %in% steps) {
     dev.off()
     
     
-    png("Barplot_morphology_vs_sweep_all_pgls.png")
+    png("Barplot_morphology_vs_sweep_all_pgls.may2020.png")
     par(
       bg = NA,
       col.axis = "white",
@@ -2623,7 +2616,7 @@ if(9 %in% steps) {
     
     
     
-    png("Barplot_morphology_vs_islands_all_pgls.png")
+    png("Barplot_morphology_vs_islands_all_pgls.may2020.png")
     par(
       bg = NA,
       col.axis = "white",
@@ -2655,7 +2648,7 @@ if(9 %in% steps) {
     dev.off()
     
     
-    png("Barplot_morphology_vs_str_all_pgls.png")
+    png("Barplot_morphology_vs_str_all_pgls.may2020.png")
     par(
       bg = NA,
       col.axis = "white",
@@ -2756,11 +2749,11 @@ if(9 %in% steps) {
     corrplot::corrplot(pva_des,is.corr=F)
     
     
-    write.table(rsq_des,"rsquared_pgls_des.txt")
-    write.table(pva_des,"pval_pgls_des.txt")
+    write.table(rsq_des,"rsquared_pgls_des.may2020.txt")
+    write.table(pva_des,"pval_pgls_des.txt.may2020")
     
     
-    png("Barplot_despca_vs_genomics_pgls.png")
+    png("Barplot_despca_vs_genomics_pgls.may2020.png")
     #par(  bg = NA,  col.axis = "white",  fg = "white",  col.lab = "white",  col.main = "white")
     barplot((rsq_des),beside=T,       xlab=("Genetic Metric"),
             ylab="R-squared value",col=c("red","cyan","yellow"),
@@ -2772,7 +2765,7 @@ if(9 %in% steps) {
            bty="n")
     dev.off()
     
-    png("correlations_populationlevel_genomemorpho_pc1dif.png",width=1000,height=300)
+    png("correlations_populationlevel_genomemorpho_pc1dif.may2020.png",width=1000,height=300)
     #par(  bg = NA,  col.axis = "white",  fg = "white",  col.lab = "white",  col.main = "white")
     par(mfrow=c(1,5))
     model1 = pgls(birddata$data[,"pc1dif"]~birddata$data[,"dxymeans.mean"],data=birddata)
@@ -2796,7 +2789,7 @@ if(9 %in% steps) {
     boxplot(birddata$data[,"pc1dif"]~birddata$data[,"str"],xlab="Structure",ylab="Dif pc1dif between pops",col=c("red","cyan"),cex=2,main=towrite)
     dev.off()
     
-    png("correlations_populationlevel_genomemorpho_pc2dif.png",width=1000,height=300)
+    png("correlations_populationlevel_genomemorpho_pc2dif.may2020.png",width=1000,height=300)
     #par(  bg = NA,  col.axis = "white",  fg = "white",  col.lab = "white",  col.main = "white")
     par(mfrow=c(1,5))
     model1 = pgls(birddata$data[,"pc2dif"]~birddata$data[,"dxymeans.mean"],data=birddata)
@@ -2820,7 +2813,7 @@ if(9 %in% steps) {
     boxplot(birddata$data[,"pc2dif"]~birddata$data[,"str"],xlab="Structure",ylab="Dif pc2dif between pops",col=c("red","cyan"),cex=2,main=towrite)
     dev.off()
     
-    png("correlations_populationlevel_genomemorpho_pc3dif.png",width=1000,height=300)
+    png("correlations_populationlevel_genomemorpho_pc3dif.may2020.png",width=1000,height=300)
     #par(  bg = NA,  col.axis = "white",  fg = "white",  col.lab = "white",  col.main = "white")
     par(mfrow=c(1,5))
     model1 = pgls(birddata$data[,"pc3dif"]~birddata$data[,"dxymeans.mean"],data=birddata)
@@ -2923,7 +2916,7 @@ if(9 %in% steps) {
     rsq_cor_line = c(rsq_cor[1,],rsq_cor[2,],rsq_cor[3,])
     names(rsq_cor_line) = colnames(matrix)
     
-    png("Randomization_Tests_For_Across_Spp_PGLS.png",
+    png("Randomization_Tests_For_Across_Spp_PGLS.may2020.png",
         height=600,width=900)
     par(mfrow=c(3,5))
     for (i in 1:15) {
@@ -2960,13 +2953,13 @@ if(9 %in% steps) {
     zonomeansqua = rowMeans(zono[,c(6,10)])
     zono = cbind(zono,zonomeansdxy,zonomeansfst,zonomeansqua)
     
-    png("same_zono_fst.png",width=800,height=500)
+    png("same_zono_fst.may2020.png",width=800,height=500)
     par(mfrow=c(2,1),mar=c(4,4,0,0))
     plot(zono[,4],col=as.numeric(as.factor(zono$chr)),xlab=unique(zono[,5]),ylab="Fst")
     plot(zono[,8],col=as.numeric(as.factor(zono$chr)),xlab=unique(zono[,9]),ylab="Fst")
     dev.off()
     
-    png("same_zono_dxy.png",width=800,height=500)
+    png("same_zono_dxy.may2020.png",width=800,height=500)
     par(mfrow=c(2,1),mar=c(4,4,0,0))
     plot(zono[,3],col=as.numeric(as.factor(zono$chr)),xlab=unique(zono[,5]),ylab="Dxy")
     plot(zono[,7],col=as.numeric(as.factor(zono$chr)),xlab=unique(zono[,9]),ylab="Dxy")
@@ -2974,7 +2967,7 @@ if(9 %in% steps) {
     
     colfunc <- colorRampPalette(c("red", "black","cyan"))
     palette(colfunc(17))
-    png("corr_zono_dxy.png",width=500,height=500)
+    png("corr_zono_dxy.may2020.png",width=500,height=500)
     plot(zono[,3],
          zono[,7],
          xlab=paste(unique(zono[,5]),names(zono)[3]),
@@ -2983,7 +2976,7 @@ if(9 %in% steps) {
          col=as.numeric((zono$quancolor.x-zono$quancolor.y)+9))
     dev.off()
     
-    png("corr_zono_fst.png",width=500,height=500)
+    png("corr_zono_fst.may2020.png",width=500,height=500)
     plot(zono[,4],
          zono[,8],
          xlab=paste(unique(zono[,5]),names(zono)[4]),
@@ -2993,13 +2986,13 @@ if(9 %in% steps) {
     dev.off()
     
     
-    png("same_zono_dxyfstmeans.png",width=800,height=500)
+    png("same_zono_dxyfstmeans.may2020.png",width=800,height=500)
     par(mfrow=c(2,1),mar=c(4,4,0,0))
     plot(zono$zonomeansfst,col=as.numeric(as.factor(zono$chr)),ylab="Fst mean across spp")
     plot(zono$zonomeansdxy,col=as.numeric(as.factor(zono$chr)),ylab="Dxy mean across spp")
     dev.off()
     
-    png("same_zono_quantilemeansDXY.png",width=800,height=500)
+    png("same_zono_quantilemeansDXY.may2020.png",width=800,height=500)
     plot(zono$zonomeansqua,col=as.numeric(as.factor(zono$chr)),ylab="Quantile DXY mean across spp")
     dev.off()
     
@@ -3019,7 +3012,7 @@ if(9 %in% steps) {
     stur = merge(stur,stursmall5,by=c("chr","midPos")) 
     
     
-    png("same_stur_fst.png",width=800,height=1250)
+    png("same_stur_fst.may2020.png",width=800,height=1250)
     par(mfrow=c(5,1),mar=c(4,4,0,0))
     plot(stur[,4],col=as.numeric(as.factor(stur$chr)),xlab=unique(stur[,5]),ylab="Fst")
     plot(stur[,8],col=as.numeric(as.factor(stur$chr)),xlab=unique(stur[,9]),ylab="Fst")
@@ -3028,7 +3021,7 @@ if(9 %in% steps) {
     plot(stur[,20],col=as.numeric(as.factor(stur$chr)),xlab=unique(stur[,21]),ylab="Fst")
     dev.off()
     
-    png("same_stur_dxy.png",width=800,height=1250)
+    png("same_stur_dxy.may2020.png",width=800,height=1250)
     par(mfrow=c(5,1),mar=c(4,4,0,0))
     plot(stur[,3],col=as.numeric(as.factor(stur$chr)),xlab=unique(stur[,5]),ylab="Dxy")
     plot(stur[,7],col=as.numeric(as.factor(stur$chr)),xlab=unique(stur[,9]),ylab="Dxy")
@@ -3046,20 +3039,20 @@ if(9 %in% steps) {
     sturmeansqua = rowMeans(stur[,c(6,10,14,18,22)])
     stur = cbind(stur,sturmeansdxy,sturmeansfst,sturmeansqua)
     
-    png("same_stur_dxyfstmeans.png",width=800,height=500)
+    png("same_stur_dxyfstmeans.may2020.png",width=800,height=500)
     par(mfrow=c(2,1),mar=c(4,4,0,0))
     plot(stur$sturmeansfst,col=as.numeric(as.factor(stur$chr)),ylab="Fst mean across spp")
     plot(stur$sturmeansdxy,col=as.numeric(as.factor(stur$chr)),ylab="Dxy mean across spp")
     dev.off()
     
-    png("same_stur_quantilemeans.png",width=800,height=500)
+    png("same_stur_quantilemeans.may2020.png",width=800,height=500)
     plot(stur$sturmeansqua,col=as.numeric(as.factor(stur$chr)),ylab="Quantile mean across spp")
     dev.off()
     
     palette(    c(      "white",      "white",
                         "white",      "white",      "white",      "magenta",
                         "white",      "white",      "cyan"    )  )
-    png("same_stur_quancol.png",width=800,height=500)
+    png("same_stur_quancol.may2020.png",width=800,height=500)
     #par(mfrow=c(5,1),mar=c(4,4,0,0))
     plot(log(stur[,6]+2),col=as.numeric(as.factor(stur[,6])),xlab=unique(stur[,5]),ylab="quantile",ylim=c(log(20-2),log(36+2)))
     points(log(stur[,10]+1),col=as.numeric(as.factor(stur[,10])),xlab=unique(stur[,9]),ylab="quantile",ylim=c(log(20-2),log(36+2)))
@@ -3079,7 +3072,7 @@ if(9 %in% steps) {
 if(10 %in% steps) {
   print("STEP 10 -- 5 ST DEVS"); {
     
-    #bigplot = read.csv("/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ANALYSIS/DXY/textfiles/bigplot.txt")
+    #bigplot = read.csv("/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ANALYSIS/DXY/textfiles/bigplot.may2020.txt")
     names(bigplot)
     
     var1num=which(names(bigplot)=="dxymeans")
@@ -3115,12 +3108,13 @@ if(11 %in% steps) {
 }
 
 ## overlaying bigplots over one another
-bigplot=read.table("/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ANALYSIS/DXY/textfiles/bigplot.txt",
+if(12 %in% steps) {
+bigplot=read.table("/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ANALYSIS/DXY/textfiles/bigplot.may2020.txt",
                    sep=",",header=T)
-png("testbigplotoverlay.png",height=1000,width=800)
 bigplot = bigplot[order(bigplot$chr,bigplot$starts),]
 bigplot$chrpos = paste(bigplot$chr,bigplot$starts)
 bigplot$chrpos = as.numeric(as.factor(bigplot$chrpos))
+png("testbigplotoverlay.may2020.png",height=1000,width=800)
 par(mfrow=c(10,1),mar=c(0,3,0,0))
 for (i in 1:length(unique(bigplot$species))){
   spp=sort(unique(bigplot$species))[i]
@@ -3133,10 +3127,10 @@ for (i in 1:length(unique(bigplot$species))){
 }
 dev.off()
 
-png("testbigplotoverlaydxy.png",height=1000,width=800)
 bigplot = bigplot[order(bigplot$chr,bigplot$starts),]
 bigplot$chrpos = paste(bigplot$chr,bigplot$starts)
 bigplot$chrpos = as.numeric(as.factor(bigplot$chrpos))
+png("testbigplotoverlaydxy.may2020.png",height=1000,width=800)
 par(mfrow=c(10,1),mar=c(0,3,0,0))
 for (i in 1:length(unique(bigplot$species))){
   spp=sort(unique(bigplot$species))[i]
@@ -3186,7 +3180,7 @@ listspp=unlist(strsplit(colnames(ncor),"\\."))[seq(2,length(colnames(ncor))*2,2)
 colnames(ncor)=listspp
 rownames(ncor)=listspp
 
-pdf("dxy_fst_nsites_corr_fullgenome.pdf",height=1.5,width=3)
+pdf("dxy_fst_nsites_corr_fullgenome.may2020.pdf",height=1.5,width=3)
 par(mfrow=c(1,3))
 corrplot::corrplot(dcor,
                    method="ellipse",diag=F,order="alphabet",
@@ -3218,7 +3212,7 @@ corrplot::corrplot(cor(btemp[,nsit],use="pairwise.complete.obs"),
                    method="number",diag=T,order="hclust")
 
 
-pdf("dxy_corrs_chroms.pdf",height=5,width=8)
+pdf("dxy_corrs_chroms.may2020.pdf",height=5,width=8)
 par(mfrow=c(4,7))
 for(i in 1:length(unique(btemp$chr))) {
   print(i)
@@ -3250,7 +3244,7 @@ for(i in 1:length(unique(btemp$chr))) {
 }
 dev.off()
 
-pdf("fst_corrs_chroms.pdf",height=5,width=8)
+pdf("fst_corrs_chroms.may2020.pdf",height=5,width=8)
 par(mfrow=c(4,7))
 for(i in 1:length(unique(btemp$chr))) {
   print(i)
@@ -3282,7 +3276,7 @@ for(i in 1:length(unique(btemp$chr))) {
 }
 dev.off()
 
-pdf("nsites_corrs_chroms.pdf",height=5,width=8)
+pdf("nsites_corrs_chroms.may2020.pdf",height=5,width=8)
 par(mfrow=c(4,7))
 for(i in 1:length(unique(btemp$chr))) {
   print(i)
@@ -3314,9 +3308,11 @@ for(i in 1:length(unique(btemp$chr))) {
 }
 dev.off()
 
+}
 
 ## combine by species -- relative dxy and fst
 ## combine by species 
+if(13 %in% steps) {
 bigplot = bigplot[order(bigplot$chr,bigplot$starts),]
 bigplot$chrpos = paste(bigplot$chr,bigplot$starts)
 bigplot$chrpos = as.numeric(as.factor(bigplot$chrpos))
@@ -3359,11 +3355,11 @@ listspp=unlist(strsplit(colnames(ncor),"\\."))[seq(2,length(colnames(ncor))*2,2)
 colnames(ncor)=listspp
 rownames(ncor)=listspp
 
-png("dxy_quan_corrplot_data.png")
+png("dxy_quan_corrplot_data.may2020.png")
 plot(btemp[,dxys])
 dev.off()
 
-pdf("quans_corr_fullgenome.pdf",height=1.5,width=3)
+pdf("quans_corr_fullgenome.may2020.pdf",height=1.5,width=3)
 par(mfrow=c(1,3))
 corrplot::corrplot(dcor,
                    method="ellipse",diag=F,order="alphabet",
@@ -3389,3 +3385,4 @@ dev.off()
 chisq.test(qtab)
 chisq.test(ftab)
 chisq.test(dtab)
+}

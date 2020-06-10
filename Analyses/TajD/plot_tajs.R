@@ -55,7 +55,7 @@ for (speciesname in specieslist) {
 
     for (colnam in names(tajs)[1:length(tajs)]) {
       print(colnam)
-      png(paste("/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ANALYSIS/tajimas/",speciesname,"_CHROM_",colnam,".png",sep=""),width=800,height=300)
+      png(paste("/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ANALYSIS/tajimas/",speciesname,"_CHROM_",colnam,".may2020.png",sep=""),width=800,height=300)
       
       toplot=as.numeric(as.character(tajs[,colnam]))
       
@@ -108,7 +108,7 @@ for (speciesname in specieslist) {
   
   for (colnam in names(tajs)[1:length(tajs)]) {
     print(colnam)
-    png(paste("/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ANALYSIS/tajimas/",speciesname,colnam,".png",sep=""),width=800,height=300)
+    png(paste("/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ANALYSIS/tajimas/",speciesname,colnam,".may2020.png",sep=""),width=800,height=300)
     
     toplot=as.numeric(as.character(tajs[,colnam]))
     
@@ -135,9 +135,9 @@ for (speciesname in specieslist) {
 }
 }
 
-write.csv(bigtaj,"/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ANALYSIS/DXY/textfiles/bigtaj.new.temp",row.names=F)
+write.csv(bigtaj,"/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ANALYSIS/DXY/textfiles/bigtaj.new.may2020.temp",row.names=F)
 
-bigtaj = read.csv("/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ANALYSIS/DXY/textfiles/bigtaj.new.txt")
+bigtaj = read.csv("/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ANALYSIS/DXY/textfiles/bigtaj.new.may2020.txt")
 colnames(bigtaj) = c("windowinfo",
                      "chr",
                      "midPos",
@@ -155,25 +155,27 @@ colnames(bigtaj) = c("windowinfo",
                      "species"
 )
 
-bigplot = read.csv("/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ANALYSIS/DXY/textfiles/bigplot.txt")
+bigplot = read.csv("/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ANALYSIS/DXY/textfiles/bigplot.may2020.txt")
 
-#bigplot2 = merge(bigplot, bigtaj, by = c("chr","midPos","species"))
+bigplot2 = merge(bigplot, bigtaj, by = c("chr","midPos","species"),all=T)
 
-#write.csv(bigplot2,"/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ANALYSIS/DXY/textfiles/bigplot2.txt",row.names=F)
+write.csv(bigplot2,"/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ANALYSIS/DXY/textfiles/bigplot2.may2020.txt",row.names=F)
+write.csv(bigplot2,"/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ANALYSIS/DXY/textfiles/bigplot2.may2020.txt",row.names=F)
 
-bigplot2 = read.csv("/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ANALYSIS/DXY/textfiles/bigplot2.txt")
+
+bigplot2 = read.csv("/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ANALYSIS/DXY/textfiles/bigplot2.may2020.txt")
 
 names(bigplot2)
 mu=2.21e-9
 ##pi=4Ne*mu so so pi/4mu = 'Ne'
-bigplot2$average_theta_divby_windowsize = rowMeans(bigplot2[,c("tW","tH","tF","tP","tL")]) /50000
+bigplot2$average_theta_divby_windowsize = rowMeans(bigplot2[,c("tW","tH","tF","tP-pi","tL")]) /50000
 bigplot2$est_ne_221e9 = (bigplot2$average_theta_divby_windowsize) / (4*mu)
 names(bigplot2)
 
 #write.csv(bigplot2,"/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ANALYSIS/DXY/textfiles/bigplot2.txt",row.names=F)
 
 th_calc = (bigplot2$tH / 50000) / (4*mu)
-tp_calc = (bigplot2$tP / 50000) / (4*mu)
+tp_calc = (bigplot2$`tP-pi` / 50000) / (4*mu)
 tl_calc = (bigplot2$tL / 50000) / (4*mu)
 tf_calc = (bigplot2$tF / 50000) / (4*mu)
 tw_calc = (bigplot2$tW / 50000) / (4*mu)
@@ -193,49 +195,55 @@ nrow(tajs)
 
 for (s in unique(bigplot2$species)) {
   print(s)
+  
+  if(sum(complete.cases(unique(tajs$est_ne_221e9[tajs$species==s])))>0){
+  
+  
   palette(  c(    "red",    "cyan",    "goldenrod",    "green",    "blue",    "purple",    "blue",    "black",    "brown",    "magenta"  ))
-  png(paste(s,"est_ne_221e9_averageThetas.png",sep=""),width=800,height=300)
+  png(paste(s,"est_ne_221e9_averageThetasc.may2020.png",sep=""),width=800,height=300)
   plot(tajs$est_ne_221e9[tajs$species==s],col=as.numeric(as.factor(tajs$chr[tajs$species==s])),cex=0.2,
        main=paste(s,"average value Ne_est:",
-                  formatC(mean(tajs$est_ne_221e9[tajs$species==s]),format="e",digits=2),sep=" "),
+                  formatC(mean(tajs$est_ne_221e9[tajs$species==s],na.rm=T),format="e",digits=2),sep=" "),
        xlab="Window (Scaffold)",ylab="average theta scaled by 50000")
   dev.off()
   
-  png(paste(s,"est_ne_221e9_th_calc.png",sep=""),width=800,height=300)
+  png(paste(s,"est_ne_221e9_th_calc.may2020.png",sep=""),width=800,height=300)
   plot(th_calc[tajs$species==s],col=as.numeric(as.factor(tajs$chr[tajs$species==s])),cex=0.2,
        main=paste(s,"average value Ne_est:",
-                  formatC(mean(th_calc[tajs$species==s]),format="e",digits=2),sep=" "),
+                  formatC(mean(th_calc[tajs$species==s],na.rm=T),format="e",digits=2),sep=" "),
        xlab="Window (Scaffold)",ylab="average theta scaled by 50000")
   dev.off()
   
-  png(paste(s,"est_ne_221e9_tp_calc.png",sep=""),width=800,height=300)
+  png(paste(s,"est_ne_221e9_tp_calc.may2020.png",sep=""),width=800,height=300)
   plot(tp_calc[tajs$species==s],col=as.numeric(as.factor(tajs$chr[tajs$species==s])),cex=0.2,
        main=paste(s,"average value Ne_est:",
-                  formatC(mean(tp_calc[tajs$species==s]),format="e",digits=2),sep=" "),
+                  formatC(mean(tp_calc[tajs$species==s],na.rm=T),format="e",digits=2),sep=" "),
        xlab="Window (Scaffold)",ylab="average theta scaled by 50000")
   dev.off()
   
-  png(paste(s,"est_ne_221e9_tl_calc.png",sep=""),width=800,height=300)
+  png(paste(s,"est_ne_221e9_tl_calc.may2020.png",sep=""),width=800,height=300)
   plot(tl_calc[tajs$species==s],col=as.numeric(as.factor(tajs$chr[tajs$species==s])),cex=0.2,
        main=paste(s,"average value Ne_est:",
-                  formatC(mean(tl_calc[tajs$species==s]),format="e",digits=2),sep=" "),
+                  formatC(mean(tl_calc[tajs$species==s],na.rm=T),format="e",digits=2),sep=" "),
        xlab="Window (Scaffold)",ylab="average theta scaled by 50000")
   dev.off()
   
-  png(paste(s,"est_ne_221e9_tf_calc.png",sep=""),width=800,height=300)
+  png(paste(s,"est_ne_221e9_tf_calc.may2020.png",sep=""),width=800,height=300)
   plot(tf_calc[tajs$species==s],col=as.numeric(as.factor(tajs$chr[tajs$species==s])),cex=0.2,
        main=paste(s,"average value Ne_est:",
-                  formatC(mean(tf_calc[tajs$species==s]),format="e",digits=2),sep=" "),
+                  formatC(mean(tf_calc[tajs$species==s],na.rm=T),format="e",digits=2),sep=" "),
        xlab="Window (Scaffold)",ylab="average theta scaled by 50000")
   dev.off()
   
-  png(paste(s,"est_ne_221e9_tw_calc.png",sep=""),width=800,height=300)
+  png(paste(s,"est_ne_221e9_tw_calc.may2020.png",sep=""),width=800,height=300)
   plot(tw_calc[tajs$species==s],col=as.numeric(as.factor(tajs$chr[tajs$species==s])),cex=0.2,
        main=paste(s,"average value Ne_est:",
-                  formatC(mean(tw_calc[tajs$species==s]),format="e",digits=2),sep=" "),
+                  formatC(mean(tw_calc[tajs$species==s],na.rm=T),format="e",digits=2),sep=" "),
        xlab="Window (Scaffold)",ylab="average theta scaled by 50000")
   dev.off()
-  
+  }
 }
 
 #formatC(numb, format = "e", digits = 2)
+
+write.csv(bigplot2,"/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ANALYSIS/DXY/textfiles/bigplot2.may2020.txt",row.names=F)
