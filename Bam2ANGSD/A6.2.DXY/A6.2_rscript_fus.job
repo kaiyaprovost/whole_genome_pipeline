@@ -17,8 +17,8 @@ echo $PATH
 
 cd /vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/
 
-sonmaf=/vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/MAFS/Melozone-fusca-SONDXY4.mafs.RAW
-chimaf=/vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/MAFS/Melozone-fusca-CHIDXY4.mafs.RAW
+sonmaf=/vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/MAFS/Melozone-fusca-SONDXY4.mafs
+chimaf=/vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/MAFS/Melozone-fusca-CHIDXY4.mafs
 if [[ -f "$sonmaf" ]]; then
 echo "Son exists"
 else

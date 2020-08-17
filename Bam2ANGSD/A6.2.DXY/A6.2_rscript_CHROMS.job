@@ -1,7 +1,7 @@
 #!/bin/bash
 #PBS -l select=1:ncpus=16
 #PBS -l walltime=5000:00:00
-#PBS -N rscript_chrom_loop
+#PBS -N sin_r_chrom_loop
 #PBS -j oe
 #PBS -m ae
 #PBS -M kprovost@amnh.org
@@ -21,21 +21,21 @@ module load R-3.4.1
 
 #spplist=("Amphispiza-bilineata" "Campylorhynchus-brunneicapillus" "Toxostoma-crissale" "Toxostoma-curvirostre" "Auriparus-flaviceps" "Melozone-fusca" "Polioptila-melanura" "Phainopepla-nitens" "Cardinalis-sinuatus" "Vireo-bellii")
 
-spplist=("Campylorhynchus-brunneicapillus")
+spplist=("Cardinalis-sinuatus")
 
-#chromlist=("mtDNA" "1B" "8" "25" "22" "27" "28" "26" "21" "23" "24" "19" "18" "17" "15" "20" "13" "14" "Z" "4A" "10" "11" "12" "9" "6" "7" "5" "4" "1A" "3" "2" "1" "LG2" "LG5" "LGE22")
+chromlist=("mtDNA" "1B" "8" "25" "22" "27" "28" "26" "21" "23" "24" "19" "18" "17" "15" "20" "13" "14" "Z" "4A" "10" "11" "12" "9" "6" "7" "5" "4" "1A" "3" "2" "1" "LG2" "LG5" "LGE22" "16")
 
-chromlist=("10" "mtDNA" "12" "Z" "2" "5")
+#chromlist=("1A" "1B" "4" "3" "mtDNA")
 
 for chrom in ${chromlist[@]}; do
 echo $chrom
 
-#for spp in ${spplist[@]}; do
+for spp in ${spplist[@]}; do
 #echo $spp
 
 shortname=`echo $spp | cut -f2 -d"-" | head -c3`
 
-ls *${spp}*DXY4*chr*Tgut_${chrom}*.*
+ls *${spp}*DXY4*chr*Tgut_${chrom}.mafs*
 
 ## check if son and chi files exist
 

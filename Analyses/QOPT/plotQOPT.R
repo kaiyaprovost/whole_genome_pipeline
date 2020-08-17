@@ -36,7 +36,7 @@ if (reloadEnv == T) {
 ## with all combined
 
 structure_all = read.csv(
-  "/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ASSEMBLY/ANGSD/QOPT/AllSpeciesMetadata_allK.csv",
+  "/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/AllSpeciesMetadata_allK_9june2020.csv",
   row.names = NULL
 )
 

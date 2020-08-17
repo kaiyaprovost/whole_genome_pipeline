@@ -2,7 +2,7 @@
 
 library(AICcmodavg)
 
-steps=c(7,8) ## up to 13
+steps=c(1) ## up to 13
 
 setwd("/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ANALYSIS/DXY/")
 

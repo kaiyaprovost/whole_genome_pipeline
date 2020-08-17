@@ -13,7 +13,7 @@ grey=col[9]
 
 ## Import Data
 ## Note that these must be sorted by the column "SORTORDER" for this to work properly
-structure_all <- read.csv("/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ASSEMBLY/ANGSD/QOPT/AllSpeciesMetadata_allK.csv",
+structure_all <- read.csv("/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/AllSpeciesMetadata_allK_9june2020.csv",
                           row.names=NULL)
 names(structure_all)
 

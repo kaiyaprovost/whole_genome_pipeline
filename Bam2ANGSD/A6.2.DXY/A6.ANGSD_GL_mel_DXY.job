@@ -37,4 +37,4 @@ time /home/kprovost/nas3/angsd/angsd -GL 2 \
 -minQ 20 \
 -nThreads 16 \
 -bam $bamlist \
--out Polioptila-melanura-DXY
+-out Polioptila-melanura-DXY-TEST4

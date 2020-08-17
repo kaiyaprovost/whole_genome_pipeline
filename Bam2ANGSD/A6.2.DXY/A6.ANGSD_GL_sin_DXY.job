@@ -37,4 +37,4 @@ time /home/kprovost/nas3/angsd/angsd -GL 2 \
 -minQ 20 \
 -nThreads 16 \
 -bam $bamlist \
--out Cardinalis-sinuatus-DXY
+-out Cardinalis-sinuatus-DXY-TEST4

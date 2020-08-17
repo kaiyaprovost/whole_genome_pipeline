@@ -5,9 +5,9 @@ import os
 import glob
 import copy
 
-# cd "/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ANALYSIS/DXY/textfiles/raw/"; 
-# for i in *chrfix.txt; do 
-# python3 /Users/kprovost/Documents/Github/whole_genome_pipeline/Analyses/FST-DXY/split_dxy_by_chromosomes.py $i 1; 
+# cd "/vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/MAFS/"; 
+# for i in Phainopepla-nitens*mafs; do 
+# python3 ~/nas3/ANGSD_pipeline/split_dxy_by_chromosomes.py $i 1; 
 # done;
 
 def checkfile(path,stufftowrite,header):

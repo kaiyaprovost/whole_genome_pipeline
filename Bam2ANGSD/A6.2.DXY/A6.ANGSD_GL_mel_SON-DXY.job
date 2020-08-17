@@ -1,5 +1,5 @@
 #!/bin/bash
-#PBS -l select=1:ncpus=2
+#PBS -l select=1:ncpus=16
 #PBS -l walltime=5000:00:00
 #PBS -N melSON_ANGSD_GL
 #PBS -j oe
@@ -56,7 +56,7 @@ time /home/kprovost/nas3/angsd/angsd -GL 2 \
 -sites /home/kprovost/nas3/ANGSD_pipeline/CHROMS_FROM_DXY_RAWSIZES.txt \
 -nThreads 16 \
 -bam $bamlist \
--out Polioptila-melanura-SONDXY4
+-out Polioptila-melanura-SONDXY-TEST4
 
 ## took out: #-sites /vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/Polioptila-melanura-DXY.beagle \
 ## took out: #-minInd 4 \

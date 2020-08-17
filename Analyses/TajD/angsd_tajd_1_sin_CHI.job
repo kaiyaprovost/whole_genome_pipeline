@@ -15,7 +15,6 @@ EXECDIR=`pwd`
 export PATH=./:$PATH
 echo $PATH
 
-
 #for i in /home/kprovost/nas3/genomeresequencingFromLucas/???_chrom/pseudo*gz; do
 #gzip -f $i;
 #done;
@@ -35,30 +34,29 @@ for i in /vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/REALIGNED_BAMS/
 echo $i; gunzip $i; done
 
 ## bam_list = list of BAM files
-bamlist=/home/kprovost/nas3/ANGSD_pipeline/CHI_Vireo_bellii.indlist
-# chilist=/home/kprovost/nas3/ANGSD_pipeline/CHI_Vireo_bellii.indlist
-# bamlist=/home/kprovost/nas3/ANGSD_pipeline/Cardinalis-sinuatus.bamlist
+bamlist=/home/kprovost/nas3/ANGSD_pipeline/CHI_Cardinalis_sinuatus.indlist
 
 cd /vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/SAFS/
 
 date
 time
 
-#time /home/kprovost/nas3/angsd/angsd -bam $bamlist -doSaf 1 -anc $ref -GL 1 -P 24 -out Cardinalis-sinuatus-CHI-taj1
+time /home/kprovost/nas3/angsd/angsd -bam $bamlist -doSaf 1 -anc $ref -GL 1 -P 24 -out Cardinalis-sinuatus-CHI-taj1
 
-time /home/kprovost/nas3/angsd/misc/realSFS \
-/vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/SAFS/Cardinalis-sinuatus-CHI-taj1.saf.idx \
-> Cardinalis-sinuatus-CHI-taj.sfs
+#time /home/kprovost/nas3/angsd/misc/realSFS \
+#/vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/SAFS/Cardinalis-sinuatus-CHI-taj1.saf.idx \
+#> Cardinalis-sinuatus-CHI-taj.sfs
 
-time /home/kprovost/nas3/angsd/angsd -GL 2 -bam $bamlist -doThetas 1 -doSaf 1 -pest Cardinalis-sinuatus-CHI-taj.sfs -anc $ref -out Cardinalis-sinuatus-CHI-taj2 
+#time /home/kprovost/nas3/angsd/angsd -GL 2 -bam $bamlist -doThetas 1 -doSaf 1 \
+#-pest Cardinalis-sinuatus-CHI-taj.sfs -anc $ref -out Cardinalis-sinuatus-CHI-taj2 
 
 #Estimate for every Chromosome/scaffold
-time /home/kprovost/nas3/angsd/misc/thetaStat do_stat \
-Cardinalis-sinuatus-CHI-taj2.thetas.idx
+#time /home/kprovost/nas3/angsd/misc/thetaStat do_stat \
+#Cardinalis-sinuatus-CHI-taj2.thetas.idx
 
 #Do a sliding window analysis based on the output from the make_bed command.
-time /home/kprovost/nas3/angsd/misc/thetaStat do_stat \
-Cardinalis-sinuatus-CHI-taj2.thetas.idx \
--win 100000 \
--step 10000  \
--outnames Cardinalis-sinuatus-CHI-taj2.thetasWindow.gz
+#time /home/kprovost/nas3/angsd/misc/thetaStat do_stat \
+#Cardinalis-sinuatus-CHI-taj2.thetas.idx \
+#-win 100000 \
+#-step 10000  \
+#-outnames Cardinalis-sinuatus-CHI-taj2.thetasWindow.gz
