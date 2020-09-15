@@ -11,9 +11,9 @@ library(RColorBrewer)
 library(tools)
 library(R.utils)
 
-mypath="/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ANALYSIS/called_geno/SPECIES/"
+mypath="/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ANALYSIS/called_geno/"
 setwd(mypath)
-overwrite=T
+overwrite=F
 doPlots=F
 
 specieslist =(sort(c("cur","cri","bru","bil","fla",
@@ -26,10 +26,11 @@ specieslist =(sort(c("cur","cri","bru","bil","fla",
 colors=c("red","blue","orange","green","goldenrod","magenta",
          "black","grey","brown","pink","purple","darkgreen","lightblue")
 
+quickDist = T
 calcDist = F
 reloadDist = F
 combineVcfs = F
-compareNewick = T
+compareNewick = F
 
 ## import color scheme
 col = brewer.pal(12,"Paired")
@@ -40,6 +41,72 @@ yellow=col[7]
 grey=col[9]
 
 chromlist=c("1","1A","1B","LG5","mtDNA","16")
+
+if (quickDist == T){
+  
+  filelist=list.files(mypath,pattern="vcf$",full.names = T)
+  filelist=filelist[grepl("fla",filelist)]
+  
+  for (vcffile in filelist) {
+    print(vcffile)
+    vcf <- vcfR::read.vcfR(vcffile, verbose = TRUE,limit=1e08)
+    x <- vcfR::vcfR2genlight(vcf)
+    x.dist3 <- poppr::bitwise.dist(x,missing_match = T,percent=F,scale_missing = T)
+    outfile = paste(vcffile,"_distances.dist",sep="")
+    write.table(as.matrix(x.dist3), outfile, row.names=FALSE, col.names=FALSE,append = F)
+    
+    spp =strsplit(basename(outfile),"\\.")[[1]][1]
+    spp = substr(spp,1,nchar(spp)-7)
+    
+    region=strsplit(basename(vcffile),"_")[[1]][2]
+    region=strsplit(region,"\\.")[[1]][1]
+    
+    labels=readLines(paste("/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ASSEMBLY/ANGSD/A5.bamlists/bamlist/",spp,".bamlist",sep=""))
+    spp=sub("-","_",spp)
+    sonlabels=readLines(paste("/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ASSEMBLY/ANGSD/A5.bamlists/son/SON_",spp,".indlist",sep=""))
+    
+    labels=sapply(1:length(labels),FUN=function(x) {
+      strsplit(labels[x],"/")[[1]][8]
+    }
+    )
+    labels=sapply(1:length(labels),FUN=function(x) {
+      strsplit(labels[x],"\\.")[[1]][1]
+    }
+    )
+    
+    sonlabels=sapply(1:length(sonlabels),FUN=function(x) {
+      strsplit(sonlabels[x],"/")[[1]][8]
+    }
+    )
+    sonlabels=sapply(1:length(sonlabels),FUN=function(x) {
+      strsplit(sonlabels[x],"\\.")[[1]][1]
+    }
+    )
+    
+    labels = sub("AMN_245","",labels)
+    labels = sub("_P002_","-",labels)
+    labels = sub("_P001_","-",labels)
+    labels = sub("_P01_","-",labels)
+    labels = sub(paste("_",strsplit(spp,"_")[[1]][2],sep=""),"",labels)
+    labels = sub("W","",labels)
+   
+    
+    inds=(x@ind.names)
+    threenewick = paste(substr(outfile,1,nchar(outfile)-5),"_tree3.newick",sep="")
+    
+    
+    mat3=as.matrix(x.dist3)
+    tree3 =tryCatch(njs(as.matrix(mat3)),error=function(cond){return(NA)})
+    labels2 = inds
+    spp= toupper(strsplit(spp,as.character("_"))[[1]][2])
+    colnames(mat3)=labels2; rownames(mat3) = labels2
+    write.csv(mat3,paste(mypath,spp,"_distancematrix_",region,".csv",sep = ""),
+              quote=F)
+    if(!(is.na(tree3))) {write.tree(tree3,threenewick)}
+    
+  }
+  
+}
 
 if (calcDist == T) {
   
@@ -265,7 +332,7 @@ if(reloadDist == T) {
   #distfilelist=c("/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ANALYSIS/called_geno/SPECIES/Amphispiza-bilineata-called.geno/DISTS/Amphispiza-bilineata-called.geno.PseudoNC.all.vcf.gz_distances.dist")
   
   distfilelist = distfilelist[!(grepl("window",distfilelist))]
-
+  
   
   for (distfile in distfilelist[1:length(distfilelist)]) {
     
@@ -437,9 +504,9 @@ if(reloadDist == T) {
       if(!(is.na(tree3))) {write.tree(tree3,threenewick)}
       
     } 
-  #}
-  
-  gzip(distfile,zippedfile,skip=T)  
+    #}
+    
+    gzip(distfile,zippedfile,skip=T)  
   }
 }
 
@@ -1028,7 +1095,7 @@ if(compareNewick==T) {
   newickfiles1 = list.files(path,pattern="newick$",recursive = T,full.names = T)
   newickfiles1 = newickfiles1[!grepl("window",newickfiles1)]
   newickfiles1 = newickfiles1[!grepl("converted",newickfiles1)]
-
+  
   if(doPlots==F){
     png("all_species_rfdist_corrplots.png",#height=600,width=1000,
         height=2.5,width=6.5,units="in",res=600)
@@ -1043,7 +1110,7 @@ if(compareNewick==T) {
     ## need a better system for this
     
     newickfiles= newickfiles1[grepl(spp,newickfiles1)]
-
+    
     #names=sapply(newickfiles,FUN=function(x){strsplit(x,"/")[[1]][11]}) ## before was 12
     names=basename(newickfiles)
     names=sapply(names,FUN=function(x){strsplit(x,"\\.")[[1]][4]})
@@ -1089,7 +1156,7 @@ if(compareNewick==T) {
     #phydist=unique(t(phydist))
     #phydist=t(phydist)
     
-
+    
     
     phydist = phydist[,gtools::mixedorder(colnames(phydist))]
     phydist = phydist[gtools::mixedorder(rownames(phydist)),]
@@ -1098,7 +1165,7 @@ if(compareNewick==T) {
     neworder=c(1:(allcol-1),(allcol+1):length(colnames(phydist)),allcol)
     phydist=phydist[neworder,neworder]
     write.table(phydist,paste("phydist_rfdist_",spp,".txt",sep=""),sep="\t",row.names = T)
-  
+    
     spectralpal=colorRampPalette(c("#d7191c","#fdae61","#ffffbf","#abdda4","#2b83ba"))
     
     if(doPlots==T){
