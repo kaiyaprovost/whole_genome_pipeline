@@ -3,12 +3,12 @@
 import sys
 from collections import Counter
 
-# for fasta in /Users/kprovost/Dropbox\ \(AMNH\)/CFB_review_J_Biogeo/*fa; do
+# for fasta in /Users/kprovost/Downloads/cardinalis\ vcf/*TEST.fasta; do
 # echo $fasta;
-# python3 /Users/kprovost/Documents/Github/whole_genome_pipeline/fasta2vcf.py "$fasta" 0 1;
-# python3 /Users/kprovost/Documents/Github/whole_genome_pipeline/fasta2vcf.py "$fasta" 1 1;
-# python3 /Users/kprovost/Documents/Github/whole_genome_pipeline/fasta2vcf.py "$fasta" 0 0;
-# python3 /Users/kprovost/Documents/Github/whole_genome_pipeline/fasta2vcf.py "$fasta" 1 0;
+# python3 "/Users/kprovost/Documents/Github/whole_genome_pipeline/VCF File Conversions/fasta2vcf.py" "$fasta" 0 1 1;
+# #python3 "/Users/kprovost/Documents/Github/whole_genome_pipeline/VCF File Conversions/fasta2vcf.py" "$fasta" 1 1;
+# #python3 "/Users/kprovost/Documents/Github/whole_genome_pipeline/VCF File Conversions/fasta2vcf.py" "$fasta" 0 0;
+# #python3 "/Users/kprovost/Documents/Github/whole_genome_pipeline/VCF File Conversions/fasta2vcf.py" "$fasta" 1 0;
 # done 
 
 try:
@@ -42,6 +42,18 @@ except:
 	print("Whether to keep monomorphic sites not specified. Dropping monomorphic sites.")
 	monomorphic = False
 
+try:
+	diploid_int = int(sys.argv[4])
+	if diploid_int != "0":
+		diploid = True
+		print("Lines are diploid")
+	else:
+		diploid = False
+		print("Lines are haploid")
+except:
+	print("Diploid not set, defaulting to haploid")
+	diploid=False 
+
 #fasta="/Users/kprovost/Dropbox (AMNH)/CFB_review_J_Biogeo/Crotalus_scutulatus_concat.fa"
 vcfoutfile = fasta+".missing"+str(convertGapToMissing)+".monomorphic"+str(monomorphic)+".generated.vcf"
 print("Outfile:",vcfoutfile)
@@ -62,13 +74,20 @@ def fasta2reads_dict(fasta,verbose=False):
 			## is a name
 			ind_name = line.strip()[1:-2] ## takes off the ">", the read number and the _ before it
 			## check if the name is first (0) or second (1) read
-			read_number = (line.strip()[-1])
-			if read_number == "a":
+			
+			if diploid==False:
+				read_number = (line.strip()[-1])
+				if read_number == "a":
+					read_number = 0
+				if read_number == "b":
+					read_number = 1
+			else:
 				read_number = 0
-			if read_number == "b":
-				read_number = 1
 			if(int(read_number)==0):
-				reads_dict[ind_name] = [None,None]
+				if diploid==False:
+					reads_dict[ind_name] = [None,None]
+				else:
+					reads_dict[ind_name] = [None]
 		else:
 			dna_seq = line.strip().upper()
 			#fasta_dict[ind_name][read_number] = dna_seq.upper()
@@ -179,7 +198,7 @@ def reads_dict2snps(reads_dict,convertGapToMissing=False,verbose=False,monomorph
 					snp_dict[base_num] = all_bases
 			else:
 				snp_dict[base_num] = all_bases
-				
+			
 	return(snp_dict)
 
 snp_dict = reads_dict2snps(reads_dict,convertGapToMissing=convertGapToMissing,monomorphic=monomorphic)
@@ -257,7 +276,7 @@ for snp_position in snp_dict.keys():
 		if "." in alt_snps and len(alt_snps) >= 2:
 			alt_snps.remove(".")
 		if len(alt_snps) == 0:
-			if alt_snps = ["."]
+			alt_snps = ["."]
 		toprint = "chr\t"+str(snp_position+1)+"\t.\t"+str("".join(ref_snp))+"\t"+",".join(alt_snps)+"\t.\tPASS\tGT"
 		## phased = "|"
 		for ind_num in range(0,len(readnums),2):

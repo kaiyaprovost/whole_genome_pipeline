@@ -1,13 +1,15 @@
 #!/bin/bash
 
-spp="Parrots"
+#spp="Parrots"
 
 #cd "/Users/kprovost/Documents/folder_for_popgenome/"
-cd /vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/VCFS/
+#cd /vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/VCFS/
+cd "/home/kprovost/nas3/"
 
-i=${spp}-called.geno.vcf
+#i=${spp}-called.geno.vcf
 
 #for i in ${spp}*vcf; do
+for i in *vcf; do
 echo $i 
 j=${i%.vcf}
 mkdir ./${j}

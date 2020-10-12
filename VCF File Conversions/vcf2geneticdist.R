@@ -11,7 +11,8 @@ library(RColorBrewer)
 library(tools)
 library(R.utils)
 
-mypath="/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ANALYSIS/called_geno/"
+#mypath="/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ANALYSIS/called_geno/"
+mypath="/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ANALYSIS/called_geno/SPECIES/VCFS/"
 setwd(mypath)
 overwrite=F
 doPlots=F
@@ -44,13 +45,23 @@ chromlist=c("1","1A","1B","LG5","mtDNA","16")
 
 if (quickDist == T){
   
-  filelist=list.files(mypath,pattern="vcf$",full.names = T)
-  filelist=filelist[grepl("fla",filelist)]
+  #black.vcf
+  #1B9E77.vcf
+  #7570B3.vcf
+  #D95F02.vcf
+  
+  filelist=list.files(mypath,pattern=".vcf$",full.names = T)
+  filelist=filelist[grepl("bel",filelist)]
   
   for (vcffile in filelist) {
     print(vcffile)
     vcf <- vcfR::read.vcfR(vcffile, verbose = TRUE,limit=1e08)
     x <- vcfR::vcfR2genlight(vcf)
+    
+    if(max(ploidy(x))!=min(ploidy(x))){
+      ploidy(x) = 2
+    }
+    
     x.dist3 <- poppr::bitwise.dist(x,missing_match = T,percent=F,scale_missing = T)
     outfile = paste(vcffile,"_distances.dist",sep="")
     write.table(as.matrix(x.dist3), outfile, row.names=FALSE, col.names=FALSE,append = F)
@@ -328,10 +339,10 @@ if (calcDist == T) {
 if(reloadDist == T) {
   
   path="/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ANALYSIS/called_geno/SPECIES/DISTS"
-  distfilelist = list.files(path,pattern="distances.dist",recursive = T,full.names = T)
+  distfilelist = list.files(path,pattern="distances.dist",recursive = F,full.names = T)
   #distfilelist=c("/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ANALYSIS/called_geno/SPECIES/Amphispiza-bilineata-called.geno/DISTS/Amphispiza-bilineata-called.geno.PseudoNC.all.vcf.gz_distances.dist")
   
-  distfilelist = distfilelist[!(grepl("window",distfilelist))]
+  #distfilelist = distfilelist[!(grepl("window",distfilelist))]
   
   
   for (distfile in distfilelist[1:length(distfilelist)]) {
@@ -374,17 +385,17 @@ if(reloadDist == T) {
       
       
       
-      if(spp!="Auriparus-flaviceps"){
+      #if(spp!="Auriparus-flaviceps"){
         labels=readLines(paste("/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ASSEMBLY/ANGSD/A5.bamlists/bamlist/",spp,".bamlist",sep=""))
         spp=sub("-","_",spp)
         sonlabels=readLines(paste("/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ASSEMBLY/ANGSD/A5.bamlists/son/SON_",spp,".indlist",sep=""))
-        
-      } else {
-        labels=readLines(paste("/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ASSEMBLY/ANGSD/A5.bamlists/bamlist/old/",spp,"-WITHFAILS.bamlist",sep=""))
-        spp=sub("-","_",spp)
-        sonlabels=readLines(paste("/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ASSEMBLY/ANGSD/A5.bamlists/son/testing_flaviceps/SON_",spp,"-WITHFAILS.indlist",sep=""))
-        
-      }
+      #  
+      #} else {
+      #  labels=readLines(paste("/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ASSEMBLY/ANGSD/A5.bamlists/bamlist/old/",spp,"-WITHFAILS.bamlist",sep=""))
+      #  spp=sub("-","_",spp)
+      #  sonlabels=readLines(paste("/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ASSEMBLY/ANGSD/A5.bamlists/son/testing_flaviceps/SON_",spp,"-WITHFAILS.indlist",sep=""))
+      #  
+      #}
       
       
       labels=sapply(1:length(labels),FUN=function(x) {

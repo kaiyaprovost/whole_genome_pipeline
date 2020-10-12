@@ -1,0 +1,29 @@
+#!/bin/bash
+#PBS -l select=1:ncpus=16
+#PBS -l walltime=5000:00:00
+#PBS -N human_S1.1_merge_bam
+#PBS -j oe
+#PBS -m ae
+#PBS -M kprovost@amnh.org
+#PBS -k oe
+
+# change to the working directory
+cd $PBS_O_WORKDIR
+echo "pbsworkdir"
+echo $PBS_O_WORKDIR
+EXECDIR=`pwd`
+export PATH=./:$PATH
+echo $PATH
+
+cd /vz-nas1-active/RawGenomicReads/HUMANS/BAM_dedup/
+#cd /vz-nas1-active/RawGenomicReads/AMN_245111/Plate2/bilineata/BAM_files
+
+command="time java -jar /home/kprovost/nas3/genomeresequencingFromLucas/picard.jar MergeSamFiles ";
+for i in *bam; do 
+command="${command}I=${i} "; 
+done; 
+#echo $command;
+merged="human.bam"
+command="${command} O=${merged}"
+echo $command
+eval $command

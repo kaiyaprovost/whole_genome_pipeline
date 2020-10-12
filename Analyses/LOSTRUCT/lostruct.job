@@ -1,13 +1,15 @@
 #!/bin/bash
 #PBS -l select=1:ncpus=1
 #PBS -l walltime=5000:00:00
-#PBS -N lostruct
+#PBS -N lostruct_all
 #PBS -j oe
 #PBS -m ae
 #PBS -M kprovost@amnh.org
 #PBS -k oe
 
 ## lostruct
+
+logfile=all.logfile
 
 cd /vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/VCFS/FOR_LOSTRUCT/
 
@@ -35,9 +37,9 @@ cd /vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/VCFS/FOR_LOSTRUCT/
 for file in *.nospace.vcf.gz; do
 echo $file
 cd /vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/VCFS/FOR_LOSTRUCT/
-cp $file ./working
+cp ${file}* ./working
 cd ./working
-Rscript /home/kprovost/nas3/LOSTRUCT/run_lostruct.R -t bp -s 100000 -i ./
+Rscript /home/kprovost/nas3/LOSTRUCT/run_lostruct.R -t bp -s 100000 -i ./ > $logfile 2>&1
 mv ./*.* /vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/VCFS/FOR_LOSTRUCT/
 cd /vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/VCFS/FOR_LOSTRUCT/
 done

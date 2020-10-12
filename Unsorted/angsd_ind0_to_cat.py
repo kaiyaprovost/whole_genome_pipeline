@@ -2,10 +2,11 @@ import glob
 import sys
 import os
 
-
-# python3 "/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ASSEMBLY/angsd_ind0_to_cat.py" \
-# "/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER3_TRAITS/Distances/BY_SPECIES/CSVS/BILINEATA/BILINEATA_distancematrix_FULLGENOME.csv" \
-# "/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ASSEMBLY/ANGSD/A5.bamlists/bamlist/Amphispiza-bilineata.bamlist"
+# for i in /Users/kprovost/Dropbox\ \(AMNH\)/Dissertation/CHAPTER2_GENOMES/ANALYSIS/called_geno/SPECIES/VCFS/FLAVICEPS_distancematrix_*.csv.converted; do
+# python3 "/Users/kprovost/Documents/Github/whole_genome_pipeline/Unsorted/angsd_ind0_to_cat.py" \
+# "$i" \
+# "/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ASSEMBLY/ANGSD/A5.bamlists/bamlist/Auriparus-flaviceps.bamlist"
+# done 
 
 def main():
 	try:
