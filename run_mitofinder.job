@@ -1,0 +1,34 @@
+#!/bin/bash
+#PBS -l select=1:ncpus=8:mem=64gb
+#PBS -l walltime=5000:00:00
+#PBS -N mitofinder
+#PBS -j oe
+#PBS -m ae
+#PBS -M kprovost@amnh.org
+#PBS -k oe
+
+spp="Parrots"
+ref=/home/kprovost/nas3/genomeresequencingFromLucas/Melo_chrom/mtGenome/MelopsittacusMT_genome_sequence_NC_009134.1.gb
+
+cd /vz-nas1-active/RawGenomicReads/FASTQ_SCREEN_RESULTS/$spp
+
+## F119_AMN_245113_P001_WG01_i5-507_i7-169_S294_L002.Parrots.zf.fil.forward_paired.fq.gz 
+##Trimmed paired-end reads
+##mitofinder -j [seqid] -1 [left_reads.fastq.gz] -2 [right_reads.fastq.gz] -r [genbank_reference.gb]
+
+for fwd in *.forward_paired.fq.gz; do
+rev=${fwd%.forward_paired.fq.gz}.reverse_paired.fq.gz
+echo $rev
+/home/kprovost/nas3/genomeresequencingFromLucas/MitoFinder/mitofinder \
+-j parrotsMT-${fwd} \
+-1 $fwd \
+-2 $rev \
+-r $ref \
+-o 2
+
+## Reference mitochondrial genome is not in the expected format
+## Provide a file in GenBank format (.gb)
+
+
+done
+

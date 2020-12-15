@@ -15,33 +15,17 @@ EXECDIR=`pwd`
 export PATH=./:$PATH
 echo $PATH
 
-## these are missing
-# F098*WH05*L005 -- done
-# F119*WB01*L002 -- done
-# F119*WB05*L002 -- done
-# F119*WB06*L002 -- done
-# F119*WC05*L002 -- done
-# F119*WC06*L002 -- done
-# F119*WD01*L002 -- done
-# F119*WD05*L002 -- done
-# F119*WD06*L002 -- done
-# F119*WE01*L002 -- done
-# F119*WF01*L002 -- done
-# F119*WF05*L002 -- done
-# F119*WG01*L002 -- done
-# F119*WG05*L002 -- done
-
 spp="Parrots"
-logfile=${spp}_119_bwalog.txt
+logfile=${spp}_119_15_bwalog.txt
 
-dofastqpair=1
+dofastqpair=0
 dotrimming=0
 dofastqc=0
-dobwaalign=0
+dobwaalign=0 ## uses cores 
 dosamtobam=0
 doreadgroups=0
 dodedup=0
-dometrics=0
+dometrics=1
 
 ref=/home/kprovost/nas3/genomeresequencingFromLucas/Melo_chrom/pseudochromosomesSHORT.fasta
 
@@ -55,38 +39,37 @@ module load fastqc-0.11.5
 module load R-3.4.1
 #source activate stampy ## NEWLY ADDED from lucas
 
-for i in *fq; do echo $i; gzip $i; done;
-for i in *fastq; do echo $i; gzip $i; done;
+for i in *fq; do echo $i; gzip -f $i; done;
+for i in *fastq; do echo $i; gzip -f $i; done;
 
 #for i in */; do  
 #	namei="${i///}" ## not there for lucas
 #	cd $i; ## not there for lucas
 for read1 in RAPiD-Genomics*F119*_R1_*.tagged_filter.fastq.gz; do 
-	name2=${read1%_R1_*} ## edited from lucas's
-	name=${name2#"RAPiD-Genomics_"}.$spp.zf.fil  ## edited from lucas's
-	read2=${read1%_R1_*}_R2_*.tagged_filter.fastq.gz  ## edited from lucas's		
-	header=`zcat $read1 | head -1`
-	IFS=':' read -a header <<< "$header"
-	INSTRUMENT=${header[0]}
-	RUN_ID=${header[1]}
-	FLOWCELL_BARCODE=${header[2]}
-	LANE=${header[3]}
-	ID=$FLOWCELL_BARCODE.$LANE
-	PU=$FLOWCELL_BARCODE.$LANE.$name
-	SM=$name
-	PL=ILLUMINA
-	LB=TrueSeq
-	echo $name $read1 $read2 $ID $PU $SM $PL $LB >> $logfile 2>&1 
+name2=${read1%_R1_*} ## edited from lucas's
+name=${name2#"RAPiD-Genomics_"}.$spp.zf.fil  ## edited from lucas's
+read2=${read1%_R1_*}_R2_*.tagged_filter.fastq.gz  ## edited from lucas's		
+header=`zcat $read1 | head -1`
+IFS=':' read -a header <<< "$header"
+INSTRUMENT=${header[0]}
+RUN_ID=${header[1]}
+FLOWCELL_BARCODE=${header[2]}
+LANE=${header[3]}
+ID=$FLOWCELL_BARCODE.$LANE
+PU=$FLOWCELL_BARCODE.$LANE.$name
+SM=$name
+PL=ILLUMINA
+LB=TrueSeq
+echo $name $read1 $read2 $ID $PU $SM $PL $LB >> $logfile 2>&1 
 
-	echo ""  >> $logfile 2>&1 
-	echo "#######################"  >> $logfile 2>&1  
-	echo $name  >> $logfile 2>&1 
-	echo "#######################"  >> $logfile 2>&1  
+echo ""  >> $logfile 2>&1 
+echo "#######################"  >> $logfile 2>&1  
+echo $name  >> $logfile 2>&1 
+echo "#######################"  >> $logfile 2>&1  
 
-	##ADDED TO DEAL WITH THE MISMATCHED PAIRS 	
-	
+##ADDED TO DEAL WITH THE MISMATCHED PAIRS 	
+if [[ "$dofastqpair" -ne 0 ]]; then
 	if [ ! -f "${read2%*.gz}.single.fq.gz" ]; then
-		if [[ "$dofastqpair" -ne 0 ]]; then
 		echo ""  >> $logfile 2>&1 
 		echo ""  >> $logfile 2>&1 
 		echo Separating unpaired >> $logfile 2>&1 
@@ -104,19 +87,18 @@ for read1 in RAPiD-Genomics*F119*_R1_*.tagged_filter.fastq.gz; do
 		gzip -v ${read2%*.gz}.paired.fq >> $logfile 2>&1 
 		gzip -v ${read2%*.gz}.single.fq >> $logfile 2>&1 
 		gzip -v ${read2%*.gz} >> $logfile 2>&1 
-		fi
 	else
 		echo "~~~Already done mismatching, skipping\n" >> $logfile 2>&1 
 	fi 
+fi
 
+if [[ "$dotrimming" -ne 0 ]]; then
 	if [ ! -f "$name.reverse_unpaired.fq.gz" ]; then
-		if [[ "$dotrimming" -ne 0 ]]; then
 		echo >> $logfile 2>&1  
 		echo >> $logfile 2>&1  
 		echo Trimming adapters >> $logfile 2>&1  
 		echo >> $logfile 2>&1   
 		echo >> $logfile 2>&1  
-
 		## edited from lucas's, his includes the raw_reads folder 
 		time java -jar /home/kprovost/nas3/genomeresequencingFromLucas/Trimmomatic-0.36/trimmomatic-0.36.jar \
 		PE ${read1%*.gz}.paired.fq.gz ${read2%*.gz}.paired.fq.gz \
@@ -126,38 +108,36 @@ for read1 in RAPiD-Genomics*F119*_R1_*.tagged_filter.fastq.gz; do
 		$name.reverse_unpaired.fq.gz \
 		ILLUMINACLIP:/home/kprovost/nas3/genomeresequencingFromLucas/Trimmomatic-0.36/adapters/TruSeq3-PE-2.fa:2:30:10:8:true \
 		>> $logfile 2>&1  
-		## FOR ABOVE: CHANGED #PE $read1 $read2 TO BE THE FIXED PAIRED ONES
-		fi
+		## FOR ABOVE: CHANGED #PE $read1 $read2 TO BE THE FIXED PAIRED ONE
 	else 
 		echo "~~~Already done trimming, skipping\n" >> $logfile 2>&1 
 	fi
+fi
 
+echo >> $logfile 2>&1  
+echo	 >> $logfile 2>&1 
+echo Quality assessment >> $logfile 2>&1 
+echo >> $logfile 2>&1 
+echo >> $logfile 2>&1 
 
-	echo >> $logfile 2>&1  
-	echo	 >> $logfile 2>&1 
-	echo Quality assessment >> $logfile 2>&1 
-	echo >> $logfile 2>&1 
-	echo >> $logfile 2>&1 
-
-	## edited from lucas's, his includes the raw_reads folder 
-	if [[ "$dofastqc" -ne 0 ]]; then
+## edited from lucas's, his includes the raw_reads folder 
+if [[ "$dofastqc" -ne 0 ]]; then
 	time fastqc $name.forward_paired.fq.gz >> $logfile 2>&1 
 	time fastqc $name.reverse_paired.fq.gz >> $logfile 2>&1 
-	fi
+fi
 
-	if [ ! -d "BAM_files/" ]; then 
-		mkdir BAM_files 
-	fi ## added from lucas's 
+if [ ! -d "BAM_files/" ]; then 
+	mkdir BAM_files 
+fi ## added from lucas's 
 
+
+if [[ "$dobwaalign" -ne 0 ]]; then
 	if [ ! -f "BAM_files/$name.bam" ]; then
-
-		if [[ "$dobwaalign" -ne 0 ]]; then
 		echo >> $logfile 2>&1 
 		echo	 >> $logfile 2>&1 
 		echo Running BWA alignment >> $logfile 2>&1 
 		echo >> $logfile 2>&1 
 		echo >> $logfile 2>&1 
-
 		time bwa mem \
 		-M \
 		-t 28 \
@@ -165,7 +145,6 @@ for read1 in RAPiD-Genomics*F119*_R1_*.tagged_filter.fastq.gz; do
 		$name.forward_paired.fq.gz \
 		$name.reverse_paired.fq.gz \
 		> BAM_files/$name.sam ## added from lucas's 
-
 		## CHECK IF THE SAM FILE IS BLANK 
 		if [ -s "BAM_files/$name.sam" ]; then
 			echo "BAM_files/$name.sam has some data."  >> $logfile 2>&1 
@@ -184,15 +163,18 @@ for read1 in RAPiD-Genomics*F119*_R1_*.tagged_filter.fastq.gz; do
 			echo "###################################################################"  >> $logfile 2>&1 
 			break
 		fi
-		fi
+	else
+		echo "~~~Already done bam creation, skipping\n" >> $logfile 2>&1 
+	fi 
+fi
 
-		if [[ "$dosamtobam" -ne 0 ]]; then
+if [[ "$dosamtobam" -ne 0 ]]; then
+	if [ ! -f "BAM_files/$name.bam" ]; then
 		echo	 >> $logfile 2>&1 
 		echo >> $logfile 2>&1 
 		echo Converting SAM to sorted BAM >> $logfile 2>&1 
 		echo >> $logfile 2>&1 
 		echo	 >> $logfile 2>&1 
-
 		## added the BAM_files folders 
 		mkdir tmp
 		time java -jar /home/kprovost/nas3/genomeresequencingFromLucas/picard.jar SortSam \
@@ -202,41 +184,38 @@ for read1 in RAPiD-Genomics*F119*_R1_*.tagged_filter.fastq.gz; do
 		TMP_DIR=`pwd`/tmp  >> $logfile 2>&1 
 		rm -r tmp/
 		rm BAM_files/$name.sam ## added from lucas's 
-		fi
-
 	else
 		echo "~~~Already done bam creation, skipping\n" >> $logfile 2>&1 
 	fi 
+fi
 
-	## CHECK IF THE BAM FILE HAS INPUT AT ALL 
+## CHECK IF THE BAM FILE HAS INPUT AT ALL 
 
+# this whole section added from lucas in case need to use STAMPY to do anything, but is commented out on his
+
+## LUCAS'S PIPELINE HAS ADDING READ GROUP AND DEDUPLICATION BEFORE THIS POINT 
+
+if [ ! -d "BAM_groupsAdded/" ]; then 
+	mkdir BAM_groupsAdded
+fi ## added from lucas's 
+
+if [[ "$doreadgroups" -ne 0 ]]; then
 	check_bam=`~/nas3/samtools/samtools view BAM_files/$name.bam | head`
-	if [ -z "$check_bam" ]
-	then
+	if [ -z "$check_bam" ]; then
 		echo "Error: THE BAM FILE HAS NO DATA"   >> $logfile 2>&1 
+		rm BAM_files/$name.bam
 		echo "###################################################################"  >> $logfile 2>&1 
-		break
+		#break
 	else
 		echo "Bam file has data. Moving on" >> $logfile 2>&1 
 	fi
 
-	# this whole section added from lucas in case need to use STAMPY to do anything, but is commented out on his
-
-	## LUCAS'S PIPELINE HAS ADDING READ GROUP AND DEDUPLICATION BEFORE THIS POINT 
-
-	if [ ! -d "BAM_groupsAdded/" ]; then 
-		mkdir BAM_groupsAdded
-	fi ## added from lucas's 
-
 	if [ ! -f "BAM_groupsAdded/$name.groups_added.bam" ]; then
-		if [[ "$doreadgroups" -ne 0 ]]; then
-
 		echo >> $logfile 2>&1 
 		echo >> $logfile 2>&1 
 		echo Adding Read Group >> $logfile 2>&1 
 		echo >> $logfile 2>&1 
 		echo >> $logfile 2>&1 
-
 		## added folders from Lucas 
 		time java -jar /home/kprovost/nas3/genomeresequencingFromLucas/picard.jar AddOrReplaceReadGroups \
 		I=BAM_files/$name.bam \
@@ -247,24 +226,22 @@ for read1 in RAPiD-Genomics*F119*_R1_*.tagged_filter.fastq.gz; do
 		RGPU=$PU \
 		RGSM=$SM  >> $logfile 2>&1 
 		#rm BAM_files/$name.bam
-		fi
-
 	else
 		echo "~~~Already done adding groups, skipping\n" >> $logfile 2>&1 
 	fi
-
-	if [ ! -d "Stats/" ]; then 
-		mkdir Stats
-	fi
-	
-	if [ ! -d "BAM_dedup/" ]; then 
-		mkdir BAM_dedup
-	fi ## added from lucas's 
+fi
 
 
+if [ ! -d "Stats/" ]; then 
+	mkdir Stats
+fi
+
+if [ ! -d "BAM_dedup/" ]; then 
+	mkdir BAM_dedup
+fi ## added from lucas's 
+
+if [[ "$dodedup" -ne 0 ]]; then
 	if [ ! -f "BAM_dedup/$name.dedup.bam" ]; then 
-		if [[ "$dodedup" -ne 0 ]]; then
-
 		echo >> $logfile 2>&1 
 		echo >> $logfile 2>&1 
 		echo Deduplication >> $logfile 2>&1 
@@ -282,24 +259,19 @@ for read1 in RAPiD-Genomics*F119*_R1_*.tagged_filter.fastq.gz; do
 		TAGGING_POLICY=All  >> $logfile 2>&1 
 		#rm -r tmp/
 		#rm BAM_groupsAdded/$name.groups_added.bam
-		fi
-
 	else
 		echo "~~~Already done deduplication, skipping\n" >> $logfile 2>&1 
 	fi
+fi
 
-	if [[ "$dometrics" -ne 0 ]]; then
-
+if [[ "$dometrics" -ne 0 ]]; then ## missing fi?
 	if [ ! -f "Stats/$name.alignment_metrics.txt" ]; then 
-
 		echo	 >> $logfile 2>&1 
 		echo >> $logfile 2>&1 
 		echo Collecting alignment metrics >> $logfile 2>&1 
 		echo >> $logfile 2>&1 
 		echo >> $logfile 2>&1 
-
 		## add this from lucas's 
-
 		## add folders to this 
 		time java -jar /home/kprovost/nas3/genomeresequencingFromLucas/picard.jar CollectAlignmentSummaryMetrics \
 		INPUT=BAM_files/$name.bam \
@@ -307,13 +279,10 @@ for read1 in RAPiD-Genomics*F119*_R1_*.tagged_filter.fastq.gz; do
 		R=$ref \
 		METRIC_ACCUMULATION_LEVEL=SAMPLE \
 		METRIC_ACCUMULATION_LEVEL=READ_GROUP  >> $logfile 2>&1 
-
 	else
 		echo "~~~Already done alignment metrics, skipping\n" >> $logfile 2>&1 
 	fi
-
 	if [ ! -f "Stats/$name.insert_metrics.txt" ]; then 
-
 		echo >> $logfile 2>&1 
 		echo >> $logfile 2>&1 
 		echo Collect Insert Size Metrics >> $logfile 2>&1 
@@ -324,13 +293,10 @@ for read1 in RAPiD-Genomics*F119*_R1_*.tagged_filter.fastq.gz; do
 		INPUT=BAM_files/$name.bam \
 		OUTPUT=Stats/$name.insert_metrics.txt \
 		HISTOGRAM_FILE=Stats/$name.insert_size_histogram.pdf  >> $logfile 2>&1 
-
 	else
 		echo "~~~Already done insert metrics, skipping\n" >> $logfile 2>&1 
 	fi
-
 	if [ ! -f "Stats/$name.raw_wgs_metrics.txt" ]; then 
-
 		echo >> $logfile 2>&1 
 		echo >> $logfile 2>&1 
 		echo Collect Coverage Metrics >> $logfile 2>&1 
@@ -346,69 +312,51 @@ for read1 in RAPiD-Genomics*F119*_R1_*.tagged_filter.fastq.gz; do
 	else
 		echo "~~~Already done WGS metrics, skipping\n" >> $logfile 2>&1 
 	fi
-
-	#rm $name.sam
-	#rm $name.bam
-
 	## AFTER THIS STEP LUCAS RUNS INDEXING AND QUALIMAP 
-
 	if [ ! -f "BAM_dedup/$name.dedup.bai" ]; then 
-
 		echo >> $logfile 2>&1 
 		echo >> $logfile 2>&1 
 		echo Indexing BAM >> $logfile 2>&1 
 		echo >> $logfile 2>&1 
 		echo >> $logfile 2>&1 
-
 		time java -jar /home/kprovost/nas3/genomeresequencingFromLucas/picard.jar BuildBamIndex \
 		I=BAM_dedup/$name.dedup.bam  >> $logfile 2>&1  ## folder added from lucas
-
 	else
 		echo "~~~Already done BAM index, skipping\n" >> $logfile 2>&1 
 	fi
-
 	echo >> $logfile 2>&1 
 	echo >> $logfile 2>&1 
 	echo Running QUALIMAP >> $logfile 2>&1 
 	echo >> $logfile 2>&1 
 	echo >> $logfile 2>&1 
-
 	## copied from lucas 
 	time qualimap bamqc -nt 8 -bam BAM_dedup/$name.dedup.bam -outdir Stats/$name.QUALIMAP --java-mem-size=8G   >> $logfile 2>&1 
-
 	echo >> $logfile 2>&1 
 	echo "#######################" >> $logfile 2>&1 
 	echo "Moving finished files to ./DONE" >> $logfile 2>&1 
 	echo "#######################" >> $logfile 2>&1 
 	echo >> $logfile 2>&1 
 	echo >> $logfile 2>&1 
-	fi
+fi
 
-	if [ ! -d "DONE/" ]; then 
-		mkdir DONE
-	fi ## added from lucas's 
+if [ ! -d "DONE/" ]; then 
+	mkdir DONE
+fi ## added from lucas's 
 
-	mv -nv $read1 ./DONE/
-	mv -nv $read2 ./DONE/
+mv -nv $read1 ./DONE/
+mv -nv $read2 ./DONE/
 
-	echo >> $logfile 2>&1 
-	echo "#######################" >> $logfile 2>&1 
-	echo $name DONE! >> $logfile 2>&1 
-	echo "#######################" >> $logfile 2>&1 
-	echo >> $logfile 2>&1 
-	echo >> $logfile 2>&1 
-
-
+echo >> $logfile 2>&1 
+echo "#######################" >> $logfile 2>&1 
+echo $name DONE! >> $logfile 2>&1 
+echo "#######################" >> $logfile 2>&1 
+echo >> $logfile 2>&1 
+echo >> $logfile 2>&1 
 
 done
 
 if [ ! -d "paired/" ]; then 
 	mkdir paired
 fi ## added from lucas's 
-mv *paired.* ./paired/  >> $logfile 2>&1 
 
-#cd ..
-
-#done
-
-
+#mv *paired.* ./paired/  >> $logfile 2>&1 

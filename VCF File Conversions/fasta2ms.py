@@ -3,10 +3,10 @@
 import sys
 from collections import Counter
 
-# for fasta in /Users/kprovost/Dropbox\ \(AMNH\)/Dissertation/cardcard16.fasta; do
-# echo $fasta;
-# python3 "/Users/kprovost/Documents/Github/whole_genome_pipeline/VCF File Conversions/fasta2vcf.py" "$fasta" 1 1 1;
-# done 
+# cd "/Users/kprovost/Dropbox (AMNH)/Dissertation/"
+# for fasta in *.fasta; do
+# python3 "/Users/kprovost/Documents/Github/whole_genome_pipeline/VCF File Conversions/fasta2ms.py" $fasta 1 1 1 
+# done
 
 try:
 	fasta = str(sys.argv[1])
@@ -52,8 +52,8 @@ except:
 	diploid=False 
 
 #fasta="/Users/kprovost/Dropbox (AMNH)/CFB_review_J_Biogeo/Crotalus_scutulatus_concat.fa"
-vcfoutfile = fasta+".missing"+str(convertGapToMissing)+".monomorphic"+str(monomorphic)+".generated.vcf"
-print("Outfile:",vcfoutfile)
+msoutfile = fasta+".missing"+str(convertGapToMissing)+".monomorphic"+str(monomorphic)+".NOVCF.ms"
+print("Outfile:",msoutfile)
 
 def ambigExp(base):
 	'''
@@ -140,84 +140,7 @@ def fasta2reads_dict(fasta,verbose=False):
 	return(reads_dict)
 
 ## ambiguity code text, from baseDisAmbig.py on github
-
-def ambigSimp(dataList): 
-	'''	reambiguates lists of bases into their ambiguity codes'''
-	if "A" in dataList:
-		hasA = True
-	else:
-		hasA = False
-	if "C" in dataList:
-		hasC = True
-	else:
-		hasC = False
-	if "G" in dataList:
-		hasG = True
-	else:
-		hasG = False
-	if "T" in dataList:
-		hasT = True
-	else:
-		hasT = False
-	if hasA:
-		if hasG:
-			if hasC:
-				if hasT:
-					simp = "N"
-				else:
-					simp = "V"
-			else:
-				if hasT:
-					simp = "D"
-				else:
-					simp = "R"
-		else:
-			if hasC:
-				if hasT:
-					simp = "H"
-				else:
-					simp = "M"
-			else:
-				if hasT:
-					simp = "W"
-				else:
-					simp = "A"
-	else:
-		if hasG:
-			if hasC:
-				if hasT:
-					simp = "B"
-				else:
-					simp = "S"
-			else:
-				if hasT:
-					simp = "K"
-				else:
-					simp = "G"
-		else:
-			if hasC:
-				if hasT:
-					simp = "Y"
-				else:
-					simp = "C"
-			else:
-				if hasT:
-					simp = "T"
-				else:
-					simp = dataList
-	return(simp)
-
-## find snps from fasta
-
 reads_dict = fasta2reads_dict(fasta)
-
-header = "##fileformat=VCFv4.0\n#CHROM\tPOS\tID\tREF\tALT\tQUAL\tFILTER\tINFO\tFORMAT"+"\t"
-
-individual_names=reads_dict.keys()
-
-header=header+"\t".join(individual_names)+"\n"
-
-#fasta_dict,reads_dict = fasta2fasta_dict(fasta)
 
 def reads_dict2snps(reads_dict,convertGapToMissing=False,verbose=False,monomorphic=False):
 	snp_dict = {}
@@ -243,18 +166,10 @@ def reads_dict2snps(reads_dict,convertGapToMissing=False,verbose=False,monomorph
 
 snp_dict = reads_dict2snps(reads_dict,convertGapToMissing=convertGapToMissing,monomorphic=monomorphic)
 
-#snp_dict_nomissing = reads_dict2snps(reads_dict,keepMissing=False)
+segsites = "//\nsegsites: "+str(len(snp_dict.keys()))
+positions="\npositions: "+" ".join([str(x) for x in list(snp_dict.keys())])
 
-#overlap = set(snp_dict.keys()).intersection(snp_dict_nomissing.keys())
-
-## now need to convert the snp dict, assign the "ref" as the most common and the alts as the others
-
-## write out header
-
-## if there are no alternative alleles then "." should be used
-
-with open(vcfoutfile,"w") as outfile:
-	_ = outfile.write(header) ## prevents number of characters from getting written to screen
+snp_binary_dict={}
 
 for snp_position in snp_dict.keys():
 	if snp_position % 10000 == 0:
@@ -278,7 +193,7 @@ for snp_position in snp_dict.keys():
 		count_dict=dict(Counter(reads)) ## generates another dictionary with the values
 		##Counter({'C': 4, '-': 2})
 		maximum_count=max(count_dict.values())
-		snps_with_max = [key for (key, value) in count_dict.items() if value == maximum_count]	
+		snps_with_max = [key for (key, value) in count_dict.items() if value == maximum_count]
 		alt_snps = [key for (key, value) in count_dict.items() if value != maximum_count]
 		alt_snps.sort()
 		if len(snps_with_max) >=2:
@@ -317,22 +232,20 @@ for snp_position in snp_dict.keys():
 		if "." in allsnp:
 			gap_index = allsnp.index(".")
 			readnums_nomissing = [str(r).replace(str(gap_index),".") for r in readnums_nomissing]
-		if "." in alt_snps and len(alt_snps) >= 2:
-			alt_snps.remove(".")
-		if len(alt_snps) == 0:
-			alt_snps = ["."]
-		toprint = "chr\t"+str(snp_position+1)+"\t.\t"+str("".join(ref_snp))+"\t"+",".join(alt_snps)+"\t.\tPASS\tGT"
-		## phased = "|"
-		for ind_num in range(0,len(readnums),2):
-			if convertGapToMissing == False:
-				genotype=str(readnums[ind_num])+"|"+str(readnums[ind_num+1])
-			else:
-				genotype=str(readnums_nomissing[ind_num])+"|"+str(readnums_nomissing[ind_num+1])
-			toprint+=("\t"+genotype)
-		toprint+="\n"
-		#print(toprint)
-		with open(vcfoutfile,"a") as outfile:
-			_ = outfile.write(toprint)
-	
+		snp_binary_dict[snp_position] = readnums_nomissing
+
+reads_binary_dict = {}
+
+with open(msoutfile,"w") as outfile:
+	_ = outfile.write(segsites)
+	_ = outfile.write(positions)
+
+for individual_number in range(len(snp_dict.keys())):
+	print(individual_number)
+	sequence=""
+	for snp_position in snp_binary_dict.keys():
+		sequence+=str(snp_binary_dict[snp_position][individual_number])
+	with open(msoutfile,"a") as outfile:
+		_ = outfile.write("\n"+sequence)
 
 

@@ -2,7 +2,7 @@
 skip=T
 setwd("~")
 if(skip == F){
-merged=read.table("~/rec_taj_dxy_fst_islswp_missing.temp",fill=T,header=T,stringsAsFactors = F)
+merged=read.table("/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ANALYSIS/rec_taj_dxy_fst_islswp_miss_lostruct.temp",fill=T,header=T,stringsAsFactors = F)
 small=merged[,c("chr","midPos","species")]
 small=small[duplicated(small),]
 dim(small)
@@ -403,6 +403,7 @@ summary(merged$dxymeans)
 write.table(merged,"rec_taj_dxy.temp",row.names = F)
 }
 
+if(skip == F){
 merged = read.table("rec_taj_dxy.temp",fill=T,header=T,stringsAsFactors = F)
 fstdf = read.table("fst.temp",fill=T,header=T,stringsAsFactors = F)
 recdf = read.table("/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ANALYSIS/DXY/textfiles/bigrecom.may2020.txt",
@@ -639,7 +640,7 @@ write.table(unique(merged),"rec_taj_dxy_fst_islandssweeps.temp")
 merged=read.table("~/rec_taj_dxy_fst_islandssweeps.temp",header=T,fill=T,
                   stringsAsFactors = F)
 dim(merged)
-
+}
 
 
 
@@ -648,7 +649,7 @@ dim(merged)
 
 
 ## plot dxy for each species
-micro=T
+micro=F
 Z1=F
 smallspp=F
 {
@@ -692,7 +693,8 @@ smallspp=F
   }
   
   print(specieslist)
-  png(paste("dxy_all_species_",suffix,".png",sep=""),width=800,height=(150*length(specieslist)))
+  #png(paste("dxy_all_species_",suffix,".png",sep=""),width=800,height=(150*length(specieslist)))
+  pdf(paste("dxy_all_species_",suffix,".pdf",sep=""),width=6,height=8.5)
   palette(c("black","grey"))
   par(mfrow=c(length(specieslist),1),
       mar=c(2,4,0,0))
@@ -751,7 +753,8 @@ smallspp=F
   }
   
   print(specieslist)
-  png(paste("rec_all_species_",suffix,".png",sep=""),width=800,height=(150*length(specieslist)))
+  #png(paste("rec_all_species_",suffix,".png",sep=""),width=800,height=(150*length(specieslist)))
+  pdf(paste("rec_all_species_",suffix,".pdf",sep=""),width=6,height=8.5)
   palette(c("black","grey"))
   par(mfrow=c(length(specieslist),1),
       mar=c(2,4,0,0))
@@ -810,7 +813,8 @@ smallspp=F
   }
   
   print(specieslist)
-  png(paste("fst_all_species_",suffix,".png",sep=""),width=800,height=(150*length(specieslist)))
+  #png(paste("fst_all_species_",suffix,".png",sep=""),width=800,height=(150*length(specieslist)))
+  pdf(paste("fst_all_species_",suffix,".pdf",sep=""),width=6,height=8.5)
   palette(c("black","grey"))
   par(mfrow=c(length(specieslist),1),
       mar=c(2,4,0,0))
@@ -872,7 +876,8 @@ smallspp=F
   }
   abline_locations =sweepmerged[which(sweepmerged$ranksppISLAND + sweepmerged$ranksppSWEEP > 0),"plotorder"]
   print(specieslist)
-  png(paste("islswp_all_species_",suffix,"-2.png",sep=""),width=800,height=(150*length(specieslist)))
+  #png(paste("islswp_all_species_",suffix,"-2.png",sep=""),width=800,height=(150*length(specieslist)))
+  pdf(paste("islswp_all_species_",suffix,"-2.pdf",sep=""),width=6,height=8.5)
   palette(c("black","grey"))
   par(mfrow=c(length(specieslist),1),
       mar=c(2,4,0,0))
@@ -937,7 +942,8 @@ smallspp=F
   }
   
   print(specieslist)
-  png(paste("Tajima_all_species_",suffix,".png",sep=""),width=800,height=(150*length(specieslist)))
+  #png(paste("Tajima_all_species_",suffix,".png",sep=""),width=800,height=(150*length(specieslist)))
+  pdf(paste("Tajima_all_species_",suffix,".pdf",sep=""),width=6,height=8.5)
   palette(c("black","grey"))
   par(mfrow=c(length(specieslist),1),
       mar=c(2,4,0,0))
