@@ -11,7 +11,7 @@ source activate py36
 
 cd /vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/VCFS/ 
 
-for vcf in *cri*vcf; do 
+for vcf in *vcf; do 
 echo $vcf; 
 #python3 /home/kprovost/nas3/ANGSD_pipeline/vcf_remove_2tabs.py $vcf; 
 

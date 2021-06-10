@@ -1,7 +1,7 @@
 #!/bin/bash
 #PBS -l select=1:ncpus=32
 #PBS -l walltime=5000:00:00
-#PBS -N all2_PCAngsd
+#PBS -N belflaNW_PCAngsd
 #PBS -j oe
 #PBS -m ae
 #PBS -M kprovost@amnh.org
@@ -19,17 +19,6 @@ echo $PATH
 run=2
 #run=3
 
-#spp="Vireo-bellii"
-#spp="Amphispiza-bilineata"
-#spp="Campylorhynchus-brunneicapillus"
-#spp="Toxostoma-crissale"
-#spp="Toxostoma-curvirostre"
-#spp="Auriparus-flaviceps"
-#spp="Melozone-fusca"
-#spp="Polioptila-melanura"
-#spp="Phainopepla-nitens"
-spp="Cardinalis-sinuatus"
-
 cd /vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/
 
 #Arguments:
@@ -37,8 +26,9 @@ cd /vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/
 
 
 #Declare a string array
-spplist=( "Vireo-bellii" "Amphispiza-bilineata" "Campylorhynchus-brunneicapillus" "Toxostoma-crissale" "Toxostoma-curvirostre" "Auriparus-flaviceps" "Melozone-fusca" "Polioptila-melanura" "Phainopepla-nitens" "Cardinalis-sinuatus" "Campylorhynchus-brunneicapillus-NOWEIRD" "Phainopepla-nitens-NOWEIRD" "Polioptila-melanura-NOWEIRD" "Vireo-bellii-NOWEIRD")
- 
+#spplist=( "Vireo-bellii" "Amphispiza-bilineata" "Campylorhynchus-brunneicapillus" "Toxostoma-crissale" "Toxostoma-curvirostre" "Auriparus-flaviceps" "Melozone-fusca" "Polioptila-melanura" "Phainopepla-nitens" "Cardinalis-sinuatus" "Campylorhynchus-brunneicapillus-NOWEIRD" "Phainopepla-nitens-NOWEIRD" "Polioptila-melanura-NOWEIRD" "Vireo-bellii-NOWEIRD")
+ spplist=("Auriparus-flaviceps-NOWEIRD" "Vireo-bellii-NOWEIRD")
+
 # Print array values in  lines
 for spp in ${spplist[*]}; do
 echo $spp

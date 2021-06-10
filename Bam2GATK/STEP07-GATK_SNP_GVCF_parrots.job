@@ -1,0 +1,50 @@
+#!/bin/bash
+#PBS -l select=1:ncpus=64
+#PBS -l walltime=5000:00:00
+#PBS -N par_7_GATKsnpGVCF
+#PBS -j oe
+#PBS -m ae
+#PBS -M kprovost@amnh.org
+#PBS -k oe
+
+# change to the working directory
+cd $PBS_O_WORKDIR
+echo "pbsworkdir"
+echo $PBS_O_WORKDIR
+EXECDIR=`pwd`
+export PATH=./:$PATH
+echo $PATH
+
+ref=/home/kprovost/nas3/genomeresequencingFromLucas/Melo_chrom/pseudochromosomesSHORT.fasta
+
+cd /vz-nas1-active/RawGenomicReads/FASTQ_SCREEN_RESULTS/Parrots/BAM_dedup
+
+echo
+echo
+echo Combine GVCFs
+echo
+echo
+
+time java -jar /home/kprovost/nas3/genomeresequencingFromLucas/GenomeAnalysisTK-3.8-1-0-gf15c1c3ef/GenomeAnalysisTK.jar \
+-T GenotypeGVCFs \
+-R $ref \
+--variant AMN_245113_P001_WA01.recal.raw.g.vcf \
+--variant AMN_245113_P001_WA05.recal.raw.g.vcf \
+--variant AMN_245113_P001_WA06.recal.raw.g.vcf \
+--variant AMN_245113_P001_WB01.recal.raw.g.vcf \
+--variant AMN_245113_P001_WB05.recal.raw.g.vcf \
+--variant AMN_245113_P001_WC01.recal.raw.g.vcf \
+--variant AMN_245113_P001_WC06.recal.raw.g.vcf \
+--variant AMN_245113_P001_WD01.recal.raw.g.vcf \
+--variant AMN_245113_P001_WD05.recal.raw.g.vcf \
+--variant AMN_245113_P001_WD06.recal.raw.g.vcf \
+--variant AMN_245113_P001_WE01.recal.raw.g.vcf \
+--variant AMN_245113_P001_WE05.recal.raw.g.vcf \
+--variant AMN_245113_P001_WF01.recal.raw.g.vcf \
+--variant AMN_245113_P001_WF05.recal.raw.g.vcf \
+--variant AMN_245113_P001_WG01.recal.raw.g.vcf \
+--variant AMN_245113_P001_WG05.recal.raw.g.vcf \
+--variant AMN_245113_P001_WH05.recal.raw.g.vcf \
+-o parrots.recal.raw.vcf
+#-nt 64
+##### nt not there originally, didn't have slash before

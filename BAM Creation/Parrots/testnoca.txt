@@ -1,0 +1,513 @@
+Desert Population Tested	Song Type Played	Distance to Speaker Before Trial	Distance to Speaker After Trial	Attacks on Speaker Before Trial	Attacks on Speaker After Trial	Songs Sung Before Trial	Songs Sung After Trial	Aggression Index Before Trial	Aggression Index After Trial
+Sonoran Desert	Other Desert	8	4	1	9	0	1	0.988596495	2.588436521
+Sonoran Desert	Other Desert	24	24	0	0	0	0	-1.084752945	-1.07456491
+Sonoran Desert	Other Desert	24	2	0	4	0	39	-1.044000806	2.960004019
+Sonoran Desert	Other Desert	24	24	0	0	0	0	-1.101733003	-1.101733003
+Sonoran Desert	Other Desert	24	24	0	0	0	0	-1.101733003	-1.101733003
+Sonoran Desert	Other Desert	24	24	0	0	0	0	-1.060980864	-1.013436703
+Sonoran Desert	Other Desert	24	24	0	0	0	1	-1.07456491	-0.161511133
+Sonoran Desert	Other Desert	24	8	0	2	0	28	-1.084752945	1.698333217
+Sonoran Desert	Other Desert	24	24	0	0	0	0	-1.091544968	-1.07456491
+Sonoran Desert	Other Desert	24	8	0	2	0	28	-1.037208783	2.495935148
+Sonoran Desert	Other Desert	24	24	0	0	0	0	-1.07456491	-1.03041676
+Sonoran Desert	Other Desert	24	24	0	0	0	12	-1.05079283	-0.405701189
+Sonoran Desert	Other Desert	24	24	0	0	13	0	0.398680219	-0.263378933
+Sonoran Desert	Other Desert	24	24	0	0	0	0	-1.101733003	-1.044000806
+Sonoran Desert	Other Desert	24	24	0	0	8	6	0.144042083	0.042186829
+Sonoran Desert	Other Desert	24	24	0	0	0	0	-1.044000806	-1.037208783
+Sonoran Desert	Other Desert	24	24	0	0	0	0	-1.101733003	-1.09494098
+Sonoran Desert	Other Desert	16	24	0	0	3	0	0.425466947	-1.101733003
+Sonoran Desert	Other Desert	24	24	0	0	0	0	-1.101733003	-1.071168899
+Sonoran Desert	Other Desert	24	24	0	0	0	0	-1.020228726	-0.999852656
+Sonoran Desert	Other Desert	24	24	0	0	0	0	-1.060980864	-1.057584853
+Sonoran Desert	Other Desert	24	24	0	0	0	0	-1.044000806	-1.060980864
+Sonoran Desert	Other Desert	24	16	0	3	0	5	-1.098336991	1.009138294
+Sonoran Desert	Other Desert	24	24	0	1	16	10	-0.286890969	-0.432983372
+Sonoran Desert	Other Desert	24	24	0	0	0	21	-1.098336991	-0.066212949
+Sonoran Desert	Other Desert	24	24	0	0	0	0	-1.101733003	-1.098336991
+Sonoran Desert	Other Desert	24	24	0	0	0	0	-1.013436703	-1.016832714
+Sonoran Desert	Other Desert	24	24	0	0	3	23	-0.110596052	0.907956489
+Sonoran Desert	Other Desert	24	24	0	0	0	0	-0.192062691	-0.236210841
+Sonoran Desert	Other Desert	24	24	0	0	3	0	-0.925178041	-1.077960922
+Sonoran Desert	Other Desert	24	24	0	0	2	1	-0.161523679	-0.212451306
+Sonoran Desert	Other Desert	16	16	0	0	14	5	0.13373273	-0.300843833
+Sonoran Desert	Other Desert	24	24	0	0	0	0	-1.101733003	-1.081356933
+Sonoran Desert	Other Desert	24	24	0	0	0	0	-1.088148957	-1.077960922
+Sonoran Desert	Other Desert	24	24	0	0	0	0	-1.071168899	-1.09494098
+Sonoran Desert	Other Desert	24	24	0	0	0	0	-1.101733003	-1.101733003
+Sonoran Desert	Other Desert	24	24	0	0	0	0	-1.101733003	-1.101733003
+Sonoran Desert	Other Desert	24	16	0	0	0	8	-1.101733003	0.663125025
+Sonoran Desert	Other Desert	24	24	0	0	0	0	-1.101733003	-1.101733003
+Sonoran Desert	Other Desert	24	24	0	0	2	0	-1.00327376	-1.09494098
+Sonoran Desert	Other Desert	24	8	0	6	0	21	-1.101733003	1.945773153
+Sonoran Desert	Other Desert	24	24	0	0	0	0	-1.101733003	-0.25658691
+Sonoran Desert	Other Desert	24	24	0	0	0	0	-1.101733003	-1.101733003
+Sonoran Desert	Other Desert	24	24	0	0	0	0	-1.091544968	-1.081356933
+Sonoran Desert	Other Desert	24	24	0	0	0	0	-1.101733003	-1.101733003
+Sonoran Desert	Other Desert	24	24	0	0	0	0	-1.098336991	-1.098336991
+Sonoran Desert	Other Desert	24	24	0	0	0	0	-1.101733003	-1.084752945
+Sonoran Desert	Other Desert	24	24	0	0	0	0	-1.101733003	-1.057584853
+Sonoran Desert	Other Desert	24	24	0	0	0	0	-1.098336991	-1.098336991
+Sonoran Desert	Other Desert	24	24	0	0	0	0	-1.101733003	-1.071168899
+Sonoran Desert	Other Desert	24	24	0	0	10	23	-0.623020836	0.001682189
+Sonoran Desert	Other Desert	24	24	0	0	0	0	-1.101733003	-1.101733003
+Sonoran Desert	Other Desert	24	24	0	0	0	0	-1.088148957	-1.101733003
+Sonoran Desert	Other Desert	24	16	0	1	0	16	-1.09494098	0.401853367
+Sonoran Desert	Other Desert	24	16	0	0	0	24	-1.09494098	0.585276804
+Sonoran Desert	Other Desert	24	24	0	0	0	0	-1.101733003	-1.033812772
+Sonoran Desert	Other Desert	24	24	0	0	0	0	-1.07456491	-1.064376876
+Sonoran Desert	Other Desert	24	2	0	8	0	3	-1.101733003	2.657193139
+Sonoran Desert	Other Desert	8	4	1	2	1	7	1.046316145	1.753916681
+Sonoran Desert	Other Desert	24	24	0	0	0	0	-1.07456491	-1.077960922
+Sonoran Desert	Other Desert	24	4	0	3	0	18	-1.077960922	2.449821859
+Sonoran Desert	Other Desert	24	24	0	0	0	0	-1.101733003	-1.101733003
+Sonoran Desert	Other Desert	24	24	0	0	0	0	-1.101733003	-1.071168899
+Sonoran Desert	Other Desert	24	24	0	0	0	0	-1.081356933	-0.993060633
+Sonoran Desert	Other Desert	24	24	0	0	0	0	-1.101733003	-1.081356933
+Sonoran Desert	Other Desert	24	24	0	0	0	0	-1.03041676	-1.054188841
+Sonoran Desert	Other Desert	24	4	0	2	0	0	-1.081356933	1.461947511
+Sonoran Desert	Far-Away in Same Desert	24	24	0	0	0	0	-1.101733003	-1.101733003
+Sonoran Desert	Far-Away in Same Desert	24	8	0	3	0	24	-1.071168899	1.674472139
+Sonoran Desert	Far-Away in Same Desert	24	16	0	1	0	31	-1.020228726	1.247272051
+Sonoran Desert	Far-Away in Same Desert	24	24	0	0	0	0	-1.101733003	-1.101733003
+Sonoran Desert	Far-Away in Same Desert	24	4	0	1	0	27	-1.037208783	1.733889655
+Sonoran Desert	Far-Away in Same Desert	8	16	0	0	2	3	0.143564493	-0.290630706
+Sonoran Desert	Far-Away in Same Desert	24	24	0	0	0	0	-1.088148957	-1.101733003
+Sonoran Desert	Far-Away in Same Desert	24	16	0	1	5	20	-0.022324844	1.406561818
+Sonoran Desert	Far-Away in Same Desert	24	24	0	0	0	0	-1.091544968	-1.081356933
+Sonoran Desert	Far-Away in Same Desert	24	24	0	0	0	0	-1.098336991	-1.067772887
+Sonoran Desert	Far-Away in Same Desert	24	24	0	0	0	0	-1.084752945	-1.101733003
+Sonoran Desert	Far-Away in Same Desert	8	4	0	5	17	0	0.866726761	1.93697158
+Sonoran Desert	Far-Away in Same Desert	24	24	0	1	2	1	-0.161523679	-0.052977946
+Sonoran Desert	Far-Away in Same Desert	24	24	0	0	0	0	-1.077960922	-1.071168899
+Sonoran Desert	Far-Away in Same Desert	24	24	0	0	13	0	0.398680219	-0.263378933
+Sonoran Desert	Far-Away in Same Desert	24	2	0	7	0	33	-1.064376876	3.098898222
+Sonoran Desert	Far-Away in Same Desert	24	24	0	0	0	0	-1.084752945	-1.098336991
+Sonoran Desert	Far-Away in Same Desert	24	24	0	0	0	0	-1.071168899	-0.945516472
+Sonoran Desert	Far-Away in Same Desert	24	24	0	0	0	0	-1.101733003	-1.101733003
+Sonoran Desert	Far-Away in Same Desert	24	24	0	0	0	0	-1.09494098	-1.003248668
+Sonoran Desert	Far-Away in Same Desert	24	24	0	0	0	0	-1.084752945	-1.010040691
+Sonoran Desert	Far-Away in Same Desert	16	8	0	1	14	11	0.143920764	0.727426381
+Sonoran Desert	Far-Away in Same Desert	24	4	0	2	1	0	-0.212451306	1.421195372
+Sonoran Desert	Far-Away in Same Desert	24	24	0	0	0	0	-1.101733003	-1.098336991
+Sonoran Desert	Far-Away in Same Desert	24	24	0	0	0	1	-0.263378933	-0.212451306
+Sonoran Desert	Far-Away in Same Desert	24	24	0	0	0	0	-1.044000806	-0.993060633
+Sonoran Desert	Far-Away in Same Desert	24	24	0	0	0	28	-1.006644679	0.297072463
+Sonoran Desert	Far-Away in Same Desert	24	24	0	0	9	0	0.19496971	-0.263378933
+Sonoran Desert	Far-Away in Same Desert	24	24	1	1	0	0	-0.942259642	-0.09711355
+Sonoran Desert	Far-Away in Same Desert	24	4	0	9	8	28	-0.694311986	3.963482453
+Sonoran Desert	Far-Away in Same Desert	24	24	0	0	1	4	-1.054201387	-0.884438448
+Sonoran Desert	Far-Away in Same Desert	24	8	0	2	0	0	-1.101733003	1.151465867
+Sonoran Desert	Far-Away in Same Desert	24	16	0	0	0	0	-1.098336991	0.282872101
+Sonoran Desert	Far-Away in Same Desert	24	8	0	1	0	0	-1.101733003	0.150242426
+Sonoran Desert	Far-Away in Same Desert	24	24	0	0	0	0	-1.101733003	-1.101733003
+Sonoran Desert	Far-Away in Same Desert	24	24	0	0	0	0	-1.057584853	-1.091544968
+Sonoran Desert	Far-Away in Same Desert	24	24	0	0	0	0	-1.101733003	-1.091544968
+Sonoran Desert	Far-Away in Same Desert	24	16	0	2	0	1	-1.101733003	0.649350437
+Sonoran Desert	Far-Away in Same Desert	24	4	0	2	0	0	-1.091544968	1.43817543
+Sonoran Desert	Far-Away in Same Desert	24	24	0	0	0	0	-1.101733003	-1.101733003
+Sonoran Desert	Far-Away in Same Desert	16	16	0	1	10	0	0.758188256	0.449137484
+Sonoran Desert	Far-Away in Same Desert	24	24	0	0	7	2	-0.741843602	-0.986293702
+Sonoran Desert	Far-Away in Same Desert	24	24	0	0	0	7	-1.098336991	-0.748635625
+Sonoran Desert	Far-Away in Same Desert	24	24	0	0	0	0	-1.101733003	-1.101733003
+Sonoran Desert	Far-Away in Same Desert	24	24	0	0	0	0	-1.101733003	-1.098336991
+Sonoran Desert	Far-Away in Same Desert	16	16	0	2	8	2	-0.16504101	-0.117699936
+Sonoran Desert	Far-Away in Same Desert	24	24	0	0	0	0	-1.101733003	-1.101733003
+Sonoran Desert	Far-Away in Same Desert	24	24	0	0	0	0	-1.101733003	-1.101733003
+Sonoran Desert	Far-Away in Same Desert	24	24	0	0	0	0	-1.071168899	-1.09494098
+Sonoran Desert	Far-Away in Same Desert	24	24	0	0	0	0	-1.101733003	-1.057584853
+Sonoran Desert	Far-Away in Same Desert	24	24	0	0	7	3	-0.731655567	-0.904801971
+Sonoran Desert	Far-Away in Same Desert	24	24	0	0	0	0	-1.098336991	-1.081356933
+Sonoran Desert	Far-Away in Same Desert	24	24	0	0	0	0	-1.098336991	-1.098336991
+Sonoran Desert	Far-Away in Same Desert	24	24	0	0	0	0	-1.088148957	-1.098336991
+Sonoran Desert	Far-Away in Same Desert	24	24	0	0	0	0	-1.09494098	-1.071168899
+Sonoran Desert	Far-Away in Same Desert	24	24	0	0	0	1	-1.060980864	-1.044013353
+Sonoran Desert	Far-Away in Same Desert	24	24	0	0	0	0	-1.101733003	-1.101733003
+Sonoran Desert	Far-Away in Same Desert	24	24	0	0	0	0	-1.101733003	-1.101733003
+Sonoran Desert	Far-Away in Same Desert	24	4	0	5	0	4	-1.098336991	2.089741915
+Sonoran Desert	Far-Away in Same Desert	24	24	0	0	0	0	-1.047396818	-1.057584853
+Sonoran Desert	Far-Away in Same Desert	24	0	0	8	0	2	-1.077960922	2.769996363
+Sonoran Desert	Far-Away in Same Desert	24	24	0	0	0	0	-1.088148957	-1.101733003
+Sonoran Desert	Far-Away in Same Desert	16	8	0	4	19	26	0.351014738	2.723214649
+Sonoran Desert	Far-Away in Same Desert	24	24	0	0	0	0	-1.047396818	-1.064376876
+Sonoran Desert	Far-Away in Same Desert	24	24	0	0	0	0	-1.101733003	-1.101733003
+Sonoran Desert	Far-Away in Same Desert	24	4	0	3	0	8	-1.091544968	1.275388107
+Sonoran Desert	Far-Away in Same Desert	24	2	0	7	0	2	-1.101733003	1.696734383
+Sonoran Desert	Local Population	24	24	0	0	0	0	-1.098336991	-1.088148957
+Sonoran Desert	Local Population	24	1	0	12	0	31	-1.077960922	4.751985391
+Sonoran Desert	Local Population	24	2	0	17	0	36	-1.084752945	5.766273052
+Sonoran Desert	Local Population	24	2	0	12	0	35	-1.101733003	4.816098278
+Sonoran Desert	Local Population	24	24	0	0	0	0	-1.064376876	-1.040604795
+Sonoran Desert	Local Population	24	8	0	3	0	0	-1.057584853	1.344899343
+Sonoran Desert	Local Population	24	2	0	18	0	25	-1.047396818	5.297622284
+Sonoran Desert	Local Population	24	24	0	0	0	0	-1.084752945	-1.101733003
+Sonoran Desert	Local Population	24	1	0	11	0	10	-1.077960922	3.563784
+Sonoran Desert	Local Population	8	24	0	0	6	1	0.306522863	-0.925152948
+Sonoran Desert	Local Population	24	8	0	2	1	10	-0.976093122	0.808804022
+Sonoran Desert	Local Population	24	2	0	5	5	0	-0.823322787	2.107494454
+Sonoran Desert	Local Population	24	1	0	16	2	21	-0.999877749	4.928146723
+Sonoran Desert	Local Population	24	24	0	0	0	0	-1.101733003	-1.101733003
+Sonoran Desert	Local Population	24	16	0	2	0	9	-1.101733003	1.060167465
+Sonoran Desert	Local Population	24	24	0	0	0	0	-1.081356933	-0.982872599
+Sonoran Desert	Local Population	24	24	0	0	0	0	-1.054188841	-1.101733003
+Sonoran Desert	Local Population	24	0	0	15	0	41	-1.101733003	5.71627081
+Sonoran Desert	Local Population	24	24	0	0	0	0	-1.101733003	-1.098336991
+Sonoran Desert	Local Population	24	4	0	9	0	22	-1.023624737	3.674896748
+Sonoran Desert	Local Population	24	24	0	0	0	0	-1.101733003	-1.101733003
+Sonoran Desert	Local Population	24	24	0	0	0	0	-1.064376876	-1.057584853
+Sonoran Desert	Local Population	24	4	0	9	7	11	-0.745239613	3.097712792
+Sonoran Desert	Local Population	24	1	0	4	2	28	-0.999877749	3.370959789
+Sonoran Desert	Local Population	24	24	0	0	1	18	-1.050805376	0.653318354
+Sonoran Desert	Local Population	24	2	0	6	7	27	-0.728259555	2.728947422
+Sonoran Desert	Local Population	24	4	0	2	0	2	-0.249794887	1.516258604
+Sonoran Desert	Local Population	24	2	0	8	0	3	-1.054188841	2.687757243
+Sonoran Desert	Local Population	24	2	0	8	0	12	-0.236210841	3.088373691
+Sonoran Desert	Local Population	24	1	0	4	7	18	0.093114456	2.861683518
+Sonoran Desert	Local Population	24	24	0	0	0	3	-1.101733003	-0.110596052
+Sonoran Desert	Local Population	16	16	0	2	10	19	-0.080165813	0.683545505
+Sonoran Desert	Local Population	24	4	0	3	0	2	-1.064376876	1.696108033
+Sonoran Desert	Local Population	24	24	0	0	0	0	-1.101733003	-1.09494098
+Sonoran Desert	Local Population	24	16	0	2	5	0	-0.022324844	0.656155006
+Sonoran Desert	Local Population	24	2	0	6	0	4	-1.101733003	2.436718207
+Sonoran Desert	Local Population	24	8	0	3	0	8	-1.101733003	1.73194429
+Sonoran Desert	Local Population	24	0	0	12	0	18	-1.101733003	4.148019583
+Sonoran Desert	Local Population	24	2	0	6	0	15	-1.101733003	2.925605863
+Sonoran Desert	Local Population	24	4	0	3	0	12	-1.088148957	2.185008235
+Sonoran Desert	Local Population	24	4	0	9	0	30	-1.101733003	3.980437418
+Sonoran Desert	Local Population	24	24	0	0	0	0	-1.101733003	-1.101733003
+Sonoran Desert	Local Population	24	2	0	23	0	35	-1.09494098	6.577097264
+Sonoran Desert	Local Population	24	1	0	8	0	18	-1.101733003	3.438448752
+Sonoran Desert	Local Population	24	24	0	0	0	0	-1.101733003	-1.101733003
+Sonoran Desert	Local Population	24	24	0	0	0	0	-1.101733003	-1.09494098
+Sonoran Desert	Local Population	24	2	0	14	0	28	-1.003248668	4.822699759
+Sonoran Desert	Local Population	24	24	0	0	0	0	-1.101733003	-1.09494098
+Sonoran Desert	Local Population	24	24	0	0	0	0	-1.101733003	-1.03041676
+Sonoran Desert	Local Population	24	24	0	0	0	0	-1.098336991	-1.027020749
+Sonoran Desert	Local Population	24	4	0	6	12	29	-0.477017432	3.51561393
+Sonoran Desert	Local Population	24	1	0	16	0	22	-1.101733003	4.955302269
+Sonoran Desert	Local Population	24	4	0	13	0	13	-1.088148957	3.796709349
+Sonoran Desert	Local Population	24	24	0	0	0	0	-1.101733003	-1.101733003
+Sonoran Desert	Local Population	16	1	0	18	11	36	-0.032634198	5.90233548
+Sonoran Desert	Local Population	24	1	0	15	12	12	-0.51776957	4.279760615
+Sonoran Desert	Local Population	24	24	0	0	0	0	-1.044000806	-1.044000806
+Sonoran Desert	Local Population	24	8	0	11	0	3	-1.101733003	2.736112979
+Sonoran Desert	Local Population	24	4	0	18	1	48	-1.054201387	6.254286683
+Sonoran Desert	Local Population	24	4	0	3	0	6	-1.09494098	1.957550738
+Sonoran Desert	Local Population	24	1	0	14	0	40	-1.084752945	5.556448848
+Sonoran Desert	Local Population	24	8	0	5	0	7	-1.054188841	2.027131476
+Sonoran Desert	Local Population	24	0	0	12	0	19	-0.993060633	4.249887384
+Sonoran Desert	Local Population	24	24	0	0	0	0	-1.101733003	-1.05079283
+Sonoran Desert	Local Population	24	24	0	0	0	0	-1.101733003	-1.101733003
+Sonoran Desert	Local Population	24	4	0	3	0	8	-1.071168899	2.001673796
+Sonoran Desert	Local Population	2	2	1	10	5	20	1.649526895	3.848701543
+Sonoran Desert	Cactus Wren Song	24	24	0	0	0	0	-1.09494098	-1.098336991
+Sonoran Desert	Cactus Wren Song	16	16	0	0	25	2	0.659976512	-0.287222149
+Sonoran Desert	Cactus Wren Song	16	16	0	2	0	8	-0.501145784	1.066972034
+Sonoran Desert	Cactus Wren Song	24	24	0	0	0	0	-1.101733003	-1.081356933
+Sonoran Desert	Cactus Wren Song	24	16	0	3	0	33	-1.047396818	1.559401656
+Sonoran Desert	Cactus Wren Song	24	24	0	0	0	0	-1.064376876	-0.209042749
+Sonoran Desert	Cactus Wren Song	24	24	0	0	0	0	-1.091544968	-1.054188841
+Sonoran Desert	Cactus Wren Song	24	16	0	0	0	11	-1.064376876	0.021701987
+Sonoran Desert	Cactus Wren Song	16	4	1	1	0	2	-0.351860458	0.610123486
+Sonoran Desert	Cactus Wren Song	24	24	0	0	0	0	-1.101733003	-1.033812772
+Sonoran Desert	Cactus Wren Song	16	24	1	0	0	0	-0.385820574	-1.084752945
+Sonoran Desert	Cactus Wren Song	8	4	2	7	12	41	1.772785427	4.323574942
+Sonoran Desert	Cactus Wren Song	24	24	0	0	2	17	-0.996481737	-0.188419181
+Sonoran Desert	Cactus Wren Song	16	24	0	0	3	0	0.425466947	-0.25658691
+Sonoran Desert	Cactus Wren Song	24	24	0	0	0	0	-1.057584853	-0.972684564
+Sonoran Desert	Cactus Wren Song	24	24	0	0	0	0	-1.084752945	-1.09494098
+Sonoran Desert	Cactus Wren Song	24	24	0	0	0	0	-1.098336991	-1.09494098
+Sonoran Desert	Cactus Wren Song	24	24	0	0	0	0	-1.010040691	-1.03041676
+Sonoran Desert	Cactus Wren Song	24	24	0	0	0	0	-1.101733003	-1.101733003
+Sonoran Desert	Cactus Wren Song	24	24	0	0	0	0	-0.962496529	-0.999852656
+Sonoran Desert	Cactus Wren Song	24	8	0	2	0	10	-1.101733003	1.647158092
+Sonoran Desert	Cactus Wren Song	24	24	0	0	0	0	-1.081356933	-1.098336991
+Sonoran Desert	Cactus Wren Song	24	24	0	0	21	3	-0.032252834	-0.110596052
+Sonoran Desert	Cactus Wren Song	24	24	0	0	0	11	-1.101733003	-0.541529105
+Sonoran Desert	Cactus Wren Song	24	24	0	0	19	5	-0.134108088	-0.008740798
+Sonoran Desert	Cactus Wren Song	24	16	0	0	6	5	-0.779187183	-0.283863775
+Sonoran Desert	Cactus Wren Song	24	24	0	0	18	9	-0.208807796	-0.57886014
+Sonoran Desert	Cactus Wren Song	16	16	1	1	8	25	0.849766478	1.715536138
+Sonoran Desert	Cactus Wren Song	24	24	0	0	0	0	-1.057584853	-1.006644679
+Sonoran Desert	Cactus Wren Song	24	8	0	2	8	6	-0.694311986	0.615281549
+Sonoran Desert	Cactus Wren Song	24	24	0	0	6	22	0.042186829	0.018674793
+Sonoran Desert	Cactus Wren Song	16	24	0	0	1	0	-0.497762318	-1.084752945
+Sonoran Desert	Cactus Wren Song	24	24	0	0	0	0	-1.101733003	-1.054188841
+Sonoran Desert	Cactus Wren Song	24	8	0	2	0	5	-1.101733003	0.574541956
+Sonoran Desert	Cactus Wren Song	24	24	0	0	0	0	-1.101733003	-1.098336991
+Sonoran Desert	Cactus Wren Song	24	24	0	0	0	0	-1.101733003	-1.101733003
+Sonoran Desert	Cactus Wren Song	24	24	0	0	0	0	-1.101733003	-1.101733003
+Sonoran Desert	Cactus Wren Song	24	24	0	0	0	0	-1.101733003	-1.101733003
+Sonoran Desert	Cactus Wren Song	24	24	0	0	0	0	-1.09494098	-1.057584853
+Sonoran Desert	Cactus Wren Song	24	24	0	0	0	0	-1.101733003	-1.101733003
+Sonoran Desert	Cactus Wren Song	24	24	0	0	0	0	-1.101733003	-1.098336991
+Sonoran Desert	Cactus Wren Song	8	24	0	0	2	0	0.085832297	-1.088148957
+Sonoran Desert	Cactus Wren Song	24	24	0	0	0	0	-1.091544968	-1.064376876
+Sonoran Desert	Cactus Wren Song	24	24	0	0	0	0	-1.101733003	-1.098336991
+Sonoran Desert	Cactus Wren Song	24	24	0	0	0	0	-1.101733003	-1.101733003
+Sonoran Desert	Cactus Wren Song	16	16	1	0	0	9	-0.345068435	-0.073361244
+Sonoran Desert	Cactus Wren Song	24	24	0	0	0	0	-1.091544968	-1.101733003
+Sonoran Desert	Cactus Wren Song	24	24	0	0	0	0	-1.067772887	-0.996456645
+Sonoran Desert	Cactus Wren Song	24	24	0	0	0	0	-1.101733003	-1.101733003
+Sonoran Desert	Cactus Wren Song	24	24	0	0	0	0	-1.071168899	-1.09494098
+Sonoran Desert	Cactus Wren Song	8	4	0	5	9	11	0.455909732	2.446235305
+Sonoran Desert	Cactus Wren Song	16	16	0	0	5	10	0.520530178	0.815920452
+Sonoran Desert	Cactus Wren Song	24	24	0	0	0	0	-1.081356933	-1.03041676
+Sonoran Desert	Cactus Wren Song	24	24	0	0	0	0	-1.101733003	-1.101733003
+Sonoran Desert	Cactus Wren Song	0	16	0	2	20	14	1.491048422	0.45267945
+Sonoran Desert	Cactus Wren Song	24	24	0	0	0	0	-1.077960922	-1.013436703
+Sonoran Desert	Cactus Wren Song	24	24	0	0	3	0	-0.955742145	-1.044000806
+Sonoran Desert	Cactus Wren Song	8	24	0	0	10	0	0.466085221	-1.101733003
+Sonoran Desert	Cactus Wren Song	24	24	0	0	0	0	-1.047396818	-1.084752945
+Sonoran Desert	Cactus Wren Song	24	24	0	0	0	0	-1.060980864	-1.060980864
+Sonoran Desert	Cactus Wren Song	24	16	0	0	0	9	-1.091544968	-0.097133325
+Sonoran Desert	Cactus Wren Song	24	24	0	0	0	0	-1.101733003	-1.098336991
+Sonoran Desert	Cactus Wren Song	24	24	0	0	0	0	-1.098336991	-1.091544968
+Sonoran Desert	Cactus Wren Song	24	24	0	0	0	0	-1.098336991	-1.088148957
+Sonoran Desert	Cactus Wren Song	24	24	0	0	0	0	-1.07456491	-1.098336991
+Sonoran Desert	Cactus Wren Song	24	24	0	0	0	0	-1.101733003	-1.101733003
+Sonoran Desert	Cactus Wren Song	24	16	0	0	0	4	-0.21243876	0.578274921
+Chihuahuan Desert	Other Desert	16	4	1	0	8	7	-0.002171638	2.280116053
+Chihuahuan Desert	Other Desert	24	16	0	0	0	2	-1.05079283	0.510379782
+Chihuahuan Desert	Other Desert	24	24	0	0	0	0	-1.098336991	-1.054188841
+Chihuahuan Desert	Other Desert	24	24	0	0	0	0	-1.084752945	-1.081356933
+Chihuahuan Desert	Other Desert	24	24	0	0	0	0	-1.071168899	-0.948912483
+Chihuahuan Desert	Other Desert	24	24	0	0	0	0	-1.101733003	-1.101733003
+Chihuahuan Desert	Other Desert	24	24	0	0	0	0	-1.101733003	-1.064376876
+Chihuahuan Desert	Other Desert	24	24	0	0	0	0	-1.098336991	-0.253190899
+Chihuahuan Desert	Other Desert	24	4	0	8	0	4	-1.084752945	2.605518123
+Chihuahuan Desert	Other Desert	16	4	0	7	0	13	0.310040193	2.850057222
+Chihuahuan Desert	Other Desert	24	24	0	0	0	0	-1.101733003	-1.101733003
+Chihuahuan Desert	Other Desert	8	8	1	2	32	24	2.52658825	2.302412674
+Chihuahuan Desert	Other Desert	24	4	0	3	0	10	-0.226022806	2.123905119
+Chihuahuan Desert	Other Desert	16	24	1	0	0	0	0.459325519	-0.222626795
+Chihuahuan Desert	Other Desert	24	16	0	1	0	0	-1.081356933	0.50686968
+Chihuahuan Desert	Other Desert	24	24	0	0	0	0	-1.044000806	-0.891180287
+Chihuahuan Desert	Other Desert	24	24	0	0	0	0	-1.010040691	-0.117350437
+Chihuahuan Desert	Other Desert	24	2	0	3	0	45	-0.226022806	3.021196133
+Chihuahuan Desert	Other Desert	24	24	0	0	0	0	-1.088148957	-1.081356933
+Chihuahuan Desert	Other Desert	24	24	0	0	0	0	-1.101733003	-1.101733003
+Chihuahuan Desert	Other Desert	24	24	0	0	0	0	-1.057584853	-0.205646737
+Chihuahuan Desert	Other Desert	24	24	0	0	0	0	-1.077960922	-1.101733003
+Chihuahuan Desert	Other Desert	24	24	0	0	0	0	-1.09494098	-1.098336991
+Chihuahuan Desert	Other Desert	24	24	0	0	0	0	-1.101733003	-1.101733003
+Chihuahuan Desert	Other Desert	24	24	0	0	0	0	-1.057584853	-0.23281483
+Chihuahuan Desert	Other Desert	24	24	0	0	0	0	-0.945516472	-0.959100518
+Chihuahuan Desert	Other Desert	24	24	0	0	0	0	-1.081356933	-1.057584853
+Chihuahuan Desert	Other Desert	16	16	3	2	7	24	0.282827513	0.951767686
+Chihuahuan Desert	Other Desert	24	24	0	0	0	0	-0.972684564	0.015094013
+Chihuahuan Desert	Other Desert	24	24	0	0	0	0	-0.171686622	-0.202250726
+Chihuahuan Desert	Other Desert	24	24	0	0	0	0	-1.091544968	-0.147914541
+Chihuahuan Desert	Other Desert	24	24	0	0	0	0	-0.959100518	-0.94212046
+Chihuahuan Desert	Other Desert	24	24	0	0	0	0	-1.101733003	-0.236210841
+Chihuahuan Desert	Other Desert	24	24	0	0	0	0	-1.064376876	-0.21243876
+Chihuahuan Desert	Other Desert	24	24	0	0	0	0	-1.040604795	-1.037208783
+Chihuahuan Desert	Other Desert	24	24	0	0	0	0	-1.067772887	-1.098336991
+Chihuahuan Desert	Other Desert	24	24	0	0	0	0	-1.098336991	-1.09494098
+Chihuahuan Desert	Other Desert	24	24	0	0	0	0	-1.084752945	-1.047396818
+Chihuahuan Desert	Other Desert	24	24	0	0	0	0	-1.101733003	-1.101733003
+Chihuahuan Desert	Other Desert	24	24	0	0	0	0	-1.101733003	-1.101733003
+Chihuahuan Desert	Other Desert	24	24	0	0	0	0	-1.101733003	-1.101733003
+Chihuahuan Desert	Other Desert	24	24	0	0	0	0	-1.101733003	-1.077960922
+Chihuahuan Desert	Other Desert	24	24	0	0	0	0	-1.057584853	-1.033812772
+Chihuahuan Desert	Other Desert	24	24	0	0	0	0	-1.054188841	-0.98626861
+Chihuahuan Desert	Other Desert	24	24	0	0	0	0	-1.067772887	-1.101733003
+Chihuahuan Desert	Other Desert	24	24	0	0	0	0	-1.088148957	-0.246398876
+Chihuahuan Desert	Other Desert	24	24	0	0	0	0	-1.064376876	-1.07456491
+Chihuahuan Desert	Other Desert	24	24	0	0	0	0	-1.101733003	-1.101733003
+Chihuahuan Desert	Other Desert	24	24	0	0	0	0	-1.088148957	-1.084752945
+Chihuahuan Desert	Other Desert	24	24	0	0	0	0	-1.101733003	-1.101733003
+Chihuahuan Desert	Other Desert	24	24	0	0	0	0	-1.071168899	-1.07456491
+Chihuahuan Desert	Other Desert	24	24	0	0	0	0	-1.101733003	-1.101733003
+Chihuahuan Desert	Other Desert	24	24	0	0	0	0	-1.101733003	-1.101733003
+Chihuahuan Desert	Other Desert	24	24	0	0	0	0	-1.09494098	-1.098336991
+Chihuahuan Desert	Other Desert	24	24	0	0	0	0	-1.05079283	-0.137726506
+Chihuahuan Desert	Other Desert	24	24	0	0	0	0	-1.101733003	-0.263378933
+Chihuahuan Desert	Other Desert	24	24	0	0	0	0	-1.101733003	-1.084752945
+Chihuahuan Desert	Other Desert	24	24	0	0	0	0	-0.253190899	-1.101733003
+Chihuahuan Desert	Other Desert	24	24	0	0	0	0	-1.101733003	-1.101733003
+Chihuahuan Desert	Other Desert	24	24	0	0	0	0	-1.101733003	-1.101733003
+Chihuahuan Desert	Other Desert	24	24	0	0	0	0	-0.215834772	-0.181874656
+Chihuahuan Desert	Far-Away in Same Desert	24	24	0	0	0	0	-1.091544968	-0.246398876
+Chihuahuan Desert	Far-Away in Same Desert	24	4	0	4	0	14	-0.263378933	2.415772745
+Chihuahuan Desert	Far-Away in Same Desert	24	24	0	0	0	0	-1.077960922	-1.101733003
+Chihuahuan Desert	Far-Away in Same Desert	24	24	0	0	0	0	-1.098336991	-1.098336991
+Chihuahuan Desert	Far-Away in Same Desert	24	24	0	0	0	0	-1.060980864	-1.07456491
+Chihuahuan Desert	Far-Away in Same Desert	24	16	0	0	0	1	-0.259982922	0.354175797
+Chihuahuan Desert	Far-Away in Same Desert	24	24	0	0	0	0	-0.259982922	-0.25658691
+Chihuahuan Desert	Far-Away in Same Desert	24	24	0	0	0	0	-1.09494098	-1.09494098
+Chihuahuan Desert	Far-Away in Same Desert	24	16	0	0	0	5	-1.091544968	0.652974629
+Chihuahuan Desert	Far-Away in Same Desert	16	24	0	0	0	0	-0.552085957	-1.088148957
+Chihuahuan Desert	Far-Away in Same Desert	24	16	0	0	0	0	-1.037208783	0.418712563
+Chihuahuan Desert	Far-Away in Same Desert	24	2	0	3	0	11	-1.07456491	2.253663308
+Chihuahuan Desert	Far-Away in Same Desert	8	2	3	1	0	0	0.486169204	1.476393036
+Chihuahuan Desert	Far-Away in Same Desert	16	4	2	7	0	7	0.659551018	2.571659552
+Chihuahuan Desert	Far-Away in Same Desert	24	24	0	0	0	0	-0.195458703	-0.141122518
+Chihuahuan Desert	Far-Away in Same Desert	24	16	0	0	0	1	-1.088148957	-0.490970295
+Chihuahuan Desert	Far-Away in Same Desert	24	24	0	0	0	0	-1.060980864	-0.243002864
+Chihuahuan Desert	Far-Away in Same Desert	24	24	0	0	0	0	-1.044000806	-1.03041676
+Chihuahuan Desert	Far-Away in Same Desert	24	24	0	0	0	0	-1.101733003	-1.101733003
+Chihuahuan Desert	Far-Away in Same Desert	24	24	0	0	0	0	-1.098336991	-1.081356933
+Chihuahuan Desert	Far-Away in Same Desert	4	1	0	3	0	41	0.270686606	3.792041304
+Chihuahuan Desert	Far-Away in Same Desert	24	24	0	0	0	0	-1.084752945	-1.101733003
+Chihuahuan Desert	Far-Away in Same Desert	24	24	0	0	0	0	-1.101733003	-1.101733003
+Chihuahuan Desert	Far-Away in Same Desert	24	24	0	0	0	0	-1.071168899	-1.101733003
+Chihuahuan Desert	Far-Away in Same Desert	24	24	0	0	0	0	-1.064376876	-1.023624737
+Chihuahuan Desert	Far-Away in Same Desert	24	8	0	2	0	11	-1.067772887	0.978592053
+Chihuahuan Desert	Far-Away in Same Desert	24	24	0	0	0	0	-1.088148957	-0.25658691
+Chihuahuan Desert	Far-Away in Same Desert	24	24	0	0	0	0	-0.253190899	-0.147914541
+Chihuahuan Desert	Far-Away in Same Desert	24	8	0	5	0	47	-1.060980864	3.056081913
+Chihuahuan Desert	Far-Away in Same Desert	24	4	0	0	0	0	-1.101733003	1.132812756
+Chihuahuan Desert	Far-Away in Same Desert	24	24	0	0	0	0	-1.027020749	-1.057584853
+Chihuahuan Desert	Far-Away in Same Desert	24	24	0	0	0	0	-1.077960922	-0.972684564
+Chihuahuan Desert	Far-Away in Same Desert	24	24	0	0	0	0	-1.098336991	-1.101733003
+Chihuahuan Desert	Far-Away in Same Desert	16	24	0	0	5	0	-0.222735568	-0.229418818
+Chihuahuan Desert	Far-Away in Same Desert	16	1	0	6	8	8	-0.158248987	2.657769922
+Chihuahuan Desert	Far-Away in Same Desert	24	16	0	0	0	1	-1.064376876	-0.389089949
+Chihuahuan Desert	Far-Away in Same Desert	24	4	0	4	0	23	-1.088148957	2.860537343
+Chihuahuan Desert	Far-Away in Same Desert	24	4	0	4	0	8	-1.05079283	2.144167098
+Chihuahuan Desert	Far-Away in Same Desert	24	24	0	0	0	0	-1.101733003	-1.054188841
+Chihuahuan Desert	Far-Away in Same Desert	24	24	0	0	0	0	-1.101733003	-1.101733003
+Chihuahuan Desert	Far-Away in Same Desert	24	24	0	0	0	0	-1.033812772	-1.088148957
+Chihuahuan Desert	Far-Away in Same Desert	24	24	0	0	0	0	-1.101733003	-1.101733003
+Chihuahuan Desert	Far-Away in Same Desert	24	24	0	0	0	0	-1.101733003	-1.101733003
+Chihuahuan Desert	Far-Away in Same Desert	24	24	0	0	0	0	-1.098336991	-1.067772887
+Chihuahuan Desert	Far-Away in Same Desert	24	24	0	0	0	0	-1.101733003	-1.098336991
+Chihuahuan Desert	Far-Away in Same Desert	24	8	0	3	0	12	-1.09494098	1.89490266
+Chihuahuan Desert	Far-Away in Same Desert	24	24	0	0	0	0	-1.098336991	-0.955704506
+Chihuahuan Desert	Far-Away in Same Desert	16	16	0	0	12	26	0.014897418	1.532278151
+Chihuahuan Desert	Far-Away in Same Desert	24	24	0	0	0	0	-1.047396818	-1.040604795
+Chihuahuan Desert	Far-Away in Same Desert	24	24	0	0	0	0	-1.101733003	-1.101733003
+Chihuahuan Desert	Far-Away in Same Desert	24	24	0	0	0	0	-1.101733003	-1.101733003
+Chihuahuan Desert	Far-Away in Same Desert	24	24	0	0	0	0	-1.101733003	-1.101733003
+Chihuahuan Desert	Far-Away in Same Desert	24	24	0	0	0	0	-1.101733003	-1.101733003
+Chihuahuan Desert	Far-Away in Same Desert	24	24	0	0	0	0	-1.027020749	-0.962496529
+Chihuahuan Desert	Far-Away in Same Desert	16	4	0	5	15	45	0.995846334	4.041934164
+Chihuahuan Desert	Far-Away in Same Desert	24	0	0	4	0	26	-1.064376876	3.286445741
+Chihuahuan Desert	Far-Away in Same Desert	24	16	0	0	0	5	-1.07456491	-0.270279729
+Chihuahuan Desert	Far-Away in Same Desert	24	24	0	0	0	0	-1.101733003	-1.054188841
+Chihuahuan Desert	Far-Away in Same Desert	24	24	0	0	0	0	-1.084752945	-0.263378933
+Chihuahuan Desert	Far-Away in Same Desert	24	24	0	0	0	0	-1.101733003	-1.101733003
+Chihuahuan Desert	Far-Away in Same Desert	16	16	0	0	4	7	0.51035469	-0.076732163
+Chihuahuan Desert	Local Population	8	8	1	3	14	17	1.654039113	2.146144784
+Chihuahuan Desert	Local Population	24	4	0	0	0	0	-0.243002864	1.153188825
+Chihuahuan Desert	Local Population	24	24	0	0	0	0	-1.067772887	-1.023624737
+Chihuahuan Desert	Local Population	24	24	0	0	0	0	-1.09494098	-1.07456491
+Chihuahuan Desert	Local Population	24	24	0	0	0	0	-1.098336991	-1.101733003
+Chihuahuan Desert	Local Population	24	24	0	0	0	0	-1.101733003	-1.091544968
+Chihuahuan Desert	Local Population	24	24	0	0	0	0	-0.25658691	-0.222626795
+Chihuahuan Desert	Local Population	24	24	0	0	0	0	-1.091544968	-0.239606853
+Chihuahuan Desert	Local Population	24	24	0	0	0	0	-1.09494098	-0.23281483
+Chihuahuan Desert	Local Population	24	24	0	0	0	0	-1.088148957	-0.989664622
+Chihuahuan Desert	Local Population	24	24	0	0	0	0	-1.060980864	-0.23281483
+Chihuahuan Desert	Local Population	24	24	0	0	0	7	-0.25658691	0.106698502
+Chihuahuan Desert	Local Population	16	1	0	8	0	36	0.282872101	3.482831854
+Chihuahuan Desert	Local Population	24	16	0	0	0	1	-0.215834772	0.44926412
+Chihuahuan Desert	Local Population	24	8	0	3	0	29	-1.081356933	2.726712205
+Chihuahuan Desert	Local Population	24	24	0	0	0	0	-0.198854714	-0.046034194
+Chihuahuan Desert	Local Population	24	16	0	0	0	2	-1.060980864	0.405103424
+Chihuahuan Desert	Local Population	24	24	0	0	0	0	-1.091544968	-1.054188841
+Chihuahuan Desert	Local Population	24	24	0	0	0	0	-1.040604795	-1.101733003
+Chihuahuan Desert	Local Population	24	24	0	0	0	0	-1.047396818	-0.979476587
+Chihuahuan Desert	Local Population	24	24	0	0	0	0	-1.091544968	-1.020228726
+Chihuahuan Desert	Local Population	24	24	0	0	0	0	-1.091544968	-1.091544968
+Chihuahuan Desert	Local Population	24	24	0	0	0	0	-1.088148957	-1.101733003
+Chihuahuan Desert	Local Population	24	24	0	0	0	0	-1.101733003	-1.101733003
+Chihuahuan Desert	Local Population	24	24	0	0	0	0	-1.020228726	-1.013436703
+Chihuahuan Desert	Local Population	16	8	0	3	2	26	0.456043597	2.672413658
+Chihuahuan Desert	Local Population	16	8	0	5	0	46	0.313436205	3.836716332
+Chihuahuan Desert	Local Population	24	24	0	0	0	0	-1.044000806	-1.040604795
+Chihuahuan Desert	Local Population	24	24	0	0	0	0	-1.033812772	-0.049430206
+Chihuahuan Desert	Local Population	24	24	0	0	0	0	-1.098336991	-1.098336991
+Chihuahuan Desert	Local Population	24	4	0	6	0	43	-1.07456491	3.301950339
+Chihuahuan Desert	Local Population	24	8	0	4	0	13	-0.21243876	1.372225936
+Chihuahuan Desert	Local Population	24	16	0	0	0	10	-1.101733003	-0.049601709
+Chihuahuan Desert	Local Population	24	0	0	10	0	34	-0.16829061	4.654102931
+Chihuahuan Desert	Local Population	24	8	0	2	0	19	-0.23281483	2.122486793
+Chihuahuan Desert	Local Population	24	0	0	16	0	36	-1.088148957	4.799732023
+Chihuahuan Desert	Local Population	24	24	0	0	0	0	-1.09494098	-1.098336991
+Chihuahuan Desert	Local Population	8	16	1	0	2	0	1.151579957	0.388148459
+Chihuahuan Desert	Local Population	24	24	0	0	0	0	-1.101733003	-1.101733003
+Chihuahuan Desert	Local Population	24	24	0	0	0	0	-1.088148957	-0.263378933
+Chihuahuan Desert	Local Population	24	24	0	0	0	0	-1.101733003	-1.101733003
+Chihuahuan Desert	Local Population	24	24	0	0	0	0	-1.09494098	-0.195458703
+Chihuahuan Desert	Local Population	24	24	0	0	0	0	-0.999852656	-1.088148957
+Chihuahuan Desert	Local Population	24	24	0	0	0	0	-1.071168899	-1.010040691
+Chihuahuan Desert	Local Population	24	24	0	0	0	0	-1.101733003	-1.088148957
+Chihuahuan Desert	Local Population	24	0	0	6	0	0	-1.027020749	2.386550515
+Chihuahuan Desert	Local Population	24	16	0	2	0	3	-1.040604795	0.795353841
+Chihuahuan Desert	Local Population	24	24	0	0	0	0	-1.05079283	-0.931932425
+Chihuahuan Desert	Local Population	24	24	0	0	0	0	-1.101733003	-1.023624737
+Chihuahuan Desert	Local Population	24	24	0	0	0	0	-1.101733003	-1.101733003
+Chihuahuan Desert	Local Population	24	24	0	0	0	0	-1.101733003	-1.101733003
+Chihuahuan Desert	Local Population	24	24	0	0	0	0	-1.101733003	-1.101733003
+Chihuahuan Desert	Local Population	24	24	0	0	0	0	-1.101733003	-1.101733003
+Chihuahuan Desert	Local Population	24	24	0	0	0	0	-1.101733003	-1.101733003
+Chihuahuan Desert	Local Population	24	2	0	10	0	35	-0.23281483	4.517527626
+Chihuahuan Desert	Local Population	24	24	0	0	0	0	-1.077960922	-1.101733003
+Chihuahuan Desert	Local Population	24	24	0	0	0	0	-1.084752945	-1.084752945
+Chihuahuan Desert	Local Population	24	24	0	0	0	0	-0.243002864	-0.23281483
+Chihuahuan Desert	Local Population	24	24	0	0	0	0	-0.226022806	-1.067772887
+Chihuahuan Desert	Local Population	24	24	0	0	0	0	-1.101733003	-1.101733003
+Chihuahuan Desert	Local Population	24	24	0	0	0	0	-1.033812772	-1.077960922
+Chihuahuan Desert	Cactus Wren Song	16	24	0	0	0	0	-0.545293934	-0.253190899
+Chihuahuan Desert	Cactus Wren Song	8	24	1	0	0	0	1.008972564	-0.25658691
+Chihuahuan Desert	Cactus Wren Song	24	24	0	0	0	0	-1.081356933	-1.064376876
+Chihuahuan Desert	Cactus Wren Song	24	24	0	0	0	0	-1.101733003	-1.037208783
+Chihuahuan Desert	Cactus Wren Song	24	24	0	0	0	0	-0.263378933	-0.243002864
+Chihuahuan Desert	Cactus Wren Song	24	24	0	0	0	0	-1.077960922	-1.067772887
+Chihuahuan Desert	Cactus Wren Song	24	24	0	0	0	0	-1.091544968	-1.081356933
+Chihuahuan Desert	Cactus Wren Song	24	24	0	0	0	0	-0.263378933	-0.263378933
+Chihuahuan Desert	Cactus Wren Song	24	24	0	0	0	0	-1.09494098	-1.088148957
+Chihuahuan Desert	Cactus Wren Song	24	16	0	0	0	3	-0.243002864	0.45263504
+Chihuahuan Desert	Cactus Wren Song	24	24	0	0	0	0	-1.101733003	-1.101733003
+Chihuahuan Desert	Cactus Wren Song	8	16	0	0	25	52	2.041185604	1.93993412
+Chihuahuan Desert	Cactus Wren Song	24	24	0	0	0	0	-1.101733003	-1.071168899
+Chihuahuan Desert	Cactus Wren Song	16	16	2	0	0	1	0.62219489	-0.426446076
+Chihuahuan Desert	Cactus Wren Song	24	24	0	0	0	0	-0.263378933	-1.07456491
+Chihuahuan Desert	Cactus Wren Song	8	8	1	1	17	31	1.810218005	2.489244669
+Chihuahuan Desert	Cactus Wren Song	24	24	0	0	0	0	-1.047396818	-0.175082633
+Chihuahuan Desert	Cactus Wren Song	24	24	0	0	0	0	-1.057584853	-1.057584853
+Chihuahuan Desert	Cactus Wren Song	24	24	0	0	0	0	-1.101733003	-1.101733003
+Chihuahuan Desert	Cactus Wren Song	24	24	0	0	0	0	-1.098336991	-1.013436703
+Chihuahuan Desert	Cactus Wren Song	24	24	0	0	0	0	-1.09494098	-1.027020749
+Chihuahuan Desert	Cactus Wren Song	24	24	0	0	0	0	-1.101733003	-1.064376876
+Chihuahuan Desert	Cactus Wren Song	24	24	0	0	0	0	-1.081356933	-1.101733003
+Chihuahuan Desert	Cactus Wren Song	24	24	0	0	0	0	-1.071168899	-1.091544968
+Chihuahuan Desert	Cactus Wren Song	24	24	0	0	0	0	-1.101733003	-0.243002864
+Chihuahuan Desert	Cactus Wren Song	24	24	0	0	0	0	-1.071168899	-1.03041676
+Chihuahuan Desert	Cactus Wren Song	24	24	0	0	0	0	-0.259982922	-1.054188841
+Chihuahuan Desert	Cactus Wren Song	24	24	0	0	0	0	-1.016832714	-0.928536414
+Chihuahuan Desert	Cactus Wren Song	24	24	0	0	0	0	-1.067772887	-1.047396818
+Chihuahuan Desert	Cactus Wren Song	24	24	0	0	0	0	-1.016832714	-1.033812772
+Chihuahuan Desert	Cactus Wren Song	24	24	0	0	0	0	-1.054188841	-1.016832714
+Chihuahuan Desert	Cactus Wren Song	24	24	0	0	0	0	-0.982872599	-0.959100518
+Chihuahuan Desert	Cactus Wren Song	24	24	0	0	0	0	-1.101733003	-0.226022806
+Chihuahuan Desert	Cactus Wren Song	24	24	0	0	0	0	-1.060980864	-1.098336991
+Chihuahuan Desert	Cactus Wren Song	4	4	1	2	18	12	1.278937023	1.173596759
+Chihuahuan Desert	Cactus Wren Song	24	24	0	0	0	0	-1.081356933	-1.016832714
+Chihuahuan Desert	Cactus Wren Song	24	24	0	0	0	0	-1.040604795	-0.921744391
+Chihuahuan Desert	Cactus Wren Song	24	24	0	0	0	0	-1.077960922	-1.03041676
+Chihuahuan Desert	Cactus Wren Song	24	24	0	0	0	0	-1.091544968	-0.171686622
+Chihuahuan Desert	Cactus Wren Song	24	24	0	0	0	0	-1.077960922	-1.067772887
+Chihuahuan Desert	Cactus Wren Song	24	24	0	0	0	0	-1.064376876	-0.969288552
+Chihuahuan Desert	Cactus Wren Song	24	24	0	0	0	0	-1.101733003	-1.101733003
+Chihuahuan Desert	Cactus Wren Song	24	16	0	0	0	0	-1.07456491	-0.531709888
+Chihuahuan Desert	Cactus Wren Song	24	24	0	0	0	0	-1.064376876	-1.067772887
+Chihuahuan Desert	Cactus Wren Song	24	24	0	0	0	0	-1.037208783	-1.057584853
+Chihuahuan Desert	Cactus Wren Song	24	24	0	0	0	0	-0.185270668	-0.999852656
+Chihuahuan Desert	Cactus Wren Song	16	24	0	0	1	0	-0.460406191	-0.069806275
+Chihuahuan Desert	Cactus Wren Song	24	24	0	0	0	0	-1.081356933	-1.088148957
+Chihuahuan Desert	Cactus Wren Song	24	24	0	0	0	0	-1.027020749	-0.999852656
+Chihuahuan Desert	Cactus Wren Song	24	16	0	1	0	10	-1.03041676	0.184583905
+Chihuahuan Desert	Cactus Wren Song	24	24	0	0	0	0	-1.101733003	-1.101733003
+Chihuahuan Desert	Cactus Wren Song	24	24	0	0	0	0	-1.098336991	-1.101733003
+Chihuahuan Desert	Cactus Wren Song	24	24	0	0	0	0	-1.101733003	-1.101733003
+Chihuahuan Desert	Cactus Wren Song	24	24	0	0	0	0	-1.101733003	-1.101733003
+Chihuahuan Desert	Cactus Wren Song	24	24	0	0	0	0	-0.181874656	-1.027020749
+Chihuahuan Desert	Cactus Wren Song	24	24	0	0	0	0	-1.098336991	-1.091544968
+Chihuahuan Desert	Cactus Wren Song	24	24	0	0	0	0	-0.249794887	-0.21243876
+Chihuahuan Desert	Cactus Wren Song	24	24	0	0	0	0	-0.259982922	-0.25658691
+Chihuahuan Desert	Cactus Wren Song	24	24	0	0	0	0	-1.09494098	-0.253190899
+Chihuahuan Desert	Cactus Wren Song	24	24	0	0	0	0	-1.101733003	-1.101733003
+Chihuahuan Desert	Cactus Wren Song	24	24	0	0	0	0	-1.101733003	-1.09494098

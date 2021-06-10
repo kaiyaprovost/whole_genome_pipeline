@@ -18,7 +18,8 @@ echo $PATH
 ## arguemnts:
 ## vcf 
 
-cd /vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/
+cd /vz-nas1-active/RawGenomicReads/FASTQ_SCREEN_RESULTS/Parrots/BAM_dedup/vcf_files
+vcf=allsamples.raw-MISSING-B6-C5.vcf
 
 echo
 echo "#######################"

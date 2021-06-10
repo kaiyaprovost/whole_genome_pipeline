@@ -31,10 +31,9 @@ module load R-3.4.1
 for i in *fq; do echo $i; gzip $i; done;
 for i in *fastq; do echo $i; gzip $i; done;
 
-for read1 in *RAPiD-Genomics**_R1_*.tagged_filter.fastq.gz; do 
-name2=${read1%_R1_*} ## edited from lucas's
-name=${name2#"RAPiD-Genomics_"}.$spp.zf.fil  ## edited from lucas's
-read2=${read1%_R1_*}_R2_*.tagged_filter.fastq.gz  ## edited from lucas's		
+for read1 in humans.R1.tagged_filter.fastq.gz; do 
+name=humans
+read2=humans.R2.tagged_filter.fastq.gz
 header=`zcat $read1 | head -1`
 IFS=':' read -a header <<< "$header"
 INSTRUMENT=${header[0]}

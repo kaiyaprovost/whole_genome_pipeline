@@ -1,0 +1,15 @@
+#!/bin/bash
+#PBS -l select=1:ncpus=8:mem=64gb
+#PBS -l walltime=5000:00:00
+#PBS -N fstout_vcf_subset
+#PBS -j oe
+#PBS -m ae
+#PBS -M kprovost@amnh.org
+#PBS -k oe
+
+# for beagle in /vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/BEAGLE/*beagle.gz; do qsub -v beagle=$beagle /home/kprovost/nas3/ANGSD_pipeline/beagle_extract_from_vcf.job; done; 
+
+cd "/vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/BEAGLE/"
+
+python3 /home/kprovost/nas3/ANGSD_pipeline/beagle_extract_from_vcf.py $beagle "/vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/BEAGLE/"
+

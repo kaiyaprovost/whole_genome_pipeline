@@ -1,0 +1,23 @@
+#!/bin/bash
+#PBS -l select=1:ncpus=1
+#PBS -l walltime=5000:00:00
+#PBS -N vcf_windows
+#PBS -j oe
+#PBS -m ae
+#PBS -M kprovost@amnh.org
+#PBS -k oe
+
+cd "/vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/VCFS/"
+for i in *converted.vcf; do
+python3 "/home/kprovost/nas3/vcf2windows.py" "${i}" 100000 20000
+done
+
+cd "/vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/VCFS/"
+for i in */*converted.vcf; do
+python3 "/home/kprovost/nas3/vcf2windows.py" "${i}" 100000 20000
+done
+
+cd "/vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/VCFS/"
+for i in */*/*converted.vcf; do
+python3 "/home/kprovost/nas3/vcf2windows.py" "${i}" 100000 20000
+done

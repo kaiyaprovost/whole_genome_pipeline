@@ -25,13 +25,6 @@ spp="Parrots"
 
 ref=/home/kprovost/nas3/genomeresequencingFromLucas/Melo_chrom/pseudochromosomesSHORT.fasta
 
-##References:
-##Corvus -- Vireo
-##Geospiza -- Cardinalis
-##Parus -- Auriparus
-##Sturnus -- Toxostoma, Campylorhynchus, Polioptila, Phainopepla
-##Zonotrichia -- Amphispiza, Pipilo
-
 #name=`echo $bam | cut -d '.' -f1`
 name=${bam%.bam}
 

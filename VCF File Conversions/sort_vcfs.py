@@ -3,10 +3,15 @@ import glob
 import sys
 import os
 
+# python3 "/Users/kprovost/Documents/Github/whole_genome_pipeline/VCF File Conversions/sort_vcfs.py" "/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ANALYSIS/Vireo-bellii_fixed.vcf"
+
+
 def vcfsort(vcffile):
 	print("reading lines")
 	with open(vcffile,"r") as infile:
 		lines=infile.readlines()
+	sortedname=os.path.basename(vcffile)
+	sortedname=sortedname.replace(".vcf","")
 	foundchrom=False
 	linestart=0
 	endheader=0
@@ -27,7 +32,8 @@ def vcfsort(vcffile):
 	linestosort = [item for item in linestosort if item[0]!="#"]
 	linestosort=list(set(linestosort))
 	linestosort.sort()
-	#y=np.asarray(x)
+	with open(sortedname+".sorted.vcf.temp","w") as outfile:
+		outfile.writelines(linestosort)	#y=np.asarray(x)
 	for i in range(len(linestosort)):
 		line = linestosort[i]
 		try:
@@ -39,9 +45,6 @@ def vcfsort(vcffile):
 	sortedlines = ["\t".join(list(item)) for item in linestosort]
 	print("generating final lines and writing")
 	finallines = headerlines+sortedlines
-	
-	sortedname=os.path.basename(vcffile)
-	sortedname=sortedname.replace(".vcf","")
 	with open(sortedname+".sorted.vcf","w") as outfile:
 		outfile.writelines(finallines)
 	print("done")

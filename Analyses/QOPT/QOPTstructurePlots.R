@@ -210,3 +210,82 @@ barplot(k5m,col=c(green,blue,red,yellow,grey),axisnames=F,axes=F,
                 rep(0,1-1)),xpd=F)
 dev.off()
 
+
+## qopt structure plots for the lostruct partitions
+
+df = read.table("/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ANALYSIS/QOPT/AllSpeciesMetadata_lostructK_25may2021.csv",
+                header=T,sep=",")
+
+for(spp in sort(unique(df$SP))) {
+  print(spp)
+  temp = df[df$SP==spp,]
+  pdf(paste(spp,".qopt.lostruct.pdf",sep=""))
+  par(mfrow=c(2,3))
+  plot(temp$JLONG,temp$JLAT,main=paste("Full",spp,"2"))
+  for(i in 1:nrow(temp)){
+    try({
+      plotrix::floating.pie(
+        xpos = temp$JLONG[i],
+        ypos = temp$JLAT[i],
+        x = c(as.numeric(temp[i,c("P2_A","P2_B")])),
+        radius = 0.3,
+        col = c(blue,green,red,yellow,grey)
+      )})
+  }
+  plot(temp$JLONG,temp$JLAT,main=paste("Empty",spp,"2"))
+  for(i in 1:nrow(temp)){
+    try({
+      plotrix::floating.pie(
+        xpos = temp$JLONG[i],
+        ypos = temp$JLAT[i],
+        x = c(as.numeric(temp[i,c("EMPTY_K2_A","EMPTY_K2_B")])),
+        radius = 0.3,
+        col = c(blue,green,red,yellow,grey)
+      )})
+  }
+  plot(temp$JLONG,temp$JLAT,main=paste("Black",spp,"2"))
+  for(i in 1:nrow(temp)){
+    try({
+      plotrix::floating.pie(
+        xpos = temp$JLONG[i],
+        ypos = temp$JLAT[i],
+        x = c(as.numeric(temp[i,c("BLACK_K2_A","BLACK_K2_B")])),
+        radius = 0.3,
+        col = c(blue,green,red,yellow,grey)
+      )})
+  }
+  plot(temp$JLONG,temp$JLAT,main=paste("D",spp,"2"))
+  for(i in 1:nrow(temp)){
+    try({
+      plotrix::floating.pie(
+        xpos = temp$JLONG[i],
+        ypos = temp$JLAT[i],
+        x = c(as.numeric(temp[i,c("D_K2_A","D_K2_B")])),
+        radius = 0.3,
+        col = c(blue,green,red,yellow,grey)
+      )})
+  }
+  plot(temp$JLONG,temp$JLAT,main=paste("1",spp,"2"))
+  for(i in 1:nrow(temp)){
+    try({
+    plotrix::floating.pie(
+      xpos = temp$JLONG[i],
+      ypos = temp$JLAT[i],
+      x = c(as.numeric(temp[i,c("X1_K2_A","X1_K2_B")])),
+      radius = 0.3,
+      col = c(blue,green,red,yellow,grey)
+    )})
+  }
+  plot(temp$JLONG,temp$JLAT,main=paste("7",spp,"2"))
+  for(i in 1:nrow(temp)){
+    try({
+      plotrix::floating.pie(
+        xpos = temp$JLONG[i],
+        ypos = temp$JLAT[i],
+        x = c(as.numeric(temp[i,c("X7_K2_A","X7_K2_B")])),
+        radius = 0.3,
+        col = c(blue,green,red,yellow,grey)
+      )})
+  }
+  dev.off()
+}

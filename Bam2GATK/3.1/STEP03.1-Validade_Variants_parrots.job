@@ -1,0 +1,40 @@
+#!/bin/bash
+#PBS -l select=1:ncpus=2
+#PBS -l walltime=5000:00:00
+#PBS -N parrots_3.1_validate
+#PBS -j oe
+#PBS -m ae
+#PBS -M kprovost@amnh.org
+#PBS -k oe
+
+# change to the working directory
+cd $PBS_O_WORKDIR
+echo "pbsworkdir"
+echo $PBS_O_WORKDIR
+EXECDIR=`pwd`
+export PATH=./:$PATH
+echo $PATH
+
+cd /vz-nas1-active/RawGenomicReads/FASTQ_SCREEN_RESULTS/Parrots/BAM_dedup/vcf_files
+
+ref=/home/kprovost/nas3/genomeresequencingFromLucas/Melo_chrom/pseudochromosomesSHORT.fasta
+
+## vcf -- need to do with the run simultaneous?
+
+for vcf in *.vcf; do
+
+echo
+echo
+echo Validate GVCFs $vcf
+echo
+echo
+
+time java -Djava.io.tmpdir=/home/kprovost/nas3/tmp/ -jar /home/kprovost/nas3/genomeresequencingFromLucas/GenomeAnalysisTK-3.8-1-0-gf15c1c3ef/GenomeAnalysisTK.jar \
+-T ValidateVariants \
+-R $ref \
+-V $vcf \
+--validateGVCF
+done;
+
+##### ERROR MESSAGE: File /vz-nas1-active/RawGenomicReads/FASTQ_SCREEN_RESULTS/Parrots/BAM_dedup/vcf_files/AMN_245113_P001_WG05_Parrots.raw.g.vcf fails strict validation: In a GVCF all records must contain a NON_REF allele. Offending record: [VC variant @ PseudoNC_007897.1_Tgut_mtDNA:3404 Q58.11 of type=INDEL alleles=[G*, GT] attr={AC=4, AF=1.00, AN=4, DP=2, ExcessHet=3.0103, FS=0.000, MLEAC=4, MLEAF=1.00, MQ=25.00, QD=29.06, SOR=2.303}
+

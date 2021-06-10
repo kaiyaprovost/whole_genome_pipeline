@@ -1,0 +1,98 @@
+#!/bin/bash
+#PBS -l select=1:ncpus=16
+#PBS -l walltime=5000:00:00
+#PBS -N parrots_2_GATK_SNP_calling
+#PBS -j oe
+#PBS -m ae
+#PBS -M kprovost@amnh.org
+#PBS -k oe
+
+# change to the working directory
+cd $PBS_O_WORKDIR
+echo "pbsworkdir"
+echo $PBS_O_WORKDIR
+EXECDIR=`pwd`
+export PATH=./:$PATH
+echo $PATH
+
+module load bamtools-2.4.1
+module load bcftools-1.10.2
+module load beagle-2.1.2
+module load bedtools-2.26.0
+module load bwa-0.7.15
+module load fastqc-0.11.5
+module load gatk-3.8-0
+module load gcc-4.9.1
+module load picard-2.10.5
+module load python-3.6.1
+module load R-3.6.3
+module load samtools-1.10
+module load satsuma-3.0
+module load slim-3.3
+module load vcftools
+
+# cd /vz-nas1-active/RawGenomicReads/FASTQ_SCREEN_RESULTS/Parrots/BAM_dedup/
+# for bam in AMN_245113_P001_WB05.Parrots.zf.fil.dedup.bam; do
+# echo $bam
+# qsub -v bam=$bam /home/kprovost/nas3/genomeresequencingFromLucas/STEP02-GATK_SNP_calling_parrots.job
+# done
+
+#Arguments:
+## ref=reference sequence
+## bam=bam file
+
+## ##### ERROR MESSAGE: Invalid command line: Argument emitRefConfidence has a bad value: Can only be used in single sample mode currently. Use the sample_name argument to run on a single sample out of a multi-sample BAM file.
+## I think these need to be re-headered again 
+
+#Arguments:
+ref=/home/kprovost/nas3/genomeresequencingFromLucas/Melo_chrom/pseudochromosomesSHORT.fasta
+
+## edited to reflect renamed headers (changed "*" to "AMN*") and so were in different folder
+
+#name=`echo $bam | cut -d '/' -f2 | cut -d '.' -f1` ## lucas's version
+name=$(echo $bam | cut -f 1 -d '.')
+	
+echo
+echo "#######################"
+echo $name
+echo "#######################"
+
+echo
+echo
+echo Building Index
+echo
+echo
+
+time java -Djava.io.tmpdir=/home/kprovost/nas3/tmp/ \
+-jar /home/kprovost/nas3/genomeresequencingFromLucas/picard.jar \
+BuildBamIndex I=$bam
+
+echo
+echo
+echo Calling SNPs with GATK Haplotype Caller
+echo
+echo
+
+cd /vz-nas1-active/RawGenomicReads/FASTQ_SCREEN_RESULTS/Parrots/BAM_dedup/
+
+if [ ! -d "vcf_files/" ]; then mkdir vcf_files; fi
+
+## 15 march 2021: adjusted this text to match the methods from Lucas' woodpecker paper
+## run haplotype caller separately, add the ERC flag
+
+## added vcf_files output folder to this
+## also added the "hets" line, 0.05, changed from default 0.001
+time java -Djava.io.tmpdir=/home/kprovost/nas3/tmp/ \
+-jar /home/kprovost/nas3/genomeresequencingFromLucas/GenomeAnalysisTK-3.8-1-0-gf15c1c3ef/GenomeAnalysisTK.jar \
+-T HaplotypeCaller \
+-R $ref \
+-I $bam \
+-o vcf_files/$name.raw.g.vcf \
+-minPruning 1 \
+-ERC GVCF \
+-minDanglingBranchLength 1 \
+--defaultBaseQualities 0 \
+-hets 0.05 \
+-nct 16
+
+## removed because erroring the emitRefConfidence GVCF

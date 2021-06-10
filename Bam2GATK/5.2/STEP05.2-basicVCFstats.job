@@ -18,7 +18,8 @@ echo $PATH
 ## arguemnts:
 ## vcf 
 
-cd /vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/
+cd /vz-nas1-active/RawGenomicReads/FASTQ_SCREEN_RESULTS/Parrots/BAM_dedup/vcf_files
+vcf=allsamples.raw-MISSING-B6-C5.vcf
 
 export PERL5LIB=$PERL5LIB:/home/kprovost/nas3/vcftools/src/perl
 export PERL5LIB=$PERL5LIB:/usr/bin/perl
@@ -30,5 +31,5 @@ echo "#######################"
 echo $vcf
 echo "#######################"
 
-/home/kprovost/nas3/vcftools/bin/vcftools --singletons --vcf $vcf --out ${vcf}.singletons; done;
+/home/kprovost/nas3/vcftools/bin/vcf-stats $vcf > ${vcf}.stats
 

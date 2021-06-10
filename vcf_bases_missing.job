@@ -1,0 +1,124 @@
+#!/bin/bash
+#PBS -l select=1:ncpus=1
+#PBS -l walltime=99999:00:00
+#PBS -N vcf_bases_missing
+#PBS -j oe
+#PBS -m ae
+#PBS -M kprovost@amnh.org
+#PBS -k oe
+
+# change to the working directory
+#cd $PBS_O_WORKDIR
+#echo "pbsworkdir"
+#echo $PBS_O_WORKDIR
+#EXECDIR=`pwd`
+#export PATH=./:$PATH
+#echo $PATH
+
+## arguments
+## filename
+
+#missing="0.5"
+
+## subset argument
+#subset=$1
+
+cd /home/kprovost/nas5/slim_osg/working/
+
+for i in *bases*missing*; do 
+mv ${i%_bases.vcf_missing0.5.vcf.gz}* ../subdirectory/; 
+mv ${i%_bases.vcf_missing0.5.vcf}* ../subdirectory/; 
+done;
+
+for v in *${subset}*2.vcf.gz; do 
+#echo $v; 
+a=${v%.gz}_bases.vcf_missing0.5.vcf.gz
+#echo $a
+if [ -f "${a}" ]; then
+mv ${v%.gz}* ../subdirectory/
+echo "skip"
+fi
+done;
+
+for vcf in /home/kprovost/nas5/slim_osg/working/*${subset}*2.vcf_bases.vcf; do
+if [ -f ${vcf}_missing0.5.vcf ]; then
+mv $vcf ../subdirectory
+elif [ -f ${vcf}_missing0.5.vcf.gz ]; then
+mv $vcf ../subdirectory
+else 
+python3 /home/kprovost/nas5/slim_osg/add_missing_data_to_vcf.py $vcf
+fi
+done
+
+for vcfgz in /home/kprovost/nas5/slim_osg/working/*${subset}*2.vcf_bases.vcf.gz; do
+gunzip $vcfgz
+vcf=${vcfgz%.gz}
+if [ -f	${vcf}_missing0.5.vcf ]; then
+mv $vcf	../subdirectory
+elif [ -f ${vcf}_missing0.5.vcf.gz ]; then
+mv $vcf ../subdirectory
+else 
+python3 /home/kprovost/nas5/slim_osg/add_missing_data_to_vcf.py $vcf
+fi
+done
+
+
+#for file in /home/kprovost/nas5/slim_osg/working/*${subset}*0.02.vcf.gz; do
+#gunzip -f $file;
+#echo "DONE ZIP"
+
+for vcfgz in /home/kprovost/nas5/slim_osg/working/*${subset}*2.vcf.gz; do
+
+#for vcf in /home/kprovost/nas5/slim_osg/working/*.vcf; do
+echo $vcfgz
+vcf=${vcfgz%.gz}
+gunzip -fv $vcfgz
+echo $vcf
+#ls $vcf 
+python3 /home/kprovost/nas5/slim_osg/add_bases_data_to_vcf.py $vcf
+echo "XXXXXXXXXXXXXXXX"
+withbases="${vcf}_bases.vcf"
+#echo $withbases
+
+if [ -f $withbases ]; then
+echo "SKIP"
+else
+python3 /home/kprovost/nas5/slim_osg/add_missing_data_to_vcf.py $vcf
+echo "YYYYYYYYYYYYYYYYY"
+fi
+
+withmissing="${vcf}_missing0.5.vcf"
+if [ -f $withmissing ]; then
+echo "SKIP"
+else
+python3 /home/kprovost/nas5/slim_osg/add_missing_data_to_vcf.py $vcf
+echo "ZZZZZZZZZZZZZZZZ"
+fi
+
+withboth="${withbases}_missing0.5.vcf"
+if [ -f $withboth ]; then
+echo "SKIP"
+else
+python3 /home/kprovost/nas5/slim_osg/add_missing_data_to_vcf.py $withbases
+echo "WWWWWWWWWWWWWWW"
+fi
+
+gzip -f $vcf
+gzip -f $withboth
+gzip -f $withbases
+gzip -f $withmissing
+
+mv $vcfgz /home/kprovost/nas5/slim_osg/subdirectory/
+
+#gzip -f *${subset}*.vcf
+done
+
+for vcfgz in /home/kprovost/nas5/slim_osg/working/*${subset}2.vcf_bases.gz; do
+gunzip $vcfgz
+vcf=${vcfgz%.gz}
+python3 /home/kprovost/nas5/slim_osg/add_missing_data_to_vcf.py $vcf
+done
+
+gzip -f *${subset}*vcf
+done
+

@@ -1,0 +1,43 @@
+#!/bin/bash
+#PBS -l select=1:ncpus=1
+#PBS -l walltime=5000:00:00
+#PBS -N wgs
+#PBS -j oe
+#PBS -m ae
+#PBS -M kprovost@amnh.org
+#PBS -k oe
+
+ref=/home/kprovost/nas3/genomeresequencingFromLucas/Melo_chrom/pseudochromosomesSHORT.fasta
+
+cd /vz-nas1-active/RawGenomicReads/FASTQ_SCREEN_RESULTS/Parrots/BAM_dedup
+
+for bam in *B06*bam; do
+
+time java -jar /home/kprovost/nas3/genomeresequencingFromLucas/picard.jar CollectRawWgsMetrics \
+I=$bam \
+O=$bam.raw_wgs_metrics.txt \
+R=$ref \
+INCLUDE_BQ_HISTOGRAM=true
+
+done
+
+for bam in *C05*bam; do
+
+time java -jar /home/kprovost/nas3/genomeresequencingFromLucas/picard.jar CollectRawWgsMetrics \
+I=$bam \
+O=$bam.raw_wgs_metrics.txt \
+R=$ref \
+INCLUDE_BQ_HISTOGRAM=true
+
+done
+
+
+for bam in *F05*bam; do
+
+time java -jar /home/kprovost/nas3/genomeresequencingFromLucas/picard.jar CollectRawWgsMetrics \
+I=$bam \
+O=$bam.raw_wgs_metrics.txt \
+R=$ref \
+INCLUDE_BQ_HISTOGRAM=true
+
+done

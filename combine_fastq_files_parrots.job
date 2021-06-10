@@ -1,0 +1,78 @@
+#!/bin/bash
+#PBS -l select=1:ncpus=64:mem=64gb
+#PBS -l walltime=5000:00:00
+#PBS -N combine_fq
+#PBS -j oe
+#PBS -m ae
+#PBS -M kprovost@amnh.org
+#PBS -k oe
+
+# change to the working directory
+cd $PBS_O_WORKDIR
+echo "pbsworkdir"
+echo $PBS_O_WORKDIR
+EXECDIR=`pwd`
+export PATH=./:$PATH
+echo $PATH
+
+cd /vz-nas1-active/RawGenomicReads/FASTQ_SCREEN_RESULTS/Parrots/
+
+## here are all of them
+## _R2_ and _R1_
+
+cat *AMN_245113_P001_WA01*_R1_*.tagged_filter.fastq.gz > AMN_245113_P001_WA01_R1_combined.tagged_filter.fastq.gz;
+cat *AMN_245113_P001_WA01*_R2_*.tagged_filter.fastq.gz > AMN_245113_P001_WA01_R2_combined.tagged_filter.fastq.gz;
+
+cat *AMN_245113_P001_WA05*_R1_*.tagged_filter.fastq.gz > AMN_245113_P001_WA05_R1_combined.tagged_filter.fastq.gz;
+cat *AMN_245113_P001_WA05*_R2_*.tagged_filter.fastq.gz > AMN_245113_P001_WA05_R2_combined.tagged_filter.fastq.gz;
+
+cat *AMN_245113_P001_WA06*_R1_*.tagged_filter.fastq.gz > AMN_245113_P001_WA06_R1_combined.tagged_filter.fastq.gz;
+cat *AMN_245113_P001_WA06*_R2_*.tagged_filter.fastq.gz > AMN_245113_P001_WA06_R2_combined.tagged_filter.fastq.gz;
+
+cat *AMN_245113_P001_WB01*_R1_*.tagged_filter.fastq.gz > AMN_245113_P001_WB01_R1_combined.tagged_filter.fastq.gz;
+cat *AMN_245113_P001_WB01*_R2_*.tagged_filter.fastq.gz > AMN_245113_P001_WB01_R2_combined.tagged_filter.fastq.gz;
+
+cat *AMN_245113_P001_WB05*_R1_*.tagged_filter.fastq.gz > AMN_245113_P001_WB05_R1_combined.tagged_filter.fastq.gz;
+cat *AMN_245113_P001_WB05*_R2_*.tagged_filter.fastq.gz > AMN_245113_P001_WB05_R2_combined.tagged_filter.fastq.gz;
+
+cat *AMN_245113_P001_WB06*_R1_*.tagged_filter.fastq.gz > AMN_245113_P001_WB06_R1_combined.tagged_filter.fastq.gz;
+cat *AMN_245113_P001_WB06*_R2_*.tagged_filter.fastq.gz > AMN_245113_P001_WB06_R2_combined.tagged_filter.fastq.gz;
+
+cat *AMN_245113_P001_WC01*_R1_*.tagged_filter.fastq.gz > AMN_245113_P001_WC01_R1_combined.tagged_filter.fastq.gz;
+cat *AMN_245113_P001_WC01*_R2_*.tagged_filter.fastq.gz > AMN_245113_P001_WC01_R2_combined.tagged_filter.fastq.gz;
+
+cat *AMN_245113_P001_WC05*_R1_*.tagged_filter.fastq.gz > AMN_245113_P001_WC05_R1_combined.tagged_filter.fastq.gz;
+cat *AMN_245113_P001_WC05*_R2_*.tagged_filter.fastq.gz > AMN_245113_P001_WC05_R2_combined.tagged_filter.fastq.gz;
+
+cat *AMN_245113_P001_WC06*_R1_*.tagged_filter.fastq.gz > AMN_245113_P001_WC06_R1_combined.tagged_filter.fastq.gz;
+cat *AMN_245113_P001_WC06*_R2_*.tagged_filter.fastq.gz > AMN_245113_P001_WC06_R2_combined.tagged_filter.fastq.gz;
+
+cat *AMN_245113_P001_WD01*_R1_*.tagged_filter.fastq.gz > AMN_245113_P001_WD01_R1_combined.tagged_filter.fastq.gz;
+cat *AMN_245113_P001_WD01*_R2_*.tagged_filter.fastq.gz > AMN_245113_P001_WD01_R2_combined.tagged_filter.fastq.gz;
+
+cat *AMN_245113_P001_WD05*_R1_*.tagged_filter.fastq.gz > AMN_245113_P001_WD05_R1_combined.tagged_filter.fastq.gz;
+cat *AMN_245113_P001_WD05*_R2_*.tagged_filter.fastq.gz > AMN_245113_P001_WD05_R2_combined.tagged_filter.fastq.gz;
+
+cat *AMN_245113_P001_WD06*_R1_*.tagged_filter.fastq.gz > AMN_245113_P001_WD06_R1_combined.tagged_filter.fastq.gz;
+cat *AMN_245113_P001_WD06*_R2_*.tagged_filter.fastq.gz > AMN_245113_P001_WD06_R2_combined.tagged_filter.fastq.gz;
+
+cat *AMN_245113_P001_WE01*_R1_*.tagged_filter.fastq.gz > AMN_245113_P001_WE01_R1_combined.tagged_filter.fastq.gz;
+cat *AMN_245113_P001_WE01*_R2_*.tagged_filter.fastq.gz > AMN_245113_P001_WE01_R2_combined.tagged_filter.fastq.gz;
+
+cat *AMN_245113_P001_WE05*_R1_*.tagged_filter.fastq.gz > AMN_245113_P001_WE05_R1_combined.tagged_filter.fastq.gz;
+cat *AMN_245113_P001_WE05*_R2_*.tagged_filter.fastq.gz > AMN_245113_P001_WE05_R2_combined.tagged_filter.fastq.gz;
+
+cat *AMN_245113_P001_WF01*_R1_*.tagged_filter.fastq.gz > AMN_245113_P001_WF01_R1_combined.tagged_filter.fastq.gz;
+cat *AMN_245113_P001_WF01*_R2_*.tagged_filter.fastq.gz > AMN_245113_P001_WF01_R2_combined.tagged_filter.fastq.gz;
+
+cat *AMN_245113_P001_WF05*_R1_*.tagged_filter.fastq.gz > AMN_245113_P001_WF05_R1_combined.tagged_filter.fastq.gz;
+cat *AMN_245113_P001_WF05*_R2_*.tagged_filter.fastq.gz > AMN_245113_P001_WF05_R2_combined.tagged_filter.fastq.gz;
+
+cat *AMN_245113_P001_WG01*_R1_*.tagged_filter.fastq.gz > AMN_245113_P001_WG01_R1_combined.tagged_filter.fastq.gz;
+cat *AMN_245113_P001_WG01*_R2_*.tagged_filter.fastq.gz > AMN_245113_P001_WG01_R2_combined.tagged_filter.fastq.gz;
+
+cat *AMN_245113_P001_WG05*_R1_*.tagged_filter.fastq.gz > AMN_245113_P001_WG05_R1_combined.tagged_filter.fastq.gz;
+cat *AMN_245113_P001_WG05*_R2_*.tagged_filter.fastq.gz > AMN_245113_P001_WG05_R2_combined.tagged_filter.fastq.gz;
+
+cat *AMN_245113_P001_WH05*_R1_*.tagged_filter.fastq.gz > AMN_245113_P001_WH05_R1_combined.tagged_filter.fastq.gz;
+cat *AMN_245113_P001_WH05*_R2_*.tagged_filter.fastq.gz > AMN_245113_P001_WH05_R2_combined.tagged_filter.fastq.gz;

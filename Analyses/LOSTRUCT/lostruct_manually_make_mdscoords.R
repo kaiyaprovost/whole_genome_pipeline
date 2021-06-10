@@ -3,18 +3,21 @@ library(colorspace)
 library(jsonlite)
 library(RColorBrewer)
 
+setwd("~")
+
 # distance matrix
 
 knum=2
 npc=2
-maxrows=100
+maxrows=10000
 
 ## time estimate: seconds ~ 3.022e-05*maxrows^2 + -0.003461*maxrows +0.7488 
 ## O(n^2)
 
-
-mds = "/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ANALYSIS/LOSTRUCT/lostruct_results/mds_coords.csv"
-mds.coords.master = read.table(mds,header=T,sep="\t")
+## this file must not be the same as the final mds file you want for a species.
+#mds = "/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ANALYSIS/LOSTRUCT/lostruct_results/mds_coords.csv"
+mds="/Users/kprovost/Dropbox (AMNH)/Melozone.fusca_fixed.sorted.nospace.sorted.nospace.fullcoords.csv"
+mds.coords.master = read.table(mds,header=T,sep=",",row.names = NULL)
 
 # for (i in sort(unique(mds.coords.master$chrom))) {
 #   print(i)
@@ -26,8 +29,9 @@ mds.coords.master = read.table(mds,header=T,sep="\t")
 #   dev.off()
 # }
 
-pca_list=list.files(path="/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ANALYSIS/LOSTRUCT/lostruct_results/",
-                    pattern=".pca.*csv",full.names = T,recursive=F)
+pca_list=list.files(#path="/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ANALYSIS/LOSTRUCT/lostruct_results/",
+  path="/Users/kprovost/Dropbox (AMNH)/",       
+  pattern=".pca.*csv",full.names = T,recursive=F)
 #pca_list = pca_list[!grepl("fla",pca_list)]
 #pca_list = pca_list[!grepl("bil",pca_list)]
 #pca_list = pca_list[!grepl("bel",pca_list)]
@@ -45,6 +49,7 @@ for (file_index in 1:length(pca_list)) {
   pca_file = pca_list[file_index]
   regions_file = regions_list[file_index]
   mds.file = coords_list[file_index]
+  #mds.file=mds
   pca_distmat_file = distmat_list[file_index]
   bychrom_file = bychrom_list[file_index]
   mdspng = mdspng_list[file_index]
@@ -140,9 +145,15 @@ for (file_index in 1:length(pca_list)) {
   
   
   # figure out where to plot things at
+  # mds.coords$window
   
   chroms <- unique(mds.coords$chrom)
   chrom.starts <- tapply( mds.coords$start, mds.coords$chrom, min, na.rm=TRUE )
+  
+  if(is.null(mds.coords$window)){
+    mds.coords$window = 1:nrow(mds.coords)
+  }
+  
   chrom.starts.windows = tapply( mds.coords$window, mds.coords$chrom, min, na.rm=TRUE )
   chrom.ends <- tapply( mds.coords$end, mds.coords$chrom, max, na.rm=TRUE )
   chrom.spacing <- floor(.05*mean(chrom.ends))
@@ -152,7 +163,7 @@ for (file_index in 1:length(pca_list)) {
   chrom.mids <- chrom.dividers[-1] - diff(chrom.dividers)/2
   mds.coords$pos <- round(chrom.offsets[match(mds.coords$chrom,chroms)]+(mds.coords$start+mds.coords$end)/2)
   
-
+  
   
   mds.corners <- lostruct::corners( mds.coords[,c("MDS1","MDS2")], prop=.05 )
   corner.cols <- brewer.pal(3,"Dark2")
@@ -204,7 +215,7 @@ for (file_index in 1:length(pca_list)) {
     points( regions$pos/1e6, y, ...)
   }
   
-  png(finalpng)
+  png(finalpng,width=1000)
   spacing <- 1
   opar <- par(mar=c(4,4,2,1)+.1,mgp=c(2.5,0.8,0))
   
@@ -220,10 +231,10 @@ for (file_index in 1:length(pca_list)) {
   #      col=corner.cols, cex=2, lwd=2 )
   opar2 <- par(mar=c(par("mar"),spacing/2)[c(5,2,3,4)])
   
-    plot(x=mds.coords$window,y=mds.coords$MDS1,col=adjustcolor(mds.coords$ccols,0.75),pch=20)
-    abline(v=as.numeric(chrom.starts.windows),col="red")
-    plot(x=mds.coords$window,y=mds.coords$MDS2,col=adjustcolor(mds.coords$ccols,0.75),pch=20)
-    abline(v=as.numeric(chrom.starts.windows),col="red")
+  plot(x=mds.coords$window,y=mds.coords$MDS1,col=adjustcolor(mds.coords$ccols,0.75),pch=20)
+  abline(v=as.numeric(chrom.starts.windows),col="red")
+  plot(x=mds.coords$window,y=mds.coords$MDS2,col=adjustcolor(mds.coords$ccols,0.75),pch=20)
+  abline(v=as.numeric(chrom.starts.windows),col="red")
   
   par(opar)
   dev.off()

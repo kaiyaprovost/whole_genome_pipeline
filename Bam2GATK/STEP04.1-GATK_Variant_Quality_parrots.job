@@ -1,0 +1,40 @@
+#!/bin/bash
+#PBS -l select=1:ncpus=2
+#PBS -l walltime=5000:00:00
+#PBS -N parrot_S4.1_variantQual
+#PBS -j oe
+#PBS -m ae
+#PBS -M kprovost@amnh.org
+#PBS -k oe
+
+# change to the working directory
+cd $PBS_O_WORKDIR
+echo "pbsworkdir"
+echo $PBS_O_WORKDIR
+EXECDIR=`pwd`
+export PATH=./:$PATH
+echo $PATH
+
+#Arguments:
+ref=/home/kprovost/nas3/genomeresequencingFromLucas/Melo_chrom/pseudochromosomesSHORT.fasta
+
+cd /vz-nas1-active/RawGenomicReads/FASTQ_SCREEN_RESULTS/Parrots/BAM_dedup/vcf_files
+
+#vcf=allsamples_parrots.raw.vcf
+vcf=allsamples.raw-MISSING-B6-C5.vcf
+
+echo
+echo
+echo Extracting Variant Quality Scores
+echo
+echo
+
+time java -Djava.io.tmpdir=/home/kprovost/nas3/tmp/ -jar /home/kprovost/nas3/genomeresequencingFromLucas/GenomeAnalysisTK-3.8-1-0-gf15c1c3ef/GenomeAnalysisTK.jar \
+-T VariantsToTable \
+-R $ref \
+-V $vcf \
+-F CHROM -F POS -F QUAL -F QD -F DP -F MQ -F MQRankSum -F FS -F ReadPosRankSum -F SOR \
+-o allsnps-MISSING-B6-C5.table
+
+## ##### ERROR MESSAGE: Invalid command line: The parameter allowMissingData is deprecated.  This argument is no longer used in GATK versions 3.8 and newer. Please see the online documentation for --errorIfMissingData.
+## 28 january 2020: removed --allowMissingData \

@@ -1,0 +1,372 @@
+#!/bin/bash
+#PBS -l select=1:ncpus=1
+#PBS -l walltime=5000:00:00
+#PBS -N subsetvcf
+#PBS -j oe
+#PBS -m ae
+#PBS -M kprovost@amnh.org
+#PBS -k oe
+
+cd /vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/VCFS/BELLII
+## BELLII -- CHI
+/home/kprovost/opt/bin/vcftools \
+--vcf Vireo-bellii-called.geno.PseudoNC.all.sorted.sorted.sorted.vcf \
+--out "CHI_bel" \
+--indv "indiv1" \
+--indv "indiv2" \
+--indv "indiv3" \
+--indv "indiv5" \
+--indv "indiv8" \
+--indv "indiv9" \
+--indv "indiv11" \
+--indv "indiv12" \
+--indv "indiv13" \
+--indv "indiv16" \
+--recode
+## BELLII -- SON
+/home/kprovost/opt/bin/vcftools \
+--vcf Vireo-bellii-called.geno.PseudoNC.all.sorted.sorted.sorted.vcf \
+--out "SON_bel" \
+--remove-indv "indiv1" \
+--remove-indv "indiv2" \
+--remove-indv "indiv3" \
+--remove-indv "indiv5" \
+--remove-indv "indiv8" \
+--remove-indv "indiv9" \
+--remove-indv "indiv11" \
+--remove-indv "indiv12" \
+--remove-indv "indiv13" \
+--remove-indv "indiv16" \
+--recode
+
+cd /vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/VCFS/BILINEATA
+## BILINEATA CHI
+/home/kprovost/opt/bin/vcftools \
+--vcf Amphispiza-bilineata-called.geno.PseudoNC.all.sorted.sorted.vcf \
+--out "CHI_bil" \
+--indv "indiv3" \
+--indv "indiv4" \
+--indv "indiv5" \
+--indv "indiv6" \
+--indv "indiv9" \
+--indv "indiv13" \
+--indv "indiv16" \
+--indv "indiv17" \
+--indv "indiv18" \
+--indv "indiv19" \
+--indv "indiv22" \
+--indv "indiv23" \
+--recode
+## BILINEATA SON
+/home/kprovost/opt/bin/vcftools \
+--vcf Amphispiza-bilineata-called.geno.PseudoNC.all.sorted.sorted.vcf \
+--out "SON_bil" \
+--remove-indv "indiv3" \
+--remove-indv "indiv4" \
+--remove-indv "indiv5" \
+--remove-indv "indiv6" \
+--remove-indv "indiv9" \
+--remove-indv "indiv13" \
+--remove-indv "indiv16" \
+--remove-indv "indiv17" \
+--remove-indv "indiv18" \
+--remove-indv "indiv19" \
+--remove-indv "indiv22" \
+--remove-indv "indiv23" \
+--recode
+
+cd /vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/VCFS/BRUNNEICAPILLUS
+##UWBM 7788MSB SKIN 29018
+##UWBM 77884	MSB SKIN 29018
+#sed -i.bak 's/UWBM 7788MSB SKIN 29018/UWBM 77884	MSB SKIN 29018/' Campylorhynchus-brunneicapillus-called.geno.PseudoNC.all.fixedchroms.converted.sorted.sorted.sorted.vcf
+## BRU CHI
+/home/kprovost/opt/bin/vcftools \
+--vcf Campylorhynchus-brunneicapillus-called.geno.PseudoNC.all.fixedchroms.converted.sorted.sorted.sorted.vcf \
+--out "CHI_bru" \
+--indv "AMNH 244261" \
+--indv "LSUMZ 62493" \
+--indv "MSB SKIN 22000" \
+--indv "MSB SKIN 24490" \
+--indv "MSB SKIN 24527" \
+--indv "MSB SKIN 24627" \
+--indv "MSB SKIN 24629" \
+--indv "MSB SKIN 25299" \
+--indv "MSB SKIN 29302" \
+--indv "MSB SKIN 39823" \
+--recode
+##BRU SON
+/home/kprovost/opt/bin/vcftools \
+--vcf Campylorhynchus-brunneicapillus-called.geno.PseudoNC.all.fixedchroms.converted.sorted.sorted.sorted.vcf \
+--out "SON_bru" \
+--remove-indv "AMNH 244261" \
+--remove-indv "LSUMZ 62493" \
+--remove-indv "MSB SKIN 22000" \
+--remove-indv "MSB SKIN 24490" \
+--remove-indv "MSB SKIN 24527" \
+--remove-indv "MSB SKIN 24627" \
+--remove-indv "MSB SKIN 24629" \
+--remove-indv "MSB SKIN 25299" \
+--remove-indv "MSB SKIN 29302" \
+--remove-indv "MSB SKIN 39823" \
+--recode
+
+cd /vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/VCFS/CRISSALE
+## TO FIX
+##TCWC 2399AMNH 224948
+##TCWC 23990	AMNH 224948
+#sed -i.bak 's/TCWC 2399AMNH 224948/TCWC 23990	AMNH 224948/' Toxostoma-crissale-called.geno.PseudoNC.all.fixedchroms.converted.sorted.sorted.sorted.vcf
+## CRISSALE CHI
+/home/kprovost/opt/bin/vcftools \
+--vcf Toxostoma-crissale-called.geno.PseudoNC.all.fixedchroms.converted.sorted.sorted.sorted.vcf \
+--out "CHI_cri" \
+--indv "AMNH LJM110" \
+--indv "AMNH SW18-107" \
+--indv "TCWC 23990" \
+--indv "MSB SKIN 26421" \
+--indv "LSUMZ 40753" \
+--indv "LSUMZ 51732" \
+--indv "LSUMZ 47304" \
+--indv "MSB SKIN 20926" \
+--indv "MSB SKIN 21308" \
+--indv "LSUMZ 58267" \
+--indv "AMNH J-1023" \
+--recode
+## CRISALE SON
+/home/kprovost/opt/bin/vcftools \
+--vcf Toxostoma-crissale-called.geno.PseudoNC.all.fixedchroms.converted.sorted.sorted.sorted.vcf \
+--out "SON_cri" \
+--remove-indv "AMNH LJM110" \
+--remove-indv "AMNH SW18-107" \
+--remove-indv "TCWC 23990" \
+--remove-indv "MSB SKIN 26421" \
+--remove-indv "LSUMZ 40753" \
+--remove-indv "LSUMZ 51732" \
+--remove-indv "LSUMZ 47304" \
+--remove-indv "MSB SKIN 20926" \
+--remove-indv "MSB SKIN 21308" \
+--remove-indv "LSUMZ 58267" \
+--remove-indv "AMNH J-1023" \
+--recode
+
+cd /vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/VCFS/CURVIROSTRE
+##UWBM 7761UWBM 95955
+##UWBM 77610	UWBM 95955
+#sed -i.bak 's/UWBM 7761UWBM 95955/UWBM 77610	UWBM 95955/' Toxostoma-curvirostre-called.geno.PseudoNC.all.fixedchroms.converted.sorted.sorted.sorted.vcf
+## CURVIROSTRE CHI
+/home/kprovost/opt/bin/vcftools \
+--vcf Toxostoma-curvirostre-called.geno.PseudoNC.all.fixedchroms.converted.sorted.sorted.sorted.vcf \
+--out "CHI_cur" \
+--indv "MSB SKIN 29272" \
+--indv "MSB SKIN 24616" \
+--indv "UWBM 77610" \
+--indv "AMNH J-089" \
+--indv "MSB SKIN 21019" \
+--indv "AMNH J-126" \
+--indv "MSB SKIN 24262" \
+--indv "MSB SKIN 24489" \
+--indv "AMNH J-081" \
+--indv "MSB SKIN 24488" \
+--indv "LSUMZ 58304" \
+--recode
+## CURVIROSTRE SON
+/home/kprovost/opt/bin/vcftools \
+--vcf Toxostoma-curvirostre-called.geno.PseudoNC.all.fixedchroms.converted.sorted.sorted.sorted.vcf \
+--out "SON_cur" \
+--remove-indv "MSB SKIN 29272" \
+--remove-indv "MSB SKIN 24616" \
+--remove-indv "UWBM 77610" \
+--remove-indv "AMNH J-089" \
+--remove-indv "MSB SKIN 21019" \
+--remove-indv "AMNH J-126" \
+--remove-indv "MSB SKIN 24262" \
+--remove-indv "MSB SKIN 24489" \
+--remove-indv "AMNH J-081" \
+--remove-indv "MSB SKIN 24488" \
+--remove-indv "LSUMZ 58304" \
+--recode
+
+cd /vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/VCFS/FLAVICEPS
+## FLAVICEPS CHI
+/home/kprovost/opt/bin/vcftools \
+--vcf Auriparus-flaviceps-called.geno.PseudoNC.all.sorted.sorted.sorted.vcf \
+--out "CHI_fla" \
+--indv "indiv1" \
+--indv "indiv2" \
+--indv "indiv4" \
+--indv "indiv5" \
+--indv "indiv6" \
+--indv "indiv7" \
+--indv "indiv10" \
+--indv "indiv11" \
+--indv "indiv12" \
+--indv "indiv13" \
+--indv "indiv15" \
+--recode
+## FLAVICEPS SON
+/home/kprovost/opt/bin/vcftools \
+--vcf Auriparus-flaviceps-called.geno.PseudoNC.all.sorted.sorted.sorted.vcf \
+--out "SON_fla" \
+--remove-indv "indiv1" \
+--remove-indv "indiv2" \
+--remove-indv "indiv4" \
+--remove-indv "indiv5" \
+--remove-indv "indiv6" \
+--remove-indv "indiv7" \
+--remove-indv "indiv10" \
+--remove-indv "indiv11" \
+--remove-indv "indiv12" \
+--remove-indv "indiv13" \
+--remove-indv "indiv15" \
+--recode
+
+cd /vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/VCFS/FUSCA
+## FUSCA CHI
+/home/kprovost/opt/bin/vcftools \
+--vcf Melozone-fusca-called.geno.vcf \
+--out "CHI_fus" \
+--indv "indiv4" \
+--indv "indiv6" \
+--indv "indiv8" \
+--indv "indiv10" \
+--indv "indiv12" \
+--indv "indiv13" \
+--indv "indiv14" \
+--indv "indiv15" \
+--indv "indiv17" \
+--indv "indiv18" \
+--indv "indiv19" \
+--indv "indiv20" \
+--recode
+## FUSCA SON
+/home/kprovost/opt/bin/vcftools \
+--vcf Melozone-fusca-called.geno.vcf \
+--out "SON_fus" \
+--remove-indv "indiv4" \
+--remove-indv "indiv6" \
+--remove-indv "indiv8" \
+--remove-indv "indiv10" \
+--remove-indv "indiv12" \
+--remove-indv "indiv13" \
+--remove-indv "indiv14" \
+--remove-indv "indiv15" \
+--remove-indv "indiv17" \
+--remove-indv "indiv18" \
+--remove-indv "indiv19" \
+--remove-indv "indiv20" \
+--recode
+
+
+cd /vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/VCFS/MELANURA
+## TO FIX
+## AMNH J-13AMNH J-129
+## AMNH J-139	AMNH J-129
+#sed -i.bak 's/AMNH J-13AMNH J-129/AMNH J-139	AMNH J-129/' Polioptila-melanura-called.geno.PseudoNC.all.fixedchroms.converted.sorted.sorted.sorted.vcf
+## MELANURA CHI
+/home/kprovost/opt/bin/vcftools \
+--vcf Polioptila-melanura-called.geno.PseudoNC.all.fixedchroms.converted.sorted.sorted.sorted.vcf \
+--out "CHI_mel" \
+--indv "MSB SKIN 29256" \
+--indv "UWBM 112138" \
+--indv "AMNH 244242" \
+--indv "UWBM 112130" \
+--indv "AMNH WMMIII-385" \
+--indv "AMNH J-139" \
+--indv "AMNH J-129" \
+--indv "MSB SKIN 29257" \
+--indv "LSUMZ 34177" \
+--indv "AMNH J-1020" \
+--recode
+## MELANURA SON
+/home/kprovost/opt/bin/vcftools \
+--vcf Polioptila-melanura-called.geno.PseudoNC.all.fixedchroms.converted.sorted.sorted.sorted.vcf \
+--out "SON_mel" \
+--remove-indv "MSB SKIN 29256" \
+--remove-indv "UWBM 112138" \
+--remove-indv "AMNH 244242" \
+--remove-indv "UWBM 112130" \
+--remove-indv "AMNH WMMIII-385" \
+--remove-indv "AMNH J-139" \
+--remove-indv "AMNH J-129" \
+--remove-indv "MSB SKIN 29257" \
+--remove-indv "LSUMZ 34177" \
+--remove-indv "AMNH J-1020" \
+--recode
+
+cd /vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/VCFS/NITENS
+##UWBM 7763LSUMZ 64140
+##UWBM 77634	LSUMZ 64140
+##sed -i.bak 's/UWBM 7763LSUMZ 64140/UWBM 77634	LSUMZ 64140/' Phainopepla-nitens-called.geno.PseudoNC.all.fixedchroms.converted.sorted.sorted.sorted.vcf
+## NITENS CHI
+/home/kprovost/opt/bin/vcftools \
+--vcf Phainopepla-nitens-called.geno.PseudoNC.all.fixedchroms.converted.sorted.sorted.sorted.vcf \
+--out "CHI_nit" \
+--indv "LSUMZ 64140" \
+--indv "MSB SKIN 39010" \
+--indv "MSB SKIN 40683" \
+--indv "MSB SKIN 29255" \
+--indv "MSB SKIN 44074" \
+--indv "MSB SKIN 29847" \
+--indv "MSB SKIN 44075" \
+--indv "LSUMZ 64233" \
+--indv "LSUMZ 64141" \
+--indv "LSUMZ 52747" \
+--recode
+## NITENS SON
+/home/kprovost/opt/bin/vcftools \
+--vcf Phainopepla-nitens-called.geno.PseudoNC.all.fixedchroms.converted.sorted.sorted.sorted.vcf \
+--out "SON_nit" \
+--remove-indv "LSUMZ 64140" \
+--remove-indv "MSB SKIN 39010" \
+--remove-indv "MSB SKIN 40683" \
+--remove-indv "MSB SKIN 29255" \
+--remove-indv "MSB SKIN 44074" \
+--remove-indv "MSB SKIN 29847" \
+--remove-indv "MSB SKIN 44075" \
+--remove-indv "LSUMZ 64233" \
+--remove-indv "LSUMZ 64141" \
+--remove-indv "LSUMZ 52747" \
+--recode
+
+cd /vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/VCFS/SINUATUS
+## SINUATUS CHI
+/home/kprovost/opt/bin/vcftools \
+--vcf Cardinalis-sinuatus-called.geno.PseudoNC.all.fixedchroms.converted.sorted.sorted.sorted.copy.vcf \
+--out "CHI_sin" \
+--indv "AMNH 244218" \
+--indv "AMNH 244232" \
+--indv "AMNH 244159" \
+--indv "TCWC 16314" \
+--indv "UWBM 109277" \
+--indv "UWBM 100163" \
+--indv "UWBM 109278" \
+--indv "TCWC 16576" \
+--indv "MSB SKIN 24612" \
+--indv "UWBM 105429" \
+--indv "MSB SKIN 24457" \
+--indv "MSB SKIN 18064" \
+--indv "LSUMZ 17193" \
+--indv "AMNH J-132" \
+--indv "AMNH J-0999" \
+--indv "AMNH J-080" \
+--recode
+## SINUATUS SON
+/home/kprovost/opt/bin/vcftools \
+--vcf Cardinalis-sinuatus-called.geno.PseudoNC.all.fixedchroms.converted.sorted.sorted.sorted.copy.vcf \
+--out "SON_sin" \
+--remove-indv "AMNH 244218" \
+--remove-indv "AMNH 244232" \
+--remove-indv "AMNH 244159" \
+--remove-indv "TCWC 16314" \
+--remove-indv "UWBM 109277" \
+--remove-indv "UWBM 100163" \
+--remove-indv "UWBM 109278" \
+--remove-indv "TCWC 16576" \
+--remove-indv "MSB SKIN 24612" \
+--remove-indv "UWBM 105429" \
+--remove-indv "MSB SKIN 24457" \
+--remove-indv "MSB SKIN 18064" \
+--remove-indv "LSUMZ 17193" \
+--remove-indv "AMNH J-132" \
+--remove-indv "AMNH J-0999" \
+--remove-indv "AMNH J-080" \
+--recode

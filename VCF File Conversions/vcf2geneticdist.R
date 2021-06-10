@@ -1,25 +1,48 @@
 rm(list=ls())
+Sys.setenv('R_MAX_VSIZE'=32000000000)
 
-library(ape)
-library(vcfR)
-library(adegenet)
-library(poppr)
-library(phangorn)
-library(plotrix)
-library(rgdal)
-library(RColorBrewer)
-library(tools)
-library(R.utils)
+huxley=F
+if(huxley==T){
+  myPaths <- .libPaths()
+  lib="/usr/local/software/R/R-3.6.3/lib64/R/library/"
+  myPaths <- c(myPaths, lib)
+  .libPaths(myPaths)
+  
+}
 
-#mypath="/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ANALYSIS/called_geno/"
-mypath="/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ANALYSIS/called_geno/SPECIES/VCFS/"
+dynamic_require <- function(package,lib=NULL) {
+  if (eval(parse(text = paste("require(", package, ")"))))
+    return(TRUE)
+  if(is.null(lib)) {
+    install.packages(package,repos='http://cran.us.r-project.org')
+  } else {
+    install.packages(package,lib=lib,repos='http://cran.us.r-project.org')
+  }
+  return(eval(parse(text = paste(
+    "require(", package,  ")"))))
+}
+packages = c("ape","vcfR","adegenet","poppr",
+             "phangorn","plotrix","rgdal","RColorBrewer","tools","R.utils")
+
+for (p in packages) {
+  if(huxley==T) {
+    dynamic_require(p,lib=lib)
+  } else {
+    dynamic_require(p)
+  }
+  
+}
+
+mypath="/Users/kprovost/Dropbox (AMNH)/Dissertation/"
+#mypath="/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ANALYSIS/called_geno/SPECIES/VCFS/"
+#mypath="/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ANALYSIS/lostruct_2021_eone/"
 setwd(mypath)
 overwrite=F
-doPlots=F
+doPlots=T
 
-specieslist =(sort(c("cur","cri","bru","bil","fla",
-                     "fus","mel","nit","sin","bel")))
-#specieslist=c("bel")
+#specieslist =(sort(c("cur","cri","bru","bil","fla","fus",
+#                     "mel","nit","sin","bel")))
+specieslist=c("bil")
 
 
 ## possibly amphispiza is too large to read 
@@ -27,7 +50,8 @@ specieslist =(sort(c("cur","cri","bru","bil","fla",
 colors=c("red","blue","orange","green","goldenrod","magenta",
          "black","grey","brown","pink","purple","darkgreen","lightblue")
 
-quickDist = T
+lostructDist=T
+quickDist = F
 calcDist = F
 reloadDist = F
 combineVcfs = F
@@ -41,7 +65,54 @@ green=col[3]
 yellow=col[7]
 grey=col[9]
 
-chromlist=c("1","1A","1B","LG5","mtDNA","16")
+chromlist=c(1:28,"4A","1A","1B","LG2","LGE22","LG5","mtDNA","Z")
+
+if (lostructDist==T){
+  
+  filelist=list.files(mypath,pattern="1.vcf$",full.names = T)
+  
+  x <- file.info(filelist)
+  filelist = filelist[match(1:length(filelist),rank(x$size))]
+  filelist = filelist[complete.cases(filelist)]
+  
+ 
+    
+    for (vcffile in filelist) {
+      print(vcffile)
+      
+      spp =strsplit(basename(vcffile),"\\.")[[1]][1]
+      spp = substr(spp,1,nchar(spp)-7)
+      
+      region=strsplit(basename(vcffile),"_")[[1]]
+      region=region[length(region)]
+      region=strsplit(region,"\\.")[[1]][1]
+      
+      if(file.exists(paste(mypath,spp,"_eistancematrix_",region,".csv",sep = "")) & overwrite==F) { print("skipping") } else {
+      
+      vcf <- vcfR::read.vcfR(vcffile, verbose = TRUE,limit=1e08)
+      x <- vcfR::vcfR2genlight(vcf) ## this is the step where it fails. above line did not fix
+      
+      rm(vcf)
+      
+      if(max(ploidy(x))!=min(ploidy(x))){
+        ploidy(x) = 2
+      }
+      
+      x.dist3 <- poppr::bitwise.dist(x,missing_match = T,percent=F,scale_missing = T)
+      #outfile = paste(vcffile,"_eistances.dist",sep="")
+      #write.table(as.matrix(x.dist3), outfile, row.names=FALSE, col.names=FALSE,append = F)
+      
+      mat3=as.matrix(x.dist3)
+      write.csv(mat3,paste(mypath,spp,"_eistancematrix_",region,".csv",sep = ""),
+                quote=F)
+      
+      #threenewick = paste(substr(outfile,1,nchar(outfile)-5),"_tree3.newick",sep="")
+      #tree3 =tryCatch(njs(as.matrix(mat3)),error=function(cond){return(NA)})
+      #if(!(is.na(tree3))) {write.tree(tree3,threenewick)}
+      
+    }
+  }
+}
 
 if (quickDist == T){
   
@@ -51,10 +122,19 @@ if (quickDist == T){
   #D95F02.vcf
   
   filelist=list.files(mypath,pattern=".vcf$",full.names = T)
-  filelist=filelist[grepl("bel",filelist)]
+  #filelist=filelist[grepl("bel",filelist)]
   
   for (vcffile in filelist) {
     print(vcffile)
+    
+    spp =strsplit(basename(outfile),"\\.")[[1]][1]
+    spp = substr(spp,1,nchar(spp)-7)
+    
+    region=strsplit(basename(vcffile),"_")[[1]][2]
+    region=strsplit(region,"\\.")[[1]][1]
+    
+    
+    
     vcf <- vcfR::read.vcfR(vcffile, verbose = TRUE,limit=1e08)
     x <- vcfR::vcfR2genlight(vcf)
     
@@ -63,46 +143,42 @@ if (quickDist == T){
     }
     
     x.dist3 <- poppr::bitwise.dist(x,missing_match = T,percent=F,scale_missing = T)
-    outfile = paste(vcffile,"_distances.dist",sep="")
+    outfile = paste(vcffile,"_eistances.dist",sep="")
     write.table(as.matrix(x.dist3), outfile, row.names=FALSE, col.names=FALSE,append = F)
     
-    spp =strsplit(basename(outfile),"\\.")[[1]][1]
-    spp = substr(spp,1,nchar(spp)-7)
     
-    region=strsplit(basename(vcffile),"_")[[1]][2]
-    region=strsplit(region,"\\.")[[1]][1]
     
-    labels=readLines(paste("/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ASSEMBLY/ANGSD/A5.bamlists/bamlist/",spp,".bamlist",sep=""))
-    spp=sub("-","_",spp)
-    sonlabels=readLines(paste("/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ASSEMBLY/ANGSD/A5.bamlists/son/SON_",spp,".indlist",sep=""))
+    #labels=readLines(paste("/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ASSEMBLY/ANGSD/A5.bamlists/bamlist/",spp,".bamlist",sep=""))
+    #spp=sub("-","_",spp)
+    #sonlabels=readLines(paste("/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ASSEMBLY/ANGSD/A5.bamlists/son/SON_",spp,".indlist",sep=""))
     
-    labels=sapply(1:length(labels),FUN=function(x) {
-      strsplit(labels[x],"/")[[1]][8]
-    }
-    )
-    labels=sapply(1:length(labels),FUN=function(x) {
-      strsplit(labels[x],"\\.")[[1]][1]
-    }
-    )
-    
-    sonlabels=sapply(1:length(sonlabels),FUN=function(x) {
-      strsplit(sonlabels[x],"/")[[1]][8]
-    }
-    )
-    sonlabels=sapply(1:length(sonlabels),FUN=function(x) {
-      strsplit(sonlabels[x],"\\.")[[1]][1]
-    }
-    )
-    
-    labels = sub("AMN_245","",labels)
-    labels = sub("_P002_","-",labels)
-    labels = sub("_P001_","-",labels)
-    labels = sub("_P01_","-",labels)
-    labels = sub(paste("_",strsplit(spp,"_")[[1]][2],sep=""),"",labels)
-    labels = sub("W","",labels)
-   
-    
-    inds=(x@ind.names)
+    # labels=sapply(1:length(labels),FUN=function(x) {
+    #   strsplit(labels[x],"/")[[1]][8]
+    # }
+    # )
+    # labels=sapply(1:length(labels),FUN=function(x) {
+    #   strsplit(labels[x],"\\.")[[1]][1]
+    # }
+    # )
+    # 
+    # sonlabels=sapply(1:length(sonlabels),FUN=function(x) {
+    #   strsplit(sonlabels[x],"/")[[1]][8]
+    # }
+    # )
+    # sonlabels=sapply(1:length(sonlabels),FUN=function(x) {
+    #   strsplit(sonlabels[x],"\\.")[[1]][1]
+    # }
+    # )
+    # 
+    # labels = sub("AMN_245","",labels)
+    # labels = sub("_P002_","-",labels)
+    # labels = sub("_P001_","-",labels)
+    # labels = sub("_P01_","-",labels)
+    # labels = sub(paste("_",strsplit(spp,"_")[[1]][2],sep=""),"",labels)
+    # labels = sub("W","",labels)
+    # 
+    # 
+    # inds=(x@ind.names)
     threenewick = paste(substr(outfile,1,nchar(outfile)-5),"_tree3.newick",sep="")
     
     
@@ -111,7 +187,7 @@ if (quickDist == T){
     labels2 = inds
     spp= toupper(strsplit(spp,as.character("_"))[[1]][2])
     colnames(mat3)=labels2; rownames(mat3) = labels2
-    write.csv(mat3,paste(mypath,spp,"_distancematrix_",region,".csv",sep = ""),
+    write.csv(mat3,paste(mypath,spp,"_eistancematrix_",region,".csv",sep = ""),
               quote=F)
     if(!(is.na(tree3))) {write.tree(tree3,threenewick)}
     
@@ -133,7 +209,7 @@ if (calcDist == T) {
       upperspp = toupper(spp)
       
       paths=c(list.dirs(path=paste(mypath,"VCFS",sep=""),recursive=F),
-              list.dirs(path=paste(mypath,"FINISH_DISTS",sep=""),recursive=F) )
+              list.dirs(path=paste(mypath,"FINISH_eISTS",sep=""),recursive=F) )
       spppath = paths[grepl(upperspp,paths)]
       
       paths2=list.dirs(path=spppath,recursive=F,full.names = F)
@@ -185,7 +261,7 @@ if (calcDist == T) {
           print(vcffile)
           print(paste(vcffile_index,"of",length(files)))
           
-          outfile = paste(vcffile,"_distances.dist",sep="")
+          outfile = paste(vcffile,"_eistances.dist",sep="")
           
           nopathname=basename(vcffile)
           split = strsplit(vcffile,"/")[[1]]
@@ -194,7 +270,7 @@ if (calcDist == T) {
           if(overwrite == F){
             print("looking for matches")
             matching=list.files(path="/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ANALYSIS/called_geno/SPECIES/",
-                                pattern=paste(species,"/",nopathname,"_distances.dist",sep=""),
+                                pattern=paste(species,"/",nopathname,"_eistances.dist",sep=""),
                                 recursive = T,full.names = T)
             
             distexists=as.logical(length(matching))
@@ -202,26 +278,26 @@ if (calcDist == T) {
             # distexists = as.logical(sum(c(
             #   file.exists(outfile),
             #   file.exists(paste("/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ANALYSIS/called_geno/SPECIES/DISTS/",
-            #                     species,"/",nopathname,"_distances.dist",sep="")),
+            #                     species,"/",nopathname,"_eistances.dist",sep="")),
             #   file.exists(paste("/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ANALYSIS/called_geno/SPECIES/DISTS/",
-            #                     nopathname,"_distances.dist",sep="")),
+            #                     nopathname,"_eistances.dist",sep="")),
             #   file.exists(paste(outfile,".gz",sep="")),
             #   file.exists(paste("/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ANALYSIS/called_geno/SPECIES/DISTS/",
-            #                     species,"/",nopathname,"_distances.dist.gz",sep="")),
+            #                     species,"/",nopathname,"_eistances.dist.gz",sep="")),
             #   file.exists(paste("/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ANALYSIS/called_geno/SPECIES/DISTS/",
-            #                     nopathname,"_distances.dist.gz",sep=""))
+            #                     nopathname,"_eistances.dist.gz",sep=""))
             # )))
             
           } else {distexists=F}
           
           if(distexists && overwrite==F){
             print("-----distances already calculated")
-            file.rename(vcffile,paste("/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ANALYSIS/called_geno/SPECIES/FINISH_DISTS/",nopathname,sep=""))
+            file.rename(vcffile,paste("/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ANALYSIS/called_geno/SPECIES/FINISH_eISTS/",nopathname,sep=""))
             
           } else {
             
             outfile=paste("/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ANALYSIS/called_geno/SPECIES/DISTS/",
-                          species,"/",nopathname,"_distances.dist",sep="")
+                          species,"/",nopathname,"_eistances.dist",sep="")
             
             print("Reading")
             vcf <- vcfR::read.vcfR(vcffile, verbose = TRUE,limit=1e08)#nrows=3000000)
@@ -269,7 +345,7 @@ if (calcDist == T) {
             tree5 =tryCatch(njs(x.dist5),error=function(cond){return(NA)})
             
             if(doPlots==T){
-              png(paste(outfile,"_distances.png",sep=""),
+              png(paste(outfile,"_eistances.png",sep=""),
                   width=1200,height=800)
               par(mfrow=c(1,5),mar=c(0,0,0,0))
               
@@ -299,7 +375,7 @@ if (calcDist == T) {
                 barplot(0)
               }
               dev.off()
-              gzip(paste(outfile,"_distances.png",sep=""),paste(outfile,"_distances.png.gz",sep=""),skip=T)
+              gzip(paste(outfile,"_eistances.png",sep=""),paste(outfile,"_eistances.png.gz",sep=""),skip=T)
             }
             
             gzip(outfile,paste(outfile,".gz",sep=""),skip=T)
@@ -307,7 +383,7 @@ if (calcDist == T) {
           }
           gzip(vcffile,zippedfile,skip=T)    
           
-          file.rename(zippedfile,paste("/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ANALYSIS/called_geno/SPECIES/FINISH_DISTS/",nopathname,".gz",sep=""))
+          file.rename(zippedfile,paste("/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ANALYSIS/called_geno/SPECIES/FINISH_eISTS/",nopathname,".gz",sep=""))
           
           rm(vcf)
           rm(x)
@@ -340,7 +416,7 @@ if(reloadDist == T) {
   
   path="/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ANALYSIS/called_geno/SPECIES/DISTS"
   distfilelist = list.files(path,pattern="distances.dist",recursive = F,full.names = T)
-  #distfilelist=c("/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ANALYSIS/called_geno/SPECIES/Amphispiza-bilineata-called.geno/DISTS/Amphispiza-bilineata-called.geno.PseudoNC.all.vcf.gz_distances.dist")
+  #distfilelist=c("/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ANALYSIS/called_geno/SPECIES/Amphispiza-bilineata-called.geno/DISTS/Amphispiza-bilineata-called.geno.PseudoNC.all.vcf.gz_eistances.dist")
   
   #distfilelist = distfilelist[!(grepl("window",distfilelist))]
   
@@ -360,14 +436,14 @@ if(reloadDist == T) {
     
     
     outpng = paste(substr(distfile,1,nchar(distfile)-5),"_consensus.png",sep="")
-    threepng = paste(substr(distfile,1,nchar(distfile)-5),"_tree3_dots.png",sep="")
+    threepng = paste(substr(distfile,1,nchar(distfile)-5),"_tree3_eots.png",sep="")
     threenewick = paste(substr(distfile,1,nchar(distfile)-5),"_tree3.newick",sep="")
     
     if (file.exists(outpng) && overwrite==F) {
       print("---skipping")
     } else {
       
-      #distfile = "Vireo-bellii-called.geno/Vireo-bellii-called.geno.PseudoNC_007897.1_Tgut_mtDNA.vcf_distances.dist"
+      #distfile = "Vireo-bellii-called.geno/Vireo-bellii-called.geno.PseudoNC_007897.1_Tgut_mtDNA.vcf_eistances.dist"
       distlines = readLines(distfile)
       
       ## get the labels
@@ -386,9 +462,9 @@ if(reloadDist == T) {
       
       
       #if(spp!="Auriparus-flaviceps"){
-        labels=readLines(paste("/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ASSEMBLY/ANGSD/A5.bamlists/bamlist/",spp,".bamlist",sep=""))
-        spp=sub("-","_",spp)
-        sonlabels=readLines(paste("/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ASSEMBLY/ANGSD/A5.bamlists/son/SON_",spp,".indlist",sep=""))
+      labels=readLines(paste("/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ASSEMBLY/ANGSD/A5.bamlists/bamlist/",spp,".bamlist",sep=""))
+      spp=sub("-","_",spp)
+      sonlabels=readLines(paste("/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ASSEMBLY/ANGSD/A5.bamlists/son/SON_",spp,".indlist",sep=""))
       #  
       #} else {
       #  labels=readLines(paste("/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ASSEMBLY/ANGSD/A5.bamlists/bamlist/old/",spp,"-WITHFAILS.bamlist",sep=""))
@@ -476,7 +552,7 @@ if(reloadDist == T) {
         labels2 = paste("Ind_",seq(0,length(labels)-1),sep="")
         spp= toupper(strsplit(spp,as.character("_"))[[1]][2])
         colnames(mat3)=labels2; rownames(mat3) = labels2
-        write.csv(mat3,paste("/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER3_TRAITS/Distances/BY_SPECIES/CSVS/",spp,"/",spp,"_distancematrix_",region,".csv",sep = ""))
+        write.csv(mat3,paste("/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER3_TRAITS/Distances/BY_SPECIES/CSVS/",spp,"/",spp,"_eistancematrix_",region,".csv",sep = ""))
       }
       
       # if (unique(is.na(treelist))==T) {
@@ -1137,7 +1213,7 @@ if(compareNewick==T) {
     
     missingcolnames=allnewicks[which(!(allnewicks %in% names))]
     
-    trees = lapply(newickfiles,FUN=read.tree)
+    trees = lapply(newickfiles,FUN=read.NEWICK)
     class(trees) = "multiPhylo"
     phydist=phytools::multiRF(trees)
     colnames(phydist) = names
@@ -1198,10 +1274,120 @@ if(compareNewick==T) {
                      tl.offset=0.1,tl.srt=90,
                      tl.cex=0.25,cl.cex=0.5,cl.length=5)
     }
-    #"Toxostoma-curvirostre-called.geno/DISTS/Toxostoma-curvirostre-called.geno.PseudoNC.all.vcf_distances_tree3.newick"
+    #"Toxostoma-curvirostre-called.geno/DISTS/Toxostoma-curvirostre-called.geno.PseudoNC.all.vcf_eistances_tree3.newick"
   }
   if(doPlots==F){
     dev.off()
   }
 }
+
+
+
+##### 
+## just make the plots from a distance matrix
+
+dists = list.files(path="/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ANALYSIS/lostruct_2021_done/",
+                   pattern="distancematrix",recursive = T,full.names = T)
+dists=dists[!(grepl("NEWICK",dists))]
+dists=dists[(grepl("black",dists))]
+
+for(dist in dists) {
+  df = read.table(dist,sep=",",header=T,row.names = 1)
+  df = as.dist(df)
+  tree=ape::nj(df)
+  write.tree(tree,paste(dist,".NEWICK",sep=""))
+  png(paste(dist,".NEWICK.PNG",sep=""))
+  par(mar=c(0,0,0,0))
+  plot(tree,type="radial",cex=0.7)
+  dev.off()
+  
+  dist2 = sub("NEW","OLD",dist)
+  if(file.exists(dist2)) {
+    df2 = read.table(dist2,sep=",",header=T,row.names = 1)
+    df2 = as.dist(df2)
+    tree2=ape::nj(df2)
+    write.tree(tree2,paste(dist2,".NEWICK",sep=""))
+    png(paste(dist2,".NEWICK.PNG",sep=""))
+    par(mar=c(0,0,0,0))
+    plot(tree2,type="radial",cex=0.7)
+    dev.off()
+    
+    print(tree)
+    print(tree2)
+    print(phytools::multiRF(c(unroot(tree),unroot(tree2))))
+    
+  }
+  
+ 
+  ## now for all the species
+  
+  dist_d=sub("black","#D95F02",dist)
+  dist_7=sub("black","#7570B3",dist)
+  dist_1=sub("black","#1B9E77",dist)
+  dist_e=sub("black","empty",dist)
+  
+  df_d = read.table(dist_d,sep=",",header=T,row.names = 1)
+  df_d = as.dist(df_d)
+  tree_d=ape::nj(df_d)
+  write.tree(tree_d,paste(dist_d,".NEWICK",sep=""))
+  png(paste(dist_d,".NEWICK.PNG",sep=""))
+  par(mar=c(0,0,0,0))
+  plot(tree_d,type="radial",cex=0.7)
+  dev.off()
+  
+  df_1 = read.table(dist_1,sep=",",header=T,row.names = 1)
+  df_1 = as.dist(df_1)
+  tree_1=ape::nj(df_1)
+  write.tree(tree_1,paste(dist_1,".NEWICK",sep=""))
+  png(paste(dist_1,".NEWICK.PNG",sep=""))
+  par(mar=c(0,0,0,0))
+  plot(tree_1,type="radial",cex=0.7)
+  dev.off()
+  
+  df_7 = read.table(dist_7,sep=",",header=T,row.names = 1)
+  df_7 = as.dist(df_7)
+  tree_7=ape::nj(df_7)
+  write.tree(tree_7,paste(dist_7,".NEWICK",sep=""))
+  png(paste(dist_7,".NEWICK.PNG",sep=""))
+  par(mar=c(0,0,0,0))
+  plot(tree_7,type="radial",cex=0.7)
+  dev.off()
+  
+  if(file.exists(dist_e)) {
+    
+    df_e = read.table(dist_e,sep=",",header=T,row.names = 1)
+    df_e = as.dist(df_e)
+    tree_e=ape::nj(df_e)
+    write.tree(tree_e,paste(dist_e,".NEWICK",sep=""))
+    png(paste(dist_e,".NEWICK.PNG",sep=""))
+    par(mar=c(0,0,0,0))
+    plot(tree_e,type="radial",cex=0.7)
+    dev.off()
+    
+    rfdists=(phytools::multiRF(c(unroot(tree),
+                              unroot(tree_d),
+                              unroot(tree_7),
+                              unroot(tree_1),
+                              unroot(tree_e))))
+    colnames(rfdists) = c("black","D","7","1","empty")
+    rownames(rfdists) = c("black","D","7","1","empty")
+    
+  } else {
+    rfdists=(phytools::multiRF(c(unroot(tree),
+                                 unroot(tree_d),
+                                 unroot(tree_7),
+                                 unroot(tree_1))))
+    colnames(rfdists) = c("black","D","7","1")
+    rownames(rfdists) = c("black","D","7","1")
+  }
+  
+  
+  
+  png(paste(dist,".CORRPLOT.PNG",sep=""))
+  corrplot::corrplot(rfdists,is.corr=F,method="number",cl.lim=c(0,44))
+  dev.off()
+  
+  
+}
+
 

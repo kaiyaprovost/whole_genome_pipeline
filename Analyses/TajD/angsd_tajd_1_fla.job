@@ -36,9 +36,7 @@ echo $i; gunzip $i; done
 ##Zonotrichia -- Amphispiza, Pipilo
 
 ## bam_list = list of BAM files
-# sonlist=/home/kprovost/nas3/ANGSD_pipeline/SON_Vireo_bellii.indlist
-# chilist=/home/kprovost/nas3/ANGSD_pipeline/CHI_Vireo_bellii.indlist
-bamlist=/home/kprovost/nas3/ANGSD_pipeline/Auriparus-flaviceps-NOWEIRD.bamlist
+bamlist=/home/kprovost/nas3/ANGSD_pipeline/Auriparus-flaviceps.bamlist
 
 cd /vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/SAFS/
 

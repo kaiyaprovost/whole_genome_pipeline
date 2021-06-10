@@ -1,0 +1,41 @@
+#!/bin/bash
+#PBS -l select=1:ncpus=32
+#PBS -l walltime=5000:00:00
+#PBS -N lostruct_PCAngsd
+#PBS -j oe
+#PBS -m ae
+#PBS -M kprovost@amnh.org
+#PBS -k oe
+
+# change to the working directory
+cd $PBS_O_WORKDIR
+echo "pbsworkdir"
+echo $PBS_O_WORKDIR
+EXECDIR=`pwd`
+export PATH=./:$PATH
+echo $PATH
+
+# for GL in /vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/BEAGLE/empty*beagle.gz; do qsub -v GL=$GL /home/kprovost/nas3/ANGSD_pipeline/A9.PCAngsd-FLEXSPECIES_lostruct.job; done;
+
+cd /vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/BEAGLE/
+
+#source activate py36
+
+#Arguments:
+## GL = genotype likehood file (Beagle format)
+
+echo "###################"
+echo $GL
+outname=${GL%.beagle.gz}
+echo $outname
+
+for k in {1..4}; do ## this does 2-5
+echo $k
+echo "RUN"
+date
+time
+python /home/kprovost/nas4/pcangsd/pcangsd.py -beagle $GL \
+-admix -e $k \
+-sites_save -o ${outname}.${spp}_PCAngsd.$k \
+-threads 32
+done

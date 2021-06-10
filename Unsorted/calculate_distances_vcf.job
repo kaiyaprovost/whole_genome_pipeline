@@ -9,6 +9,7 @@
 
 cd /vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/VCFS/
 
-module load R-3.4.1
+#module load R-3.4.1
+module load R-3.6.3
 
-Rscript ~/nas3/ANGSD_pipeline/vcf2geneticdist.R
+/usr/local/software/R/R-3.6.3/bin/Rscript ~/nas3/ANGSD_pipeline/vcf2geneticdist.R

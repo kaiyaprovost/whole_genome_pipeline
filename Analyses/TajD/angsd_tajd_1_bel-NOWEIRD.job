@@ -31,8 +31,6 @@ ref=/home/kprovost/nas3/genomeresequencingFromLucas/Corv_chrom/pseudochromosomes
 ##Zonotrichia -- Amphispiza, Pipilo
 
 ## bam_list = list of BAM files
-# sonlist=/home/kprovost/nas3/ANGSD_pipeline/SON_Vireo_bellii.indlist
-# chilist=/home/kprovost/nas3/ANGSD_pipeline/CHI_Vireo_bellii.indlist
 bamlist=/home/kprovost/nas3/ANGSD_pipeline/Vireo-bellii-NOWEIRD.bamlist
 
 for i in /vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/REALIGNED_BAMS/bellii/*gz; do
@@ -57,7 +55,7 @@ Vireo-bellii-NOWEIRD-taj2.thetas.idx
 
 #Do a sliding window analysis based on the output from the make_bed command.
 time /home/kprovost/nas3/angsd/misc/thetaStat do_stat \
-Vireo-bellii-taj2.thetas.idx \
+Vireo-bellii-NOWEIRD-taj2.thetas.idx \
 -win 100000 \
 -step 10000  \
 -outnames Vireo-bellii-NOWEIRD-taj2.thetasWindow.gz

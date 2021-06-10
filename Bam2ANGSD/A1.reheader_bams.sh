@@ -1,11 +1,12 @@
 #!/bin/bash
 
-for i in /vz-nas1-active/ProcessedGenomicReads/FILTERED/fus*/DEDUP/ ; do
+#for i in /vz-nas1-active/ProcessedGenomicReads/FILTERED/fus*/DEDUP/ ; do
+#for i in /vz-nas1-active/RawGenomicReads/FASTQ_SCREEN_RESULTS/Parrots/BAM_dedup/*bam; do
 
-echo $i;
-cd $i;
+#echo $i;
+#cd $i;
 
-for i in *dedup.bam; do
+for i in F*dedup.bam; do
 echo $i;
 
 findname=$(echo $i | cut -f 1 -d '.' | cut -f 3 -d "/")
@@ -21,7 +22,7 @@ done;
 
 mv -v *rehead*bam ../REHEAD*/
 
-cd ~ ;
-done; 
+#cd ~ ;
+#done; 
 
 

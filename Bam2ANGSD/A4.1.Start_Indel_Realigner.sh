@@ -8,7 +8,7 @@
 #PBS -k oe
 
 ## todo: sin for both
-spp="curvirostre"
+spp="Parrots"
 sp3=`echo $spp | cut -c1-3`
 
 for bam in /vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/CLIPPED/${spp}/NOTREALIGNED/*clipped.bam; do

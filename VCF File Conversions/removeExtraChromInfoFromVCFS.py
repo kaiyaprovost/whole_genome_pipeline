@@ -1,10 +1,12 @@
 import glob
 import sys
 import os
-# for i in /Users/kprovost/Dropbox\ \(AMNH\)/Dissertation/CHAPTER2_GENOMES/ANALYSIS/called_geno/SPECIES/VCFS/SINUATUS/*/*.vcf
+# for i in /Users/kprovost/Dropbox\ \(AMNH\)/Dissertation/CHAPTER2_GENOMES/ANALYSIS/bilineata_more_vcfs/*Tgut*.vcf
 # do echo "${i}"
-# python3 "/Users/kprovost/Documents/Github/whole_genome_pipeline/Unsorted/removeExtraChromInfoFromVCFS.py" "${i}";
+# python3 "/Users/kprovost/Documents/Github/whole_genome_pipeline/VCF File Conversions/removeExtraChromInfoFromVCFS.py" "${i}";
 # done
+# python3 "/Users/kprovost/Documents/Github/whole_genome_pipeline/VCF File Conversions/removeExtraChromInfoFromVCFS.py" "/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ANALYSIS/bilineata_more_vcfs/Amphispiza-bilineata-called.geno_COMBINED.vcf"
+
 def main():
 	try:
 		toconvert = sys.argv[1]
@@ -48,7 +50,10 @@ def removeExtraInfo(infilelines,outfile):
 			if (chromtype != "PseudoNC"):
 				newline=None
 			else:
-				chromname = splitchange[3]
+				try:
+					chromname = splitchange[3]
+				except:
+					print(splitchange)
 				newsplit = [chromtype,chromname]
 				newline = "_".join(newsplit)+"\t"+"\t".join(nochange)
 				

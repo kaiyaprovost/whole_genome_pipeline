@@ -9,37 +9,43 @@ import copy
 from datetime import datetime
 
 ## THIS SCRIPT IS NOT WORKING BECAUSE OF NAME MISMATCH
+## AS OF 14 JAN 2021
+## the chromosome names don't match -- PseudoNC is still there, need to subset them?
+## line by line not working -- the other one should be 
 
-
-
-# cd "/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ANALYSIS/"
-# python3 "/Users/kprovost/Documents/Github/whole_genome_pipeline/VCF File Conversions/vcf_extract_lostruct_windows.py" "/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ANALYSIS/called_geno/SPECIES/VCFS/Auriparus-flaviceps-called.geno.PseudoNC.all.sorted.sorted.sorted.nospace.vcf.gz" ./LOSTRUCT/lostruct_results/finished/Auriparus.flaviceps.called.geno.PseudoNC.all.sorted.sorted.sorted.nospace.coords_SMALL.csv
-# python3 "/Users/kprovost/Documents/Github/whole_genome_pipeline/VCF File Conversions/vcf_extract_lostruct_windows.py" "/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ANALYSIS/called_geno/SPECIES/VCFS/Vireo-bellii-called.geno.PseudoNC.all.sorted.sorted.sorted.nospace.vcf.gz" "/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ANALYSIS/LOSTRUCT/lostruct_results/finished/Vireo.bellii.called.geno.PseudoNC.all.sorted.sorted.sorted.nospace.coords_SMALL.csv"
-# python3 "/Users/kprovost/Documents/Github/whole_genome_pipeline/VCF File Conversions/vcf_extract_lostruct_windows.py" "/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ANALYSIS/called_geno/SPECIES/VCFS/BILINEATA/Amphispiza-bilineata-called.geno.fixedchroms.converted.sorted.nospace.vcf.gz" ./LOSTRUCT/lostruct_results/finished/Amphispiza.bilineata.called.geno.fixedchroms.converted.sorted.nospace.coords_SMALL.csv
+# cd "/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ANALYSIS/lostruct_2021_done/"
+# pythonfile="/Users/kprovost/Documents/Github/whole_genome_pipeline/VCF File Conversions/vcf_extract_lostruct_windows.py"
+# vcffile="/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ANALYSIS/lostruct_2021_done/Melozone-fusca_fixed.sorted.nospace.sorted.nospace.vcf.gz"
+# coordfile="/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ANALYSIS/lostruct_2021_done/Melozone.fusca_fixed.sorted.nospace.sorted.nospace.coords_SMALL.csv"
+# python3 "$pythonfile" "$vcffile" "$coordfile"
 
 linebyline=False
 
 try:
 	vcffile = sys.argv[1]
-	print("\tFile is: ",vcffile)
+	print("\tFile is: ",vcffile,str(datetime.now()))
 except:
-	print("Filename not given, quitting")
+	print("Filename not given, quitting",str(datetime.now()))
 	exit()
 
 try:
 	windowfile = str(sys.argv[2])
-	print("\tWindow file is: ",windowfile)
+	print("\tWindow file is: ",windowfile,str(datetime.now()))
 except:
-	print("Window file not given, quitting")
+	print("Window file not given, quitting",str(datetime.now()))
 	exit()
 
-def windows2vcf(vcflines,windows,header,vcffile):
+def windows2vcf(vcflines,windows,header,vcffile,verbose=False):
 	total_rows=windows.shape[0]
-	print(total_rows)
+	print(total_rows,str(datetime.now()))
 	for index, row in windows.iterrows():
-		if index % 100 == 0:
-			print(str(index)+"/"+str(total_rows))
+		if index % 100 == 0 and verbose==True:
+			print(str(index)+"/"+str(total_rows),str(datetime.now()))
+			print(vcflines,str(datetime.now()))
 		subset = subset_by_window(vcflines,chrom=row["chrom"],start=row["start"],end=row["end"])
+		if index % 100 == 0 and verbose==True:
+			print(subset,str(datetime.now()))
+			print("CHROM START END",row["chrom"],row["start"],row["end"],str(datetime.now()))
 		this_color = row["ccols"]
 		subset.to_csv(vcffile+"_"+this_color+".vcf",mode="a",index=False,sep="\t",header=False)
 
@@ -68,11 +74,11 @@ if linebyline==True:
 					#column_names=line.strip().split("\t")
 					for color in unique_colors:
 						print(color)
-						with open(vcffile+"_"+color+".vcf","w") as of:
+						with open(vcffile+"_"+str(color)+".vcf","a") as of:
 							of.write("".join(header))
-					with open(vcffile+"_skip.vcf","w") as of2:
+					with open(vcffile+"_skip.vcf","a") as of2:
 						of2.write("".join(header))
-					with open(vcffile+"_early.vcf","w") as of3:
+					with open(vcffile+"_early.vcf","a") as of3:
 						of3.write("".join(header))
 			else:
 				try:
@@ -89,7 +95,9 @@ if linebyline==True:
 					this_chrom = chrom_split[-1]
 				this_position = vcfline.iloc[0,1]
 				#print(this_chrom,this_position)
-				while (found_window == False) and (next_index < total_rows):
+				
+				#while (found_window == False) and (next_index < total_rows): ## total_rows is not defined here
+				while (found_window == False):
 					chrom = windows.iloc[next_index,0] 
 					start = windows.iloc[next_index,1] 
 					end = windows.iloc[next_index,2] 
@@ -114,9 +122,11 @@ if linebyline==True:
 							next_index += 1
 							#print("NOT FOUND")
 							#if next_index % 100 == 0:
-							print(str(next_index)+"/"+str(total_rows)) 
-				if next_index >= total_rows:
-					next
+							#print(str(next_index)+"/"+str(total_rows)) 
+				
+				## total_rows is not defined here
+				#if next_index >= total_rows:
+				#	next
 else:
 	print("STARTING TO READ VCF:",str(datetime.now()))
 	with gzip.open(vcffile,"rb") as vcf:
@@ -128,30 +138,37 @@ else:
 	header=vcfstrings[0:3]
 	for color in unique_colors:
 		print(color)
-		with open(vcffile+"_"+color+".vcf","w") as of:
+		with open(vcffile+"_"+str(color)+".vcf","w") as of:
 			_=of.write("".join(header))
-	
+
 	with open(vcffile+"_skip.vcf","w") as of2:
 		_=of2.write("".join(header))
 	
 	with open(vcffile+"_early.vcf","w") as of3:
 		_=of3.write("".join(header))
 	
-	print("read vcflines in as pandas")
+	print("read vcflines in as pandas",str(datetime.now()))
 	try:
 		vcflines = pd.read_csv(io.StringIO(''.join(vcfstrings[2:])), delim_whitespace=True)
 	except:
 		print("WARNING: Something wrong with VCF file input. Removing bad lines.")
 		vcflines = pd.read_csv(io.StringIO(''.join(vcfstrings[2:])), delim_whitespace=True,error_bad_lines=False)
-		print("done reading vcflines in as pandas")
+	print("done reading vcflines in as pandas",str(datetime.now()))
+
+	## make sure the vcflines match -- remove any PseudoNC stuff, and remove any lines that are PseudoNW or NW or SS or NC. 
+	vcflines["#CHROM"]=vcflines["#CHROM"].str.replace("PseudoNC_","")
+	vcflines["#CHROM"]=vcflines["#CHROM"].str.replace("\d+.1_Tgut_","")
+	windows["chrom"]=windows["chrom"].str.replace("PseudoNC_","")
+	windows["chrom"]=windows["chrom"].str.replace("\d+.1_Tgut_","")
 
 	for color in unique_colors:
-		print(color)
+		print(color,str(datetime.now()))
 		this_color_window = windows.loc[(windows["ccols"] == color)]
 		unique_chroms = list(this_color_window["chrom"].unique())
 		for this_chrom in unique_chroms:
-			print(this_chrom)
+			print(this_chrom,str(datetime.now()))
 			this_chrom_window = this_color_window.loc[(this_color_window["chrom"] == this_chrom)]
+			## is this just not printing? 
 			windows2vcf(vcflines,this_chrom_window,header,vcffile)
 
 

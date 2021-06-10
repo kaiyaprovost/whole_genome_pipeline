@@ -1,0 +1,105 @@
+#!/bin/bash
+#PBS -l select=1:ncpus=16
+#PBS -l walltime=5000:00:00
+#PBS -N par_S6_GATKSNPBQSR
+#PBS -j oe
+#PBS -m ae
+#PBS -M kprovost@amnh.org
+#PBS -k oe
+
+# change to the working directory
+cd $PBS_O_WORKDIR
+echo "pbsworkdir"
+echo $PBS_O_WORKDIR
+EXECDIR=`pwd`
+export PATH=./:$PATH
+echo $PATH
+
+#Arguments:
+## need to be given bam files 
+
+## for bam in /vz-nas1-active/RawGenomicReads/FASTQ_SCREEN_RESULTS/Parrots/BAM_dedup/*B05*bam; do qsub -v bam=$bam /home/kprovost/nas3/genomeresequencingFromLucas/STEP06-GATK_SNP_BQSR_parrots.job; done;
+
+ref=/home/kprovost/nas3/genomeresequencingFromLucas/Melo_chrom/pseudochromosomesSHORT.fasta
+
+cd /vz-nas1-active/RawGenomicReads/FASTQ_SCREEN_RESULTS/Parrots/BAM_dedup
+
+vcf=/vz-nas1-active/RawGenomicReads/FASTQ_SCREEN_RESULTS/Parrots/BAM_dedup/vcf_files/allsamples.raw-MISSING-B6-C5.vcf
+
+name=$(echo $bam | cut -f 1 -d '.')
+
+echo
+echo "#######################"
+echo $name
+echo "#######################"
+
+echo
+echo
+echo BQSR 1
+echo
+echo
+
+## NOTE: this step is very different. old version below new. 
+## note folder names added 
+time java -Djava.io.tmpdir=/home/kprovost/nas3/tmp/ -jar /home/kprovost/nas3/genomeresequencingFromLucas/GenomeAnalysisTK-3.8-1-0-gf15c1c3ef/GenomeAnalysisTK.jar -T BaseRecalibrator \
+-R $ref \
+-I $bam \
+-knownSites $vcf --defaultBaseQualities 0 \
+-o $name.recal_data.grp \
+-nct 16
+##### ERROR MESSAGE: SAM/BAM/CRAM file htsjdk.samtools.SamReader$PrimitiveSamReaderToSamReaderAdapter@1f72fbd1 is malformed. Please see https://software.broadinstitute.org/gatk/documentation/article?id=1317for more information. Error details: BAM file has a read with mismatching number of bases and base qualities. Offender: GWNJ-1012:197:GW191126000:2:1355:29921:16517 [103 bases] [0 quals]. You can use --defaultBaseQualities to assign a default base quality for all reads, but this can be dangerous in you don't know what you are doing.
+
+echo
+echo
+echo BQSR 2
+echo
+echo
+
+time java -Djava.io.tmpdir=/home/kprovost/nas3/tmp/ -jar /home/kprovost/nas3/genomeresequencingFromLucas/GenomeAnalysisTK-3.8-1-0-gf15c1c3ef/GenomeAnalysisTK.jar -T BaseRecalibrator \
+-R $ref \
+-I $bam \
+-knownSites $vcf --defaultBaseQualities 0 \
+-BQSR $name.recal_data.grp \
+-o $name.post_recal_data.grp \
+-nct 16
+##### ERROR MESSAGE: Bad input: The GATK report has no version specified in the header
+
+echo
+echo
+echo BQSR 3
+echo
+echo
+
+time java -Djava.io.tmpdir=/home/kprovost/nas3/tmp/ -jar /home/kprovost/nas3/genomeresequencingFromLucas/GenomeAnalysisTK-3.8-1-0-gf15c1c3ef/GenomeAnalysisTK.jar -T AnalyzeCovariates \
+-R $ref \
+-before $name.recal_data.grp --defaultBaseQualities 0 \
+-after $name.post_recal_data.grp \
+-plots BAM_files/$name.recalibration_plots.pdf
+##### ERROR MESSAGE: Invalid command line: Argument after has a bad value: input report '/vz-nas1-active/RawGenomicReads/FASTQ_SCREEN_RESULTS/Parrots/BAM_dedup/AMN_245113_P001_WC06.post_recal_data.grp' does not exist or is unreachable
+
+
+## old version
+# time java -Djava.io.tmpdir=/home/kprovost/nas3/tmp/ -jar /home/kprovost/nas3/genomeresequencingFromLucas/GenomeAnalysisTK-3.8-1-0-gf15c1c3ef/GenomeAnalysisTK.jar -T BaseRecalibrator \
+# -R $ref \
+# -I $bam \
+# -knownSites /home/kprovost/nas3/EVERY_PLATE/bellii/bellii_batch2.combined.db.vcf \
+# -o $name.recal_data.grp \
+# -nct 16
+
+echo
+echo
+echo Producing recalibrated VCF file
+echo
+echo
+
+## added folders 
+time java -Djava.io.tmpdir=/home/kprovost/nas3/tmp/ -jar /home/kprovost/nas3/genomeresequencingFromLucas/GenomeAnalysisTK-3.8-1-0-gf15c1c3ef/GenomeAnalysisTK.jar -T HaplotypeCaller \
+-R $ref \
+-I $bam \
+-o $name.recal.raw.g.vcf \
+--emitRefConfidence GVCF \
+-minPruning 1 --defaultBaseQualities 0 \
+-minDanglingBranchLength 1 \
+-BQSR $name.recal_data.grp \
+-nct 16
+##### ERROR MESSAGE: Bad input: The GATK report has no version specified in the header

@@ -1,4 +1,4 @@
-windowsRecalculator=function(data,recomb_file,window_size = 100000,overlap = 20000,reset_overlap = T,overwrite=F,chrom=NULL){
+windowsRecalculator=function(data,recomb_file,window_size = 100000,overlap = 10000,reset_overlap = T,overwrite=F,chrom=NULL){
   
   verbose=F
   
@@ -138,84 +138,94 @@ calculateOverlap = function(subset,thiswindow_start,thiswindow_stop,verbose=F){
 options(scipen=10)
 
 filelist = sort(c(#list.files(path="/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ANALYSIS/RECOMBINATION/",
-                  #           pattern="PREDICT.BSCORRECTED.txt$",full.names = T,recursive = T),
+                  #           pattern="PREDICT.BSCORRECTED.txt$",full.names = T,recursive = F),
                   list.files(path="/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ANALYSIS/RECOMBINATION/",
-                             pattern="PREDICT.txt$",full.names = T,recursive = T)))
+                             pattern="PREDICT.txt$",full.names = T,recursive = F)))
 #filelist = filelist[grepl("geno",filelist)]
 #filelist = filelist[!(grepl("sorted.sorted",filelist))]
+filelist = filelist[!(grepl("NOWEIRD",filelist))]
+filelist = filelist[!(grepl("Tgut",filelist))]
+chi_files = filelist[grepl("CHI",filelist)]
+son_files = filelist[grepl("SON",filelist)]
 
-
-for(j in 119:length(filelist)) {
-  recomb_file = filelist[j]
-  print(paste(j,"/",length(filelist)))
-  print(recomb_file)
-  
-  #recomb_file = "/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ANALYSIS/RECOMBINATION/Amphispiza-bilineata-called.geno.PseudoNC_011462.1_Tgut_1.fixedchroms.converted.PREDICT.BSCORRECTED.txt"
-  #recomb_file="/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ANALYSIS/RECOMBINATION//Amphispiza-bilineata-called.geno.PseudoNC_011469.1_Tgut_5.fixedchroms.converted.PREDICT.BSCORRECTED.txt"
-  
-  data=read.table(recomb_file,header=T)
-  #plot(data$recombRate,
-  #     cex=0.5)
-  #plot(data[,c(4,5)])
-  
-  if(nrow(data) <= 0){
-    print("NO DATA IN FILE -- SKIPPING")
-  } else {
+run_loop = function(filelist) {
+  for(j in 1:length(filelist)) {
+    recomb_file = filelist[j]
+    print(paste(j,"/",length(filelist)))
+    print(recomb_file)
     
-    ## force window size via a weighted average
-    window_size = 100000
-    overlap = 10000
+    #recomb_file = "/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ANALYSIS/RECOMBINATION/Amphispiza-bilineata-called.geno.PseudoNC_011462.1_Tgut_1.fixedchroms.converted.PREDICT.BSCORRECTED.txt"
+    #recomb_file="/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ANALYSIS/RECOMBINATION//Amphispiza-bilineata-called.geno.PseudoNC_011469.1_Tgut_5.fixedchroms.converted.PREDICT.BSCORRECTED.txt"
     
-    if(length(unique(data$chrom))==1){
-      new_data = windowsRecalculator(data,recomb_file,window_size,overlap,reset_overlap=F,overwrite=F)
-      new_data2 = windowsRecalculator(data,recomb_file,window_size,overlap,reset_overlap=T,overwrite=F)
+    data=read.table(recomb_file,header=T)
+    #plot(data$recombRate,
+    #     cex=0.5)
+    #plot(data[,c(4,5)])
+    
+    if(nrow(data) <= 0){
+      print("NO DATA IN FILE -- SKIPPING")
     } else {
       
-      combined_data = NULL
-      combined_data2 = NULL
-      for (chrom in unique(data$chrom)){
-        subset = data[data$chrom==chrom,]
-        new_data = windowsRecalculator(subset,recomb_file,window_size,overlap,reset_overlap=F,overwrite=T,chrom)
-        new_data2 = windowsRecalculator(subset,recomb_file,window_size,overlap,reset_overlap=T,overwrite=T,chrom)
+      ## force window size via a weighted average
+      window_size = 100000
+      overlap = 10000
+      
+      if(length(unique(data$chrom))==1){
+        new_data = windowsRecalculator(data,recomb_file,window_size,overlap,reset_overlap=F,overwrite=F)
+        new_data2 = windowsRecalculator(data,recomb_file,window_size,overlap,reset_overlap=T,overwrite=F)
+      } else {
         
-        new_data$chrom = rep(chrom,nrow(new_data))
-        new_data2$chrom = rep(chrom,nrow(new_data2))
-        
-        if(is.null(combined_data)) {
-          combined_data = new_data
-          combined_data2 = new_data2
-        } else {
-          combined_data = rbind(combined_data,new_data)
-          combined_data2 = rbind(combined_data2,new_data2)
+        combined_data = NULL
+        combined_data2 = NULL
+        for (chrom in unique(data$chrom)){
+          subset = data[data$chrom==chrom,]
+          new_data = windowsRecalculator(subset,recomb_file,window_size,overlap,reset_overlap=F,overwrite=T,chrom)
+          new_data2 = windowsRecalculator(subset,recomb_file,window_size,overlap,reset_overlap=T,overwrite=T,chrom)
+          
+          new_data$chrom = rep(chrom,nrow(new_data))
+          new_data2$chrom = rep(chrom,nrow(new_data2))
+          
+          if(is.null(combined_data)) {
+            combined_data = new_data
+            combined_data2 = new_data2
+          } else {
+            combined_data = rbind(combined_data,new_data)
+            combined_data2 = rbind(combined_data2,new_data2)
+          }
+          
+          
         }
         
+        outfilename_noext = paste(recomb_file,"_w",window_size,"_o",overlap,"_genome",sep="")
+        outfilename_noext2 = paste(recomb_file,"_w",window_size,"_o",overlap,"_genome_changeoverlaps",sep="")
+        
+        write.csv(combined_data,paste(outfilename_noext,".txt",sep=""),row.names = F)
+        write.csv(combined_data2,paste(outfilename_noext2,".txt",sep=""),row.names = F)
+        
+        plotmax = max(data$recombRate,combined_data$weighted_recomb,
+                      combined_data2$weighted_recomb,na.rm=T)
+        png(paste(outfilename_noext,".png",sep=""))
+        par(mfrow=c(3,1))
+        plot(data$recombRate,cex=0.5,#ylim=c(0,plotmax),
+             col=as.numeric(as.factor(data$chrom)))
+        plot(combined_data$weighted_recomb,cex=0.5,#ylim=c(0,plotmax),
+             col=as.numeric(as.factor(combined_data$chrom)))
+        plot(combined_data2$weighted_recomb,cex=0.5,#ylim=c(0,plotmax),
+             col=as.numeric(as.factor(combined_data2$chrom)))
+        dev.off()
         
       }
       
-      outfilename_noext = paste(recomb_file,"_w",window_size,"_o",overlap,"_genome",sep="")
-      outfilename_noext2 = paste(recomb_file,"_w",window_size,"_o",overlap,"_genome_changeoverlaps",sep="")
-      
-      write.csv(combined_data,paste(outfilename_noext,".txt",sep=""),row.names = F)
-      write.csv(combined_data2,paste(outfilename_noext2,".txt",sep=""),row.names = F)
-      
-      plotmax = max(data$recombRate,combined_data$weighted_recomb,
-                    combined_data2$weighted_recomb,na.rm=T)
-      png(paste(outfilename_noext,".png",sep=""))
-      par(mfrow=c(3,1))
-      plot(data$recombRate,cex=0.5,ylim=c(0,plotmax),
-           col=as.numeric(as.factor(data$chrom)))
-      plot(combined_data$weighted_recomb,cex=0.5,ylim=c(0,plotmax),
-           col=as.numeric(as.factor(combined_data$chrom)))
-      plot(combined_data2$weighted_recomb,cex=0.5,ylim=c(0,plotmax),
-           col=as.numeric(as.factor(combined_data2$chrom)))
-      dev.off()
-      
+      ## this isn't working if the window of the file is bigger than our window
     }
     
-    ## this isn't working if the window of the file is bigger than our window
   }
-  
 }
+
+run_loop(sample(c(chi_files,son_files)))
+
+
+
 
 ## merge recomb with other data -- going to need to do this
 bigplot = read.table("/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ANALYSIS/DXY/textfiles/bigplot.fst.dxy.taj.may2020.txt",
@@ -233,56 +243,56 @@ all_recom_files = all_recom_files[(grepl("o10000_genome_changeoverlaps.txt",all_
 
 
 {
-df1=read.table(all_recom_files[2],sep=",",header=T)
-df2=read.table(all_recom_files[3],sep=",",header=T)
-df3=read.table(all_recom_files[4],sep=",",header=T)
-
-par(mfrow=c(2,2))
-plot(df1$weighted_recomb,df2$weighted_recomb)
-abline(a=0,b=1,col="red")
-cor(df1$weighted_recomb,df2$weighted_recomb) # 0.89
-plot(df1$weighted_recomb,df3$weighted_recomb)
-abline(a=0,b=1,col="red")
-cor(df1$weighted_recomb,df3$weighted_recomb) # 0.70
-plot(df3$weighted_recomb,df2$weighted_recomb)
-abline(a=0,b=1,col="red")
-cor(df3$weighted_recomb,df2$weighted_recomb) # 0.85
-
-means=rowMeans(cbind(df1$weighted_recomb,
-                     df2$weighted_recomb,
-                     df3$weighted_recomb))
-dfmean = as.data.frame(cbind(df1$windowstarts,df1$windowstops,means,df1$chrom))
-colnames(dfmean) = colnames(df1)
-
-par(mfrow=c(2,2))
-plot(df1$weighted_recomb,cex=0.2,type="l")
-plot(df2$weighted_recomb,cex=0.2,type="l")
-plot(df3$weighted_recomb,cex=0.2,type="l")
-plot(dfmean$weighted_recomb,cex=0.2,type="l")
-
-par(mfrow=c(1,1))
-plot(dfmean$weighted_recomb,cex=0.2,type="l")
-points(df1$weighted_recomb,cex=0.2,col=rgb(1,0,0,0.5),type="l")
-points(df2$weighted_recomb,cex=0.2,col=rgb(0,1,0,0.5),type="l")
-points(df3$weighted_recomb,cex=0.2,col=rgb(0,0,1,0.5),type="l")
-points(dfmean$weighted_recomb,cex=0.2,type="l")
+  df1=read.table(all_recom_files[2],sep=",",header=T)
+  df2=read.table(all_recom_files[3],sep=",",header=T)
+  df3=read.table(all_recom_files[4],sep=",",header=T)
+  
+  par(mfrow=c(2,2))
+  plot(df1$weighted_recomb,df2$weighted_recomb)
+  abline(a=0,b=1,col="red")
+  cor(df1$weighted_recomb,df2$weighted_recomb) # 0.89
+  plot(df1$weighted_recomb,df3$weighted_recomb)
+  abline(a=0,b=1,col="red")
+  cor(df1$weighted_recomb,df3$weighted_recomb) # 0.70
+  plot(df3$weighted_recomb,df2$weighted_recomb)
+  abline(a=0,b=1,col="red")
+  cor(df3$weighted_recomb,df2$weighted_recomb) # 0.85
+  
+  means=rowMeans(cbind(df1$weighted_recomb,
+                       df2$weighted_recomb,
+                       df3$weighted_recomb))
+  dfmean = as.data.frame(cbind(df1$windowstarts,df1$windowstops,means,df1$chrom))
+  colnames(dfmean) = colnames(df1)
+  
+  par(mfrow=c(2,2))
+  plot(df1$weighted_recomb,cex=0.2,type="l")
+  plot(df2$weighted_recomb,cex=0.2,type="l")
+  plot(df3$weighted_recomb,cex=0.2,type="l")
+  plot(dfmean$weighted_recomb,cex=0.2,type="l")
+  
+  par(mfrow=c(1,1))
+  plot(dfmean$weighted_recomb,cex=0.2,type="l")
+  points(df1$weighted_recomb,cex=0.2,col=rgb(1,0,0,0.5),type="l")
+  points(df2$weighted_recomb,cex=0.2,col=rgb(0,1,0,0.5),type="l")
+  points(df3$weighted_recomb,cex=0.2,col=rgb(0,0,1,0.5),type="l")
+  points(dfmean$weighted_recomb,cex=0.2,type="l")
 }
 
 full_recom=NULL
 for(recom_filename in all_recom_files){
   print(recom_filename)
-#recom_filename="/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ANALYSIS/RECOMBINATION/Amphispiza-bilineata-called.geno.PREDICT.txt_w100000_o20000_genome.txt"
-recom_genome = read.table(recom_filename,sep=",",header=T)
-recom_genome$midPos = recom_genome$windowstarts+((recom_genome$windowstops - recom_genome$windowstarts)/2)
-recom_genome$chr = gsub("PseudoNC_.+_Tgut_","",recom_genome$chrom)
-shortspp=substr(strsplit(strsplit(basename(recom_filename),"\\.")[[1]][1],"-")[[1]][2],1,3)
-recom_genome$species = shortspp
-if(is.null(full_recom)){
-  full_recom = recom_genome
-} else {
-  full_recom = rbind(full_recom,recom_genome)
-}
-
+  #recom_filename="/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ANALYSIS/RECOMBINATION/Amphispiza-bilineata-called.geno.PREDICT.txt_w100000_o20000_genome.txt"
+  recom_genome = read.table(recom_filename,sep=",",header=T)
+  recom_genome$midPos = recom_genome$windowstarts+((recom_genome$windowstops - recom_genome$windowstarts)/2)
+  recom_genome$chr = gsub("PseudoNC_.+_Tgut_","",recom_genome$chrom)
+  shortspp=substr(strsplit(strsplit(basename(recom_filename),"\\.")[[1]][1],"-")[[1]][2],1,3)
+  recom_genome$species = shortspp
+  if(is.null(full_recom)){
+    full_recom = recom_genome
+  } else {
+    full_recom = rbind(full_recom,recom_genome)
+  }
+  
 }
 write.table(full_recom,"/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ANALYSIS/DXY/textfiles/bigrecom_duplicates.may2020.txt",
             row.names = F)
@@ -294,7 +304,7 @@ write.table(full_recom,"/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GEN
 agg = merge(bigplot,full_recom,all=T)
 
 write.table(agg,"/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ANALYSIS/DXY/textfiles/bigplot.fst.dxy.taj.recom.may2020.txt",
-                     row.names = F)
+            row.names = F)
 
 aggsmall = merge(bigplot,full_recom,all=F)
 
@@ -337,7 +347,7 @@ for(spp in unique(agg$species)){
 
 ## dxy fst etc
 bigplot = read.table("/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ANALYSIS/DXY/textfiles/bigplot.fst.dxy.taj.recom.may2020.txt",
-                   sep=" ",header = T,stringsAsFactors = F)
+                     sep=" ",header = T,stringsAsFactors = F)
 #boxplot(bigplot$dxymeans~bigplot$species)
 
 bigplot = bigplot[!(grepl("Pseudo",bigplot$chr)),]
@@ -349,11 +359,11 @@ for(spp in unique(bigplot$species)) {
   cat(
     paste(
       mean(small[,2], na.rm = T),
-  "+-",
-  sd(small[,2], na.rm = T),
-  " (",
-  length(unique(small$chr)),
-  ")", sep = ""),sep="\n")
+      "+-",
+      sd(small[,2], na.rm = T),
+      " (",
+      length(unique(small$chr)),
+      ")", sep = ""),sep="\n")
 }
 
 meanagg = aggregate(
@@ -364,7 +374,7 @@ sdagg = aggregate(
   cbind(Fst, dxymeans, weighted_recomb) ~ chr + species, data = bigplot,
   FUN=function(x){sd(x,na.rm=T)}
 )
-  
+
 par(mfrow=c(5,2),mar=c(2,2,1,0)) 
 for(spp in unique(bigplot$species)){
   sppmean = meanagg[meanagg$species==spp,]
@@ -462,19 +472,19 @@ par(mfrow=c(4,1))
 for(spp in unique(trimmed$species)){
   smalltrim=trimmed[trimmed$species==spp,]
   #smalltrim = smalltrim[smalltrim$chr %in% macrochroms,]
-plot(smalltrim$plotorder,
-     smalltrim$weighted_recomb,col=as.numeric(as.factor(smalltrim$chr)),cex=0.25,
-     type="n")
-rect(lowagg[,2], rep(-0.1,nrow(lowagg)), highagg[,2],
-     rep(0.1,nrow(lowagg)), lwd = 1,col=c("lightgrey","grey"),xpd=F)
-points(smalltrim$plotorder,
-     smalltrim$weighted_recomb,col="black",cex=0.25)
-points(smalltrim$plotorder[smalltrim$sumquantile==20],
-       smalltrim$weighted_recomb[smalltrim$sumquantile==20],
-       col="cyan",pch=16)
-points(smalltrim$plotorder[smalltrim$sumquantile==36],
-       smalltrim$weighted_recomb[smalltrim$sumquantile==36],
-       col="magenta",pch=16)
+  plot(smalltrim$plotorder,
+       smalltrim$weighted_recomb,col=as.numeric(as.factor(smalltrim$chr)),cex=0.25,
+       type="n")
+  rect(lowagg[,2], rep(-0.1,nrow(lowagg)), highagg[,2],
+       rep(0.1,nrow(lowagg)), lwd = 1,col=c("lightgrey","grey"),xpd=F)
+  points(smalltrim$plotorder,
+         smalltrim$weighted_recomb,col="black",cex=0.25)
+  points(smalltrim$plotorder[smalltrim$sumquantile==20],
+         smalltrim$weighted_recomb[smalltrim$sumquantile==20],
+         col="cyan",pch=16)
+  points(smalltrim$plotorder[smalltrim$sumquantile==36],
+         smalltrim$weighted_recomb[smalltrim$sumquantile==36],
+         col="magenta",pch=16)
 }
 dev.off()
 
@@ -553,13 +563,13 @@ trim_for_chrom = bigplot[,c("Fst","dxymeans","weighted_recomb","chr","species")]
 chromagg = aggregate(cbind(Fst,dxymeans,weighted_recomb) ~ chr,data=trim_for_chrom,
                      FUN=function(x){mean(x,na.rm=T)})
 chromsd = aggregate(cbind(Fst,dxymeans,weighted_recomb) ~ chr,data=trim_for_chrom,
-                     FUN=function(x){sd(x,na.rm=T)})
+                    FUN=function(x){sd(x,na.rm=T)})
 
 cbind(chromagg,chromsd)
 par(mfrow=c(3,1))
 centers=barplot(chromagg$Fst,main="fst",las=2,cex.axis=0.5,
-                  cex.names=0.75,
-                  names=chromagg$chr)
+                cex.names=0.75,
+                names=chromagg$chr)
 segments(centers, chromagg$Fst- chromsd$Fst, centers,
          chromagg$Fst + chromsd$Fst, lwd = 1.5)
 centers=barplot(chromagg$dxymeans,main="dxymeans",las=2,cex.axis=0.5,

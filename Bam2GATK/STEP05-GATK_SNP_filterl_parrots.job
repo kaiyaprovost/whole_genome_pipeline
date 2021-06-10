@@ -1,0 +1,47 @@
+#!/bin/bash
+#PBS -l select=1:ncpus=2
+#PBS -l walltime=99999:00:00
+#PBS -N S5_GATKSNPfilter
+#PBS -j oe
+#PBS -m ae
+#PBS -M kprovost@amnh.org
+#PBS -k oe
+
+# change to the working directory
+cd $PBS_O_WORKDIR
+echo "pbsworkdir"
+echo $PBS_O_WORKDIR
+EXECDIR=`pwd`
+export PATH=./:$PATH
+echo $PATH
+
+ref=/home/kprovost/nas3/genomeresequencingFromLucas/Melo_chrom/pseudochromosomesSHORT.fasta
+
+## vcf=allsamples.raw.vcf
+cd /vz-nas1-active/RawGenomicReads/FASTQ_SCREEN_RESULTS/Parrots/BAM_dedup/vcf_files
+
+vcf=allsamples.raw-MISSING-B6-C5.vcf
+
+echo
+echo "#######################"
+echo $vcf
+echo "#######################"
+
+echo
+echo
+echo Filtering SNPs
+echo
+echo
+
+## 15 march 2021: editing the filtering to match lucas
+
+time java -Djava.io.tmpdir=/home/kprovost/nas3/tmp/ -jar /home/kprovost/nas3/genomeresequencingFromLucas/GenomeAnalysisTK-3.8-1-0-gf15c1c3ef/GenomeAnalysisTK.jar -T VariantFiltration \
+-R $ref \
+-V $vcf \
+--filterExpression "(vc.isSNP() && (vc.hasAttribute('ReadPosRankSum') && ReadPosRankSum < -8.0))" \
+--filterName "badSeq" \
+--filterExpression "(vc.isSNP() && ((vc.hasAttribute('FS') && FS > 60.0) || (vc.hasAttribute('SOR') &&  SOR > 3.0)))" \
+--filterName "badStrand" \
+--filterExpression "vc.isSNP() && ((vc.hasAttribute('MQ') && MQ < 40.0) || (vc.hasAttribute('MQRankSum') && MQRankSum < -12.5))" \
+--filterName "badMap" \
+-o allsamples.filtered-MISSING-B6-C5.vcf

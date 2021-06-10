@@ -19,17 +19,8 @@ echo $PATH
 ## ref=reference sequence
 ref=/home/kprovost/nas3/genomeresequencingFromLucas/Corv_chrom/pseudochromosomesSHORT.fasta
 
-##References:
-##Corvus -- Vireo
-##Geospiza -- Cardinalis
-##Parus -- Auriparus
-##Sturnus -- Toxostoma, Campylorhynchus, Polioptila, Phainopepla
-##Zonotrichia -- Amphispiza, Pipilo
-
 ## bam_list = list of BAM files
 bamlist=/home/kprovost/nas3/ANGSD_pipeline/SON_Vireo_bellii.indlist
-# chilist=/home/kprovost/nas3/ANGSD_pipeline/CHI_Vireo_bellii.indlist
-# bamlist=/home/kprovost/nas3/ANGSD_pipeline/Vireo-bellii-NOWEIRD.bamlist
 
 for i in /vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/REALIGNED_BAMS/bellii/*gz; do
 echo $i; gunzip $i; done

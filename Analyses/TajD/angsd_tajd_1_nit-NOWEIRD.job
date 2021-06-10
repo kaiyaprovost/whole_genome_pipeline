@@ -1,0 +1,62 @@
+#!/bin/bash
+#PBS -l select=1:ncpus=32
+#PBS -l walltime=5000:00:00
+#PBS -N nit_taj1
+#PBS -j oe
+#PBS -m ae
+#PBS -M kprovost@amnh.org
+#PBS -k oe
+
+# change to the working directory
+cd $PBS_O_WORKDIR
+echo "pbsworkdir"
+echo $PBS_O_WORKDIR
+EXECDIR=`pwd`
+export PATH=./:$PATH
+echo $PATH
+
+
+#for i in /home/kprovost/nas3/genomeresequencingFromLucas/???_chrom/pseudo*gz; do
+#gzip -f $i;
+#done;
+
+#Arguments:
+## ref=reference sequence
+ref=/home/kprovost/nas3/genomeresequencingFromLucas/Stur_chrom/pseudochromosomesSHORT.fasta
+
+##References:
+##Corvus -- Vireo
+##Geospiza -- Cardinalis
+##Parus -- Auriparus
+##Sturnus -- Toxostoma, Campylorhynchus, Polioptila, Phainopepla
+##Zonotrichia -- Amphispiza, Pipilo
+
+## bam_list = list of BAM files
+bamlist=/home/kprovost/nas3/ANGSD_pipeline/Phainopepla-nitens-NOWEIRD.bamlist
+
+for i in /vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/REALIGNED_BAMS/nitens/*gz; do
+echo $i; gunzip $i; done
+
+cd /vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/SAFS/
+
+date
+time
+
+#time /home/kprovost/nas3/angsd/angsd -bam $bamlist -doSaf 1 -anc $ref -GL 1 -P 24 -out Phainopepla-nitens-NOWEIRD-taj1
+
+time /home/kprovost/nas3/angsd/misc/realSFS \
+/vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/SAFS/Phainopepla-nitens-NOWEIRD-taj1.saf.idx \
+> Phainopepla-nitens-NOWEIRD-taj.sfs
+
+time /home/kprovost/nas3/angsd/angsd -GL 2 -bam $bamlist -doThetas 1 -doSaf 1 -pest Phainopepla-nitens-NOWEIRD-taj.sfs -anc $ref -out Phainopepla-nitens-NOWEIRD-taj2 
+
+#Estimate for every Chromosome/scaffold
+time /home/kprovost/nas3/angsd/misc/thetaStat do_stat \
+Phainopepla-nitens-NOWEIRD-taj2.thetas.idx
+
+#Do a sliding window analysis based on the output from the make_bed command.
+time /home/kprovost/nas3/angsd/misc/thetaStat do_stat \
+Phainopepla-nitens-NOWEIRD-taj2.thetas.idx \
+-win 100000 \
+-step 10000  \
+-outnames Phainopepla-nitens-NOWEIRD-taj2.thetasWindow.gz

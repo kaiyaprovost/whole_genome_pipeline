@@ -1920,3 +1920,26 @@ dev.off()
 #merged$type[merged$ranksppSWEEP==1] = "sweep"
 
 boxplot(merged$mean_F_MISS~merged$type)
+
+
+
+
+
+## FILLING OUT GDM VALUES
+head(merged)
+merged$missing = (merged$mean_N_MISS / merged$mean_N_DATA)
+
+x=aggregate(merged$weighted_recomb~merged$species+merged$chr,FUN=function(x){mean(x,na.rm=T)})
+x[x$`merged$species`=="bru",]
+
+
+table()
+
+table(x[x$species=="bel",c("chr","species")])
+
+y=(merged[merged$species=="fus",])
+table(merged[merged$rankDXY>0,c("chr","species")])
+
+png("nmiss_fmiss.png")
+plot(merged$mean_N_MISS,merged$mean_N_DATA)
+dev.off()

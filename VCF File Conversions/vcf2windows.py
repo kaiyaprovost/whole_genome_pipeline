@@ -2,6 +2,7 @@
 
 import numpy as np
 import sys, os, glob
+import copy
 
 # cd "/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ANALYSIS/called_geno/SPECIES/VCFS/"
 # for i in */*converted; do
@@ -46,26 +47,30 @@ if lastpos <= windowsize:
 	print("Don't need to convert! Already a window.")
 	outfile_string = vcffile+suffix+"_"+str(window_index)+".window.vcf"
 	with open(outfile_string,"w") as outfile:
-		outfile.write("".join(lines))
+		_ = outfile.write("".join(lines))
 
 
-header = lines[:2]
-toprint = header.copy()
+toprint = ""
+header = ""
 
-for line in lines[2:]:
-	this_start = starts[window_index]
-	this_end = ends[window_index]
-	this_pos = int(line.split("\t")[1])
-	if this_pos >= this_start and this_pos <= this_end:
+for line in lines:
+	if line[0]=="#":
 		toprint += line
+		header += line
 	else:
-		outfile_string = vcffile+suffix+"_"+str(window_index)+".window.vcf"
-		with open(outfile_string,"w") as outfile:
-			outfile.write("".join(toprint))
-		toprint = header.copy()
-		window_index += 1
-		if window_index % 100 == 0:
-			print(str(window_index)+" of "+str(len(starts)))
+		this_start = starts[window_index]
+		this_end = ends[window_index]
+		this_pos = int(line.split("\t")[1])
+		if this_pos >= this_start and this_pos <= this_end:
+			toprint += line
+		else:
+			outfile_string = vcffile+suffix+"_"+str(window_index)+".window.vcf"
+			with open(outfile_string,"w") as outfile:
+				_ = outfile.write("".join(toprint))
+			toprint = copy.deepcopy(header)
+			window_index += 1
+			if window_index % 100 == 0:
+				print(str(window_index)+" of "+str(len(starts)))
 
 
 

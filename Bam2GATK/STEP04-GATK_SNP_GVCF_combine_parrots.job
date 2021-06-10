@@ -1,0 +1,63 @@
+#!/bin/bash
+#PBS -l select=1:ncpus=64
+#PBS -l walltime=5000:00:00
+#PBS -N parrot_S4_combinegvcf
+#PBS -j oe
+#PBS -m ae
+#PBS -M kprovost@amnh.org
+#PBS -k oe
+
+# change to the working directory
+cd $PBS_O_WORKDIR
+echo "pbsworkdir"
+echo $PBS_O_WORKDIR
+EXECDIR=`pwd`
+export PATH=./:$PATH
+echo $PATH
+
+ref=/home/kprovost/nas3/genomeresequencingFromLucas/Melo_chrom/pseudochromosomesSHORT.fasta
+
+cd /vz-nas1-active/RawGenomicReads/FASTQ_SCREEN_RESULTS/Parrots/BAM_dedup/vcf_files
+
+
+##### ERROR MESSAGE: The list of input alleles must contain <NON_REF> as an allele but that is not the case at position 1622; please use the Haplotype Caller with gVCF output to generate appropriate records
+## need to narrow down to subsets? 
+## removing G05 did not fix it
+
+echo
+echo
+echo Combine GVCFs
+echo
+echo
+
+
+## CHANGE AS NEEDED
+time java -Djava.io.tmpdir=/home/kprovost/nas3/tmp/ -jar /home/kprovost/nas3/genomeresequencingFromLucas/GenomeAnalysisTK-3.8-1-0-gf15c1c3ef/GenomeAnalysisTK.jar \
+-T GenotypeGVCFs \
+-R $ref \
+--variant AMN_245113_P001_WA01.raw.g.vcf \
+--variant AMN_245113_P001_WB01.raw.g.vcf \
+--variant AMN_245113_P001_WB05.raw.g.vcf \
+--variant AMN_245113_P001_WB06.raw.g.vcf \
+--variant AMN_245113_P001_Wc05.raw.g.vcf \
+--variant AMN_245113_P001_WC06.raw.g.vcf \
+--variant AMN_245113_P001_WD01.raw.g.vcf \
+--variant AMN_245113_P001_WD05.raw.g.vcf \
+--variant AMN_245113_P001_WD06.raw.g.vcf \
+--variant AMN_245113_P001_WE01.raw.g.vcf \
+--variant AMN_245113_P001_WE05.raw.g.vcf \
+--variant AMN_245113_P001_WF01.raw.g.vcf \
+--variant AMN_245113_P001_WF05.raw.g.vcf \
+--variant AMN_245113_P001_WG01.raw.g.vcf \
+--variant AMN_245113_P001_WG05.raw.g.vcf \
+-o allsamples.raw.vcf
+#-nt 64
+##### nt not there originally, didn't have slash before
+#30 oct 2018: removed -nt to see if would fix the memory issues
+
+## in a previous analysis G05 is the one that failed?
+
+## REMOVED:
+echo '''--variant AMN_245113_P001_WB06.raw.g.vcf \''' 
+echo '''--variant AMN_245113_P001_WC05.raw.g.vcf \'''
+ 

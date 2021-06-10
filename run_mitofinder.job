@@ -7,6 +7,9 @@
 #PBS -M kprovost@amnh.org
 #PBS -k oe
 
+module load jre-1.8.0_251
+module load java-jdk-14.0.1
+
 spp="Parrots"
 ref=/home/kprovost/nas3/genomeresequencingFromLucas/Melo_chrom/mtGenome/MelopsittacusMT_genome_sequence_NC_009134.1.gb
 
@@ -32,3 +35,13 @@ echo $rev
 
 done
 
+
+## FROM GREG
+##for ind in $(ls ~/raw_data/tissue_TP/clean/pn*R1_paired.fq.gz | perl -p -w -e 's/.*\///g; s/_R1.*//g'); do qsub -v ind=$ind Mitofinder.job ; done
+#Arguments:
+#module load jre-1.8.0_251
+#module load java-jdk-14.0.1
+#source activate mito
+#./../../Avian_Tree_of_Life/mtDNA/MitoFinder/mitofinder -j $ind -1 ~/raw_data/tissue_TP/clean/$ind\_R1_paired.fq.gz -2 ~/raw_data/tissue_TP/clean/$ind\_R2_paired.fq.gz -r Rhegmatorhina.gb -o 2  -p 16 -m 96
+
+## are you activating Java?
