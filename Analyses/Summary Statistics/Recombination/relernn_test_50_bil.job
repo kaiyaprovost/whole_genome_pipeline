@@ -1,0 +1,124 @@
+#!/bin/bash
+#PBS -l select=1:ncpus=16
+#PBS -l walltime=5000:00:00
+#PBS -N bil75_DESrelernn
+#PBS -j oe
+#PBS -m ae
+#PBS -M kprovost@amnh.org
+#PBS -k oe
+
+
+# change to the working directory
+cd $PBS_O_WORKDIR
+echo "pbsworkdir"
+echo $PBS_O_WORKDIR
+EXECDIR=`pwd`
+export PATH=./:$PATH
+echo $PATH
+
+## current config: give it a vcffile 
+
+prefix="bil"
+echo $prefix
+
+cd "/vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/MISSINGVCFS/"
+
+mainpath="/vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/MISSINGVCFS/"
+
+cd $mainpath
+echo $mainpath
+
+module load bcftools-1.10.2 
+
+if [ ! -d "relernn.${prefix}" ]; then
+mkdir "relernn.${prefix}"
+echo "relernn.${prefix}"
+fi
+
+for filetofilter in *${prefix}*50*fixedchroms.vcf.gz; do 
+echo "${filetofilter}"
+
+if [ ! -f "${filetofilter%.gz}.idx" ]; then
+echo "MAKE IDX"
+gunzip ${filetofilter}
+/home/kprovost/nas3/htslib/bgzip -c ${filetofilter%.gz} > ${filetofilter}
+/home/kprovost/nas3/htslib/tabix -p vcf ${filetofilter}
+fi
+
+done
+
+for gzfile in *vcf.gz; do gunzip -f $gzfile; done
+
+for vcffile in *vcf; do 
+
+echo $vcffile
+
+SIMULATE="/home/kprovost/nas4/ReLERNN/ReLERNN/ReLERNN_SIMULATE"
+TRAIN="/home/kprovost/nas4/ReLERNN/ReLERNN/ReLERNN_TRAIN"
+PREDICT="/home/kprovost/nas4/ReLERNN/ReLERNN/ReLERNN_PREDICT"
+BSCORRECT="/home/kprovost/nas4/ReLERNN/ReLERNN/ReLERNN_BSCORRECT"
+CPU="1"
+MU="2.21e-9"
+RTR="1"
+DIR="${PWD}/relernn.${prefix}"
+VCF="$vcffile"
+GENOME="$vcffile.bed"
+MASK="$vcffile.mask"
+
+
+## check if file exists 
+if [ -f "${vcffile%/vcf}.PREDICT.txt" ]; then
+echo "SKIPPING"
+else
+
+if [ ! -f "$GENOME" ]; then
+python3 /home/kprovost/nas4/generate_relernn_bed_files.py $vcffile 
+fi
+if [ ! -f "$MASK" ]; then
+python3 /home/kprovost/nas4/generate_relernn_bed_files.py $vcffile
+fi
+
+
+## for this to work MUST have this header line:
+## ##FORMAT=<ID=GT,Number=1,Type=String,Description="Genotype">
+# Simulate data
+${SIMULATE} \
+--vcf ${VCF} \
+--genome ${GENOME} \
+--unphased \
+--projectDir ${DIR} \
+--assumedMu ${MU} \
+--upperRhoThetaRatio ${RTR} \
+--forceDiploid \
+--nTrain 12800 \
+--nVali 2000 \
+--nTest 100 \
+--nCPU ${CPU} 
+
+# #Train network
+${TRAIN} \
+    --projectDir ${DIR} \
+    --nEpochs 2 \
+    --nValSteps 2 
+
+# #Predict
+${PREDICT} \
+    --vcf ${VCF} \
+    --projectDir ${DIR}
+
+# #Parametric Bootstrapping
+echo "##### BOOTSTRAPPING #####"
+${BSCORRECT} \
+    --projectDir ${DIR} \
+    --nCPU ${CPU} \
+    --nSlice 2 \
+    --nReps 2 
+
+fi
+
+echo "DONE!"
+
+gzip $vcffile
+
+done
+

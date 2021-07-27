@@ -1,0 +1,57 @@
+#!/bin/bash
+#PBS -l select=1:ncpus=32
+#PBS -l walltime=5000:00:00
+#PBS -N nit_50taj
+#PBS -j oe
+#PBS -m ae
+#PBS -M kprovost@amnh.org
+#PBS -k oe
+
+# change to the working directory
+cd $PBS_O_WORKDIR
+echo "pbsworkdir"
+echo $PBS_O_WORKDIR
+EXECDIR=`pwd`
+export PATH=./:$PATH
+echo $PATH
+
+ref=/home/kprovost/nas3/genomeresequencingFromLucas/Stur_chrom/pseudochromosomesSHORT.fasta
+
+bamlist=/home/kprovost/nas3/ANGSD_pipeline/Phainopepla_nitens_50.bamlist
+
+for i in /vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/MISSINGBAMS/nitens/*gz; do
+echo $i; gunzip $i; done
+
+cd /vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/
+
+date
+time
+
+if [ ! -f "Phainopepla_nitens-50-taj1.saf.gz" ]; then
+time /home/kprovost/nas3/angsd/angsd -bam $bamlist -doSaf 1 -anc $ref -GL 1 -P 24 -out Phainopepla_nitens-50-taj1
+fi
+
+if [ ! -f "Phainopepla_nitens-50-taj1.saf.idx" ]; then
+gunzip -vf Phainopepla_nitens-50-taj1.saf.gz
+/home/kprovost/nas3/htslib/bgzip -c Phainopepla_nitens-50-taj1.saf > Phainopepla_nitens-50-taj1.saf.gz
+/home/kprovost/nas3/htslib/tabix -p vcf Phainopepla_nitens-50-taj1.saf.gz
+fi
+
+if [ ! -f "Phainopepla_nitens-50-taj.sfs" ]; then
+time /home/kprovost/nas3/angsd/misc/realSFS \
+/vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/Phainopepla_nitens-50-taj1.saf.idx \
+> Phainopepla_nitens-50-taj.sfs
+fi
+
+time /home/kprovost/nas3/angsd/angsd -GL 2 -bam $bamlist -doThetas 1 -doSaf 1 -pest Phainopepla_nitens-50-taj.sfs -anc $ref -out Phainopepla_nitens-50-taj2 
+
+#Estimate for every Chromosome/scaffold
+time /home/kprovost/nas3/angsd/misc/thetaStat do_stat \
+Phainopepla_nitens-50-taj2.thetas.idx
+
+#Do a sliding window analysis based on the output from the make_bed command.
+time /home/kprovost/nas3/angsd/misc/thetaStat do_stat \
+Phainopepla_nitens-50-taj2.thetas.idx \
+-win 100000 \
+-step 10000  \
+-outnames Phainopepla_nitens-50-taj2.thetasWindow.gz

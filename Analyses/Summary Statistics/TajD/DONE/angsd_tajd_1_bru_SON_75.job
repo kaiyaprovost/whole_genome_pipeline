@@ -1,0 +1,57 @@
+#!/bin/bash
+#PBS -l select=1:ncpus=32
+#PBS -l walltime=5000:00:00
+#PBS -N bru_75SONtaj
+#PBS -j oe
+#PBS -m ae
+#PBS -M kprovost@amnh.org
+#PBS -k oe
+
+# change to the working directory
+cd $PBS_O_WORKDIR
+echo "pbsworkdir"
+echo $PBS_O_WORKDIR
+EXECDIR=`pwd`
+export PATH=./:$PATH
+echo $PATH
+
+ref=/home/kprovost/nas3/genomeresequencingFromLucas/Stur_chrom/pseudochromosomesSHORT.fasta
+
+bamlist=/home/kprovost/nas3/ANGSD_pipeline/SON_Campylorhynchus_brunneicapillus_75.indlist
+
+for i in /vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/MISSINGBAMS/brunneicapillus/*gz; do
+echo $i; gunzip $i; done
+
+cd /vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/
+
+date
+time
+
+if [ ! -f "Campylorhynchus_brunneicapillus-75-SON-taj1.saf.gz" ]; then
+time /home/kprovost/nas3/angsd/angsd -bam $bamlist -doSaf 1 -anc $ref -GL 1 -P 24 -out Campylorhynchus_brunneicapillus-75-SON-taj1
+fi
+
+if [ ! -f "Campylorhynchus_brunneicapillus-75-SON-taj1.saf.idx" ]; then
+gunzip -vf Campylorhynchus_brunneicapillus-75-SON-taj1.saf.gz
+/home/kprovost/nas3/htslib/bgzip -c Campylorhynchus_brunneicapillus-75-SON-taj1.saf > Campylorhynchus_brunneicapillus-75-SON-taj1.saf.gz
+/home/kprovost/nas3/htslib/tabix -p vcf Campylorhynchus_brunneicapillus-75-SON-taj1.saf.gz
+fi
+
+if [ ! -f "Campylorhynchus_brunneicapillus-75-SON-taj.sfs" ]; then
+time /home/kprovost/nas3/angsd/misc/realSFS \
+/vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/Campylorhynchus_brunneicapillus-75-SON-taj1.saf.idx \
+> Campylorhynchus_brunneicapillus-75-SON-taj.sfs
+fi
+
+time /home/kprovost/nas3/angsd/angsd -GL 2 -bam $bamlist -doThetas 1 -doSaf 1 -pest Campylorhynchus_brunneicapillus-75-SON-taj.sfs -anc $ref -out Campylorhynchus_brunneicapillus-75-SON-taj2 
+
+#Estimate for every Chromosome/scaffold
+time /home/kprovost/nas3/angsd/misc/thetaStat do_stat \
+Campylorhynchus_brunneicapillus-75-SON-taj2.thetas.idx
+
+#Do a sliding window analysis based on the output from the make_bed command.
+time /home/kprovost/nas3/angsd/misc/thetaStat do_stat \
+Campylorhynchus_brunneicapillus-75-SON-taj2.thetas.idx \
+-win 100000 \
+-step 10000  \
+-outnames Campylorhynchus_brunneicapillus-75-SON-taj2.thetasWindow.gz

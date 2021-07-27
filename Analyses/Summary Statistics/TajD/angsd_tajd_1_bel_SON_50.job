@@ -1,0 +1,87 @@
+#!/bin/bash
+#PBS -l select=1:ncpus=32
+#PBS -l walltime=5000:00:00
+#PBS -N bel_50SONtaj
+#PBS -j oe
+#PBS -m ae
+#PBS -M kprovost@amnh.org
+#PBS -k oe
+
+# change to the working directory
+cd $PBS_O_WORKDIR
+echo "pbsworkdir"
+echo $PBS_O_WORKDIR
+EXECDIR=`pwd`
+export PATH=./:$PATH
+echo $PATH
+
+ref=/home/kprovost/nas3/genomeresequencingFromLucas/Corv_chrom/pseudochromosomesSHORT.fasta
+
+bamlist=/home/kprovost/nas3/ANGSD_pipeline/SON_Vireo_bellii_50.indlist
+
+dxy=1
+
+
+#for i in /vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/MISSINGBAMS/bellii/*gz; do
+#echo $i; gunzip $i; done
+
+cd /vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/
+
+date
+time
+
+if [ "$dxy" == "1" ]; then
+
+if [ ! -f "Vireo_bellii-50-SON-tajdxy.sfs" ]; then
+time /home/kprovost/nas3/angsd/misc/realSFS \
+/vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/Vireo-bellii-50-SON-sfs1.saf.idx \
+> Vireo_bellii-50-SON-tajdxy.sfs
+fi
+
+time /home/kprovost/nas3/angsd/angsd -GL 2 -bam $bamlist -doThetas 1 -doSaf 1 \
+-pest Vireo_bellii-50-SON-tajdxy.sfs -anc $ref -out Vireo_bellii-50-SON-taj2dxy 
+
+#Estimate for every Chromosome/scaffold
+time /home/kprovost/nas3/angsd/misc/thetaStat do_stat \
+Vireo_bellii-50-SON-taj2dxy.thetas.idx
+
+#Do a sliding window analysis based on the output from the make_bed command.
+time /home/kprovost/nas3/angsd/misc/thetaStat do_stat \
+Vireo_bellii-50-SON-taj2dxy.thetas.idx \
+-win 100000 \
+-step 10000  \
+-outnames Vireo_bellii-50-SON-taj2dxy.thetasWindow.gz
+
+
+else
+
+if [ ! -f "Vireo-bellii-50-SON-taj1.saf.gz" ]; then
+time /home/kprovost/nas3/angsd/angsd -bam $bamlist -doSaf 1 -anc $ref -GL 1 -P 24 -out Vireo-bellii-50-SON-taj1
+fi
+
+if [ ! -f "Vireo-bellii-50-SON-taj1.saf.idx" ]; then
+gunzip -vf Vireo-bellii-50-SON-taj1.saf.gz
+/home/kprovost/nas3/htslib/bgzip -c Vireo-bellii-50-SON-taj1.saf > Vireo-bellii-50-SON-taj1.saf.gz
+/home/kprovost/nas3/htslib/tabix -p vcf Vireo-bellii-50-SON-taj1.saf.gz
+fi
+
+if [ ! -f "Vireo-bellii-50-SON-taj.sfs" ]; then
+time /home/kprovost/nas3/angsd/misc/realSFS \
+/vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/Vireo-bellii-50-SON-taj1.saf.idx \
+> Vireo-bellii-50-SON-taj.sfs
+fi
+
+time /home/kprovost/nas3/angsd/angsd -GL 2 -bam $bamlist -doThetas 1 -doSaf 1 -pest Vireo-bellii-50-SON-taj.sfs -anc $ref -out Vireo-bellii-50-SON-taj2 
+
+#Estimate for every Chromosome/scaffold
+time /home/kprovost/nas3/angsd/misc/thetaStat do_stat \
+Vireo-bellii-50-SON-taj2.thetas.idx
+
+#Do a sliding window analysis based on the output from the make_bed command.
+time /home/kprovost/nas3/angsd/misc/thetaStat do_stat \
+Vireo-bellii-50-SON-taj2.thetas.idx \
+-win 100000 \
+-step 10000  \
+-outnames Vireo-bellii-50-SON-taj2.thetasWindow.gz
+
+fi

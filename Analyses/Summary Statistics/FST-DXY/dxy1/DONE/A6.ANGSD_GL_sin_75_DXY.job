@@ -1,0 +1,80 @@
+#!/bin/bash
+#PBS -l select=1:ncpus=32
+#PBS -l walltime=5000:00:00
+#PBS -N sin75_dxy
+#PBS -j oe
+#PBS -m ae
+#PBS -M kprovost@amnh.org
+#PBS -k oe
+
+# change to the working directory
+cd $PBS_O_WORKDIR
+echo "pbsworkdir"
+echo $PBS_O_WORKDIR
+EXECDIR=`pwd`
+export PATH=./:$PATH
+echo $PATH
+
+#Arguments:
+## bam_list = list of BAM files
+## the indlists for son and chi work for this
+bamlist=/home/kprovost/nas3/ANGSD_pipeline/Cardinalis_sinuatus_75.bamlist
+sonlist=/home/kprovost/nas3/ANGSD_pipeline/SON_Cardinalis_sinuatus_75.indlist
+chilist=/home/kprovost/nas3/ANGSD_pipeline/CHI_Cardinalis_sinuatus_75.indlist
+
+cd /vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/
+
+date
+time
+
+if [ ! -f "Cardinalis_sinuatus_75-DXY.mafs" ]; then
+time /home/kprovost/nas3/angsd/angsd -GL 2 \
+-doMajorMinor 1 \
+-doMaf 3 \
+-doGlf 2 \
+-minMaf 0.05 \
+-SNP_pval 0.01 \
+-skipTriallelic \
+-minInd 4 \
+-minMapQ 20 \
+-minQ 20 \
+-nThreads 32 \
+-bam $bamlist \
+-out Cardinalis_sinuatus_75-DXY
+gunzip -f Cardinalis_sinuatus_75-DXY.mafs.gz
+fi
+
+if [ ! -f "Cardinalis_sinuatus_75_SON-DXY.mafs" ]; then
+time /home/kprovost/nas3/angsd/angsd -GL 2 \
+-doMajorMinor 1 \
+-doMaf 3 \
+-doGlf 2 \
+-minMaf 0.05 \
+-SNP_pval 0.01 \
+-skipTriallelic \
+-minInd 4 \
+-minMapQ 20 \
+-minQ 20 \
+-nThreads 32 \
+-bam $sonlist \
+-out Cardinalis_sinuatus_75_SON-DXY
+gunzip -f Cardinalis_sinuatus_75_SON-DXY.mafs.gz
+fi
+
+if [ ! -f "Cardinalis_sinuatus_75_CHI-DXY.mafs" ]; then
+time /home/kprovost/nas3/angsd/angsd -GL 2 \
+-doMajorMinor 1 \
+-doMaf 3 \
+-doGlf 2 \
+-minMaf 0.05 \
+-SNP_pval 0.01 \
+-skipTriallelic \
+-minInd 4 \
+-minMapQ 20 \
+-minQ 20 \
+-nThreads 32 \
+-bam $chilist \
+-out Cardinalis_sinuatus_75_CHI-DXY
+gunzip -f Cardinalis_sinuatus_75_CHI-DXY.mafs.gz
+fi
+

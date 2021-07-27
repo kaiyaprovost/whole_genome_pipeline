@@ -1,9 +1,9 @@
 import glob
 import sys
 import os
-# for i in /Users/kprovost/Dropbox\ \(AMNH\)/Dissertation/CHAPTER2_GENOMES/ANALYSIS/called_geno/SPECIES/VCFS/SINUATUS/*/*.vcf
+# for i in /Users/kprovost/Downloads/*.vcf
 # do echo "${i}"
-# python3 "/Users/kprovost/Documents/Github/whole_genome_pipeline/Unsorted/removeExtraChromInfoFromVCFS.py" "${i}";
+# python3 "/Users/kprovost/Documents/GitHub/whole_genome_pipeline/VCF File Conversions/removeExtraChromInfoFromVCFS.py" "${i}";
 # done
 def main():
 	try:

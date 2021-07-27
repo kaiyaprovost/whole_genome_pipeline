@@ -4,7 +4,8 @@
 
 #cd "/Users/kprovost/Documents/folder_for_popgenome/"
 #cd /vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/VCFS/
-cd "/home/kprovost/nas3/"
+#cd "/home/kprovost/nas3/"
+cd "/Users/kprovost/Downloads/"
 
 #i=${spp}-called.geno.vcf
 

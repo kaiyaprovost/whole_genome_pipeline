@@ -1,0 +1,43 @@
+#!/bin/bash
+#PBS -l select=1:ncpus=16
+#PBS -l walltime=5000:00:00
+#PBS -N sin50_dxy_rscript
+#PBS -j oe
+#PBS -m ae
+#PBS -M kprovost@amnh.org
+#PBS -k oe
+
+# change to the working directory
+cd $PBS_O_WORKDIR
+echo "pbsworkdir"
+echo $PBS_O_WORKDIR
+EXECDIR=`pwd`
+export PATH=./:$PATH
+echo $PATH
+
+cd /vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/
+
+for mafgz in Cardinalis_sinuatus*mafs.gz; do gunzip -fv $i; done;
+
+sonmaf=/vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/Cardinalis_sinuatus_50_SON-DXY.mafs
+chimaf=/vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/Cardinalis_sinuatus_50_CHI-DXY.mafs
+sonlen=`cat $sonmaf | wc -l`
+chilen=`cat $chimaf | wc -l`
+
+module load R-3.4.1
+gunzip -f $sonmaf.gz
+gunzip -f $chimaf.gz
+
+## don't think you need totLen to generate the Dxy thing 
+
+echo "son maf file is: ${sonmaf}"
+echo "length: ${sonlen}"
+echo "chi maf file is: ${chimaf}"
+echo "length: ${chilen}"
+
+Rscript /home/kprovost/nas3/ANGSD_pipeline/ngsTools/ngsPopGen/scripts/calcDxy.R \
+--popA $sonmaf \
+--popB $chimaf \
+--totLen $sonlen
+
+mv Dxy_persite.txt sin_50_SON_Dxy_persite.txt
