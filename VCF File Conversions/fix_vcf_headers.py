@@ -20,7 +20,7 @@ print(splitfile)
 print(prefix)
 
 to_replace = "#CHROM\tPOS\tID\tREF\tALT\tQUAL\tFILTER\tINFO\tFORMAT\t*"
-replacement = "#CHROM\tPOS\tID\tREF\tALT\tQUAL\tFILTER\tINFO\tFORMAT\t"+prefix
+replacement ="#CHROM\tPOS\tID\tREF\tALT\tQUAL\tFILTER\tINFO\tFORMAT\t"+prefix
 
 # Read in the file
 with open(filepath, 'r') as file :

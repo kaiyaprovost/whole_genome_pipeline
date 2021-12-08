@@ -7,10 +7,96 @@
 #PBS -M kprovost@amnh.org
 #PBS -k oe
 
-
 #rclone copy -v remote:/Huxley_Backup_20August2020/VCFS/FUSCA/GENOME/Melozone-fusca_fixed.sorted.nospace.sorted.nospace.vcf.gz /vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/VCFS/
 
-cd /vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/VCFS/
+cd /vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/MISSINGVCFS/
+
+
+vcffile=/vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/MISSINGVCFS/Toxostoma-curvirostre-called.geno.PseudoNC.all.fixedchroms.converted.sorted.nospace.75missing.recode.vcf.gz
+smallfile=/home/kprovost/nas3/LOSTRUCT/cur.fst-75.outlier.SMALL.txt
+python3 /home/kprovost/nas3/LOSTRUCT/vcf_extract_fstoutlier_windows.py $vcffile $smallfile
+
+# vcffile=/vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/MISSINGVCFS/Toxostoma-curvirostre-called.geno.PseudoNC.all.fixedchroms.converted.sorted.nospace.50missing.vcf.gz
+# smallfile=/home/kprovost/nas3/LOSTRUCT/cur.fst-50.outlier.SMALL.txt
+# python3 /home/kprovost/nas3/LOSTRUCT/vcf_extract_fstoutlier_windows.py $vcffile $smallfile
+# 
+
+
+
+# vcffile=/vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/MISSINGVCFS/Vireo-bellii-called.geno.PseudoNC.all.sorted.75missing.vcf.gz
+# smallfile=/home/kprovost/nas3/LOSTRUCT/bel.fst-75.outlier.SMALL.txt
+# python3 /home/kprovost/nas3/LOSTRUCT/vcf_extract_fstoutlier_windows.py $vcffile $smallfile
+# 
+# vcffile=/vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/MISSINGVCFS/Vireo-bellii-called.geno.PseudoNC.all.sorted.50missing.vcf.gz
+# smallfile=/home/kprovost/nas3/LOSTRUCT/bel.fst-50.outlier.SMALL.txt
+# python3 /home/kprovost/nas3/LOSTRUCT/vcf_extract_fstoutlier_windows.py $vcffile $smallfile
+
+
+# vcffile=/vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/MISSINGVCFS/Amphispiza-bilineata-called.geno_COMBINED.fixedchroms.sorted.nospace.50missing.vcf.gz
+# smallfile=/home/kprovost/nas3/LOSTRUCT/bil.fst-50.outlier.SMALL.txt
+# python3 /home/kprovost/nas3/LOSTRUCT/vcf_extract_fstoutlier_windows.py $vcffile $smallfile
+# 
+# vcffile=/vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/MISSINGVCFS/Amphispiza-bilineata-called.geno_COMBINED.fixedchroms.sorted.nospace.75missing.vcf.gz
+# smallfile=/home/kprovost/nas3/LOSTRUCT/bil.fst-75.outlier.SMALL.txt
+# python3 /home/kprovost/nas3/LOSTRUCT/vcf_extract_fstoutlier_windows.py $vcffile $smallfile
+# 
+# vcffile=/vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/MISSINGVCFS/Auriparus-flaviceps-called.geno.PseudoNC.all.sorted.nospace.50missing.vcf.gz
+# smallfile=/home/kprovost/nas3/LOSTRUCT/fla.fst-50.outlier.SMALL.txt
+# python3 /home/kprovost/nas3/LOSTRUCT/vcf_extract_fstoutlier_windows.py $vcffile $smallfile
+# 
+# vcffile=/vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/MISSINGVCFS/Auriparus-flaviceps-called.geno.PseudoNC.all.sorted.nospace.75missing.vcf.gz
+# smallfile=/home/kprovost/nas3/LOSTRUCT/fla.fst-75.outlier.SMALL.txt
+# python3 /home/kprovost/nas3/LOSTRUCT/vcf_extract_fstoutlier_windows.py $vcffile $smallfile
+# 
+# vcffile=/vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/MISSINGVCFS/Campylorhynchus-brunneicapillus-called.geno.PseudoNC.all.fixedchroms.converted.sorted.50missing.vcf.gz
+# smallfile=/home/kprovost/nas3/LOSTRUCT/bru.fst-50.outlier.SMALL.txt
+# python3 /home/kprovost/nas3/LOSTRUCT/vcf_extract_fstoutlier_windows.py $vcffile $smallfile
+# 
+# vcffile=/vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/MISSINGVCFS/Campylorhynchus-brunneicapillus-called.geno.PseudoNC.all.fixedchroms.converted.sorted.75missing.vcf.gz
+# smallfile=/home/kprovost/nas3/LOSTRUCT/bru.fst-75.outlier.SMALL.txt
+# python3 /home/kprovost/nas3/LOSTRUCT/vcf_extract_fstoutlier_windows.py $vcffile $smallfile
+# 
+# vcffile=/vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/MISSINGVCFS/Cardinalis-sinuatus-called.geno.PseudoNC.all.fixedchroms.converted.sorted.copy.nospace.50missing.vcf.gz
+# smallfile=/home/kprovost/nas3/LOSTRUCT/sin.fst-50.outlier.SMALL.txt
+# python3 /home/kprovost/nas3/LOSTRUCT/vcf_extract_fstoutlier_windows.py $vcffile $smallfile
+# 
+# vcffile=/vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/MISSINGVCFS/Cardinalis-sinuatus-called.geno.PseudoNC.all.fixedchroms.converted.sorted.copy.nospace.75missing.vcf.gz
+# smallfile=/home/kprovost/nas3/LOSTRUCT/sin.fst-75.outlier.SMALL.txt
+# python3 /home/kprovost/nas3/LOSTRUCT/vcf_extract_fstoutlier_windows.py $vcffile $smallfile
+# 
+# vcffile=/vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/MISSINGVCFS/Melozone-fusca_fixed.sorted.nospace.sorted.nospace.50missing.vcf.gz
+# smallfile=/home/kprovost/nas3/LOSTRUCT/fus.fst-50.outlier.SMALL.txt
+# python3 /home/kprovost/nas3/LOSTRUCT/vcf_extract_fstoutlier_windows.py $vcffile $smallfile
+# 
+# vcffile=/vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/MISSINGVCFS/Melozone-fusca_fixed.sorted.nospace.sorted.nospace.75missing.vcf.gz
+# smallfile=/home/kprovost/nas3/LOSTRUCT/fus.fst-75.outlier.SMALL.txt
+# python3 /home/kprovost/nas3/LOSTRUCT/vcf_extract_fstoutlier_windows.py $vcffile $smallfile
+# 
+# vcffile=/vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/MISSINGVCFS/Phainopepla-nitens-called.geno.PseudoNC.all.fixedchroms.converted.sorted.nospace.50missing.vcf.gz
+# smallfile=/home/kprovost/nas3/LOSTRUCT/nit.fst-50.outlier.SMALL.txt
+# python3 /home/kprovost/nas3/LOSTRUCT/vcf_extract_fstoutlier_windows.py $vcffile $smallfile
+# 
+# vcffile=/vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/MISSINGVCFS/Phainopepla-nitens-called.geno.PseudoNC.all.fixedchroms.converted.sorted.nospace.75missing.vcf.gz
+# smallfile=/home/kprovost/nas3/LOSTRUCT/nit.fst-75.outlier.SMALL.txt
+# python3 /home/kprovost/nas3/LOSTRUCT/vcf_extract_fstoutlier_windows.py $vcffile $smallfile
+# 
+# vcffile=/vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/MISSINGVCFS/Polioptila-melanura-called.geno.PseudoNC.all.fixedchroms.converted.sorted.nospace.50missing.vcf.gz
+# smallfile=/home/kprovost/nas3/LOSTRUCT/mel.fst-50.outlier.SMALL.txt
+# python3 /home/kprovost/nas3/LOSTRUCT/vcf_extract_fstoutlier_windows.py $vcffile $smallfile
+# 
+# vcffile=/vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/MISSINGVCFS/Polioptila-melanura-called.geno.PseudoNC.all.fixedchroms.converted.sorted.nospace.75missing.vcf.gz
+# smallfile=/home/kprovost/nas3/LOSTRUCT/mel.fst-75.outlier.SMALL.txt
+# python3 /home/kprovost/nas3/LOSTRUCT/vcf_extract_fstoutlier_windows.py $vcffile $smallfile
+
+
+# vcffile=/vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/MISSINGVCFS/Toxostoma-crissale-called.geno.PseudoNC.all.fixedchroms.converted.sorted.nospace.75missing.vcf.gz
+# smallfile=/home/kprovost/nas3/LOSTRUCT/cri.fst-75.outlier.SMALL.txt
+# python3 /home/kprovost/nas3/LOSTRUCT/vcf_extract_fstoutlier_windows.py $vcffile $smallfile
+# 
+# vcffile=/vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/MISSINGVCFS/Toxostoma-crissale-called.geno.PseudoNC.all.fixedchroms.converted.sorted.nospace.50missing.vcf.gz
+# smallfile=/home/kprovost/nas3/LOSTRUCT/cri.fst-50.outlier.SMALL.txt
+# python3 /home/kprovost/nas3/LOSTRUCT/vcf_extract_fstoutlier_windows.py $vcffile $smallfile
+# 
 
 # vcffile=/vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/VCFS/Amphispiza-bilineata-called.geno_COMBINED.fixedchroms.sorted.nospace.vcf.gz
 # smallfile=/home/kprovost/nas3/LOSTRUCT/bil.fstoutlier.small.csv
@@ -48,6 +134,7 @@ cd /vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/VCFS/
 # smallfile=/home/kprovost/nas3/LOSTRUCT/cur.fstoutlier.small.csv
 # python3 /home/kprovost/nas3/LOSTRUCT/vcf_extract_fstoutlier_windows.py $vcffile $smallfile
 
-vcffile=/vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/VCFS/Vireo-bellii-called.geno.PseudoNC.all.sorted.sorted.vcf.gz
-smallfile=/home/kprovost/nas3/LOSTRUCT/bel.fstoutlier.small.csv
-python3 /home/kprovost/nas3/LOSTRUCT/vcf_extract_fstoutlier_windows.py $vcffile $smallfile
+# vcffile=/vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/VCFS/Vireo-bellii-called.geno.PseudoNC.all.sorted.sorted.vcf.gz
+# smallfile=/home/kprovost/nas3/LOSTRUCT/bel.fstoutlier.small.csv
+# python3 /home/kprovost/nas3/LOSTRUCT/vcf_extract_fstoutlier_windows.py $vcffile $smallfile
+

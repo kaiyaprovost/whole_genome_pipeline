@@ -1,5 +1,5 @@
 rm(list=ls())
-Sys.setenv('R_MAX_VSIZE'=32000000000)
+Sys.setenv('R_MAX_VSIZE'=64000000000)
 
 huxley=F
 if(huxley==T){
@@ -33,16 +33,17 @@ for (p in packages) {
   
 }
 
-mypath="/Users/kprovost/Dropbox (AMNH)/Dissertation/"
+mypath="/Users/kprovost/Dropbox (AMNH)/"
 #mypath="/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ANALYSIS/called_geno/SPECIES/VCFS/"
 #mypath="/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ANALYSIS/lostruct_2021_eone/"
 setwd(mypath)
+Sys.setenv('R_MAX_VSIZE'=64000000000)
 overwrite=F
 doPlots=T
 
 #specieslist =(sort(c("cur","cri","bru","bil","fla","fus",
 #                     "mel","nit","sin","bel")))
-specieslist=c("bil")
+specieslist=c("bil","fla","bru","sin","nit","mel","cri","cur")
 
 
 ## possibly amphispiza is too large to read 
@@ -69,7 +70,7 @@ chromlist=c(1:28,"4A","1A","1B","LG2","LGE22","LG5","mtDNA","Z")
 
 if (lostructDist==T){
   
-  filelist=list.files(mypath,pattern="1.vcf$",full.names = T)
+  filelist=list.files(mypath,pattern="NORM75.vcf$",full.names = T)
   
   x <- file.info(filelist)
   filelist = filelist[match(1:length(filelist),rank(x$size))]
@@ -77,7 +78,7 @@ if (lostructDist==T){
   
  
     
-    for (vcffile in filelist) {
+    for (vcffile in (filelist)) {
       print(vcffile)
       
       spp =strsplit(basename(vcffile),"\\.")[[1]][1]
@@ -87,7 +88,7 @@ if (lostructDist==T){
       region=region[length(region)]
       region=strsplit(region,"\\.")[[1]][1]
       
-      if(file.exists(paste(mypath,spp,"_eistancematrix_",region,".csv",sep = "")) & overwrite==F) { print("skipping") } else {
+      if(file.exists(paste(mypath,spp,"_distancematrix_",region,".csv",sep = "")) & overwrite==F) { print("skipping") } else {
       
       vcf <- vcfR::read.vcfR(vcffile, verbose = TRUE,limit=1e08)
       x <- vcfR::vcfR2genlight(vcf) ## this is the step where it fails. above line did not fix
@@ -103,7 +104,7 @@ if (lostructDist==T){
       #write.table(as.matrix(x.dist3), outfile, row.names=FALSE, col.names=FALSE,append = F)
       
       mat3=as.matrix(x.dist3)
-      write.csv(mat3,paste(mypath,spp,"_eistancematrix_",region,".csv",sep = ""),
+      write.csv(mat3,paste(mypath,spp,"_distancematrix_",region,".csv",sep = ""),
                 quote=F)
       
       #threenewick = paste(substr(outfile,1,nchar(outfile)-5),"_tree3.newick",sep="")

@@ -1,0 +1,50 @@
+#!/bin/bash
+#PBS -l select=1:ncpus=1
+#PBS -l walltime=5000:00:00
+#PBS -N lostruct_all
+#PBS -j oe
+#PBS -m ae
+#PBS -M kprovost@amnh.org
+#PBS -k oe
+
+## lostruct
+
+logfile=all.logfile
+
+cd /vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/VCFS/FOR_LOSTRUCT/
+
+# for vcffile in Car*vcf.gz; do 
+# echo $vcffile
+# ## NOTE: lostruct needs headers to not have spaces in them
+# zcat $vcffile | sed -e "s/ //g" > ${vcffile%.vcf.gz}.nospace.vcf 
+# ## bgzip
+# /home/kprovost/nas3/htslib/bgzip ${vcffile%.vcf.gz}.nospace.vcf 
+# ## tabix
+# /home/kprovost/nas3/htslib/tabix ${vcffile%.vcf.gz}.nospace.vcf.gz
+# ## convert to bcf
+# #/home/kprovost/nas3/bcftools/bcftools view -O b -o ${vcffile%.vcf.gz}.nospace.bcf ${vcffile%.vcf.gz}.nospace.vcf.gz
+# ## then index 
+# #/home/kprovost/nas3/bcftools/bcftools index -f ${vcffile%.vcf.gz}.bcf
+# done;
+
+## then load modules
+module load R-3.6.3 
+module load bcftools-1.10.2
+
+if [ ! -d "working" ]; then mkdir working; fi
+cd /vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/VCFS/FOR_LOSTRUCT/
+
+for file in *.nospace.vcf.gz; do
+echo $file
+cd /vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/VCFS/FOR_LOSTRUCT/
+cp ${file}* ./working
+cd ./working
+Rscript /home/kprovost/nas3/LOSTRUCT/run_lostruct.R -t bp -s 100000 -i ./ > $logfile 2>&1
+mv ./*.* /vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/VCFS/FOR_LOSTRUCT/
+cd /vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/VCFS/FOR_LOSTRUCT/
+done
+
+# then go into the R code 
+# Rscript /home/kprovost/nas3/LOSTRUCT/run_lostruct.R -t bp -s 100000 \
+# -i /vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/VCFS/FOR_LOSTRUCT/
+

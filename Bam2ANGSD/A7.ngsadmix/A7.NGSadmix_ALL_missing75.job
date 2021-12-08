@@ -1,0 +1,56 @@
+#!/bin/bash
+#PBS -l select=1:ncpus=16
+#PBS -l walltime=900:00:00
+#PBS -N all75_NGSadmix
+#PBS -j oe
+#PBS -m ae
+#PBS -M kprovost@amnh.org
+#PBS -k oe
+# change to the working directory
+cd $PBS_O_WORKDIR
+echo "pbsworkdir"
+echo $PBS_O_WORKDIR
+EXECDIR=`pwd`
+export PATH=./:$PATH
+echo $PATH
+#Arguments:
+#for spp in Amphispiza_bilineata Auriparus_flaviceps Campylorhynchus_brunneicapillus Cardinalis_sinuatus Melozone_fusca Phainopepla_nitens Polioptila_melanura Toxostoma_crissale Toxostoma_curvirostre Vireo_bellii;
+for spp in Toxostoma_curvirostre Vireo_bellii;
+do
+## GL = genotype likehood file (Beagle format)
+echo $spp
+GL=/vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/BEAGLE/${spp}_75.bamlist.beagle.gz
+cd /vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/
+date
+time
+minMaf=0.05
+maxiter=2000
+misTol=0.2
+minInd=1
+tol=0.000001 
+#echo $minInd; 
+	for k in {2..3}; do
+	echo                          
+	echo "#########################"
+	echo $k
+	echo "#########################"
+	echo                          
+	mkdir $k
+	cd $k
+		for seed in {120412..120412}; do ## originally 10-19
+		echo $seed
+		outfile="$k.$seed.$minMaf.$minInd.$misTol.$maxiter.$tol.${spp}_75.bamlist_NGSadmix"
+			if [ ! -f $outfile ]; then
+			time /home/kprovost/nas3/angsd/misc/NGSadmix \
+			-likes $GL \
+			-K $k \
+			-P 16 \
+			-o $outfile \
+			-minMaf $minMaf \
+			-seed $seed -maxiter $maxiter \
+			-minInd $minInd -misTol $misTol -tol $tol
+			fi
+		done;
+	cd ..
+	done
+done

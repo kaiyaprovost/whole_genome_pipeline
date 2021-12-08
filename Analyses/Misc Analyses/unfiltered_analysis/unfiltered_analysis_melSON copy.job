@@ -1,0 +1,42 @@
+#!/bin/bash
+#PBS -l select=1:ncpus=1
+#PBS -l walltime=99999:00:00
+#PBS -N melSON_unfilter_analysis
+#PBS -j oe
+#PBS -m ae
+#PBS -M kprovost@amnh.org
+#PBS -k oe
+
+# change to the working directory
+cd $PBS_O_WORKDIR
+echo "pbsworkdir"
+echo $PBS_O_WORKDIR
+EXECDIR=`pwd`
+export PATH=./:$PATH
+echo $PATH
+
+#Arguments:
+## first is output directory
+output="/vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/unfiltered_analysis"
+
+## second is vcf string
+cd /vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/
+vcf="melanura_unfiltered_SON-SNP-only_no-missing-max25dp.recode.vcf"
+#vcf=melanura_unfiltered_SON-SNP-only_alldata.recode.vcf
+#vcf=melanura_unfiltered_SON-SNP-only-max25dp.recode.vcf
+
+## third is population information 
+pops="/home/kprovost/nas3/populations_for_vcf_melSON.txt"
+
+## last is suffix (i.e., melSON or whatever)
+suffix="melSON"
+
+echo "#######################"
+echo $vcf
+echo "#######################"
+
+module load R-3.4.1
+
+Rscript /home/kprovost/nas3/vcf_pca.R $output $vcf $pops $suffix
+
+## Rscript /Users/kprovost/Documents/Dissertation/CHAPTER2_GENOMES/ANALYSIS/vcf_pca.R "/Users/kprovost/Documents/Dissertation/CHAPTER2_GENOMES/ANALYSIS/" "/Users/kprovost/Documents/Dissertation/CHAPTER1_REVIEW/SLIM/runs/first_runs/slim-model3_isolation-1550691782/VCFS/model3_isolation-1550691782-1-overlaid.vcf" /Users/kprovost/Documents/Dissertation/CHAPTER1_REVIEW/SLIM/runs/first_runs/popcodes_model3_isolation-1550691782.txt "testvcf"

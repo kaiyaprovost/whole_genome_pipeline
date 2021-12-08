@@ -1,0 +1,174 @@
+#!/bin/bash
+#PBS -l select=2:ncpus=64
+#PBS -l walltime=5000:00:00
+#PBS -N S1S2_BWA_align_cur109
+#PBS -j oe
+#PBS -m ae
+#PBS -M kprovost@amnh.org
+#PBS -k oe
+
+# change to the working directory
+cd $PBS_O_WORKDIR
+echo "pbsworkdir"
+echo $PBS_O_WORKDIR
+EXECDIR=`pwd`
+export PATH=./:$PATH
+echo $PATH
+
+#Arguments:
+## ref=reference sequence
+#ref=/home/kprovost/nas3/genomeresequencingFromLucas/Zonotrichia_albicollis_GCF_000385455.1_Zonotrichia_albicollis-1.0.1_genomic.fna
+ref=/home/kprovost/nas3/genomeresequencingFromLucas/Strunus_vulgaris_GCF_001447265.1_Sturnus_vulgaris-1.0_genomic.fna
+
+
+##References:
+##Corvus -- Vireo bellii
+##Parus -- Auriparus flaviceps
+##Sturnus -- Toxostoma curvirostre, Toxostoma crissale, Campylorhynchus curvirostre, Polioptila melanura, Phainopepla nitens
+##Zonotrichia -- Amphispiza curvirostre, Pipilo fuscus
+##Geospiza -- Cardinalis cardinalis, Cardinalis sinuatus
+
+cd /home/kprovost/nas3/AMN_245109/sequences/curvirostre/
+
+date
+time
+
+module load bwa-0.7.15
+module load fastqc-0.11.5
+module load R-3.4.1
+
+for i in */; do  
+	namei="${i///}"
+	cd $i; 
+	for read1 in RAPiD-Genomics_*_R1_*; do 
+		name2=${read1%_R1_*}
+		name=${name2#"RAPiD-Genomics_"}
+		read2=${read1%_R1_*}_R2_*		
+		header=`zcat $read1 | head -1`
+		IFS=':' read -a header <<< "$header"
+		INSTRUMENT=${header[0]}
+		RUN_ID=${header[1]}
+		FLOWCELL_BARCODE=${header[2]}
+		LANE=${header[3]}
+		ID=$FLOWCELL_BARCODE.$LANE
+		PU=$FLOWCELL_BARCODE.$LANE.$name
+		SM=$name
+		PL=ILLUMINA
+		LB=TrueSeq
+		echo $name $read1 $read2 $ID $PU $SM $PL $LB
+	
+		echo
+		echo "#######################"
+		echo $namei
+		echo "#######################"
+
+		echo	
+		echo
+		echo Collecting alignment metrics
+		echo
+		echo
+	
+		time java -jar /home/kprovost/nas3/genomeresequencingFromLucas/picard.jar CollectAlignmentSummaryMetrics \
+		INPUT=$namei.bam \
+		OUTPUT=$namei.alignment_metrics.txt \
+		R=$ref \
+		METRIC_ACCUMULATION_LEVEL=SAMPLE \
+		METRIC_ACCUMULATION_LEVEL=READ_GROUP \
+
+		echo
+		echo
+		echo Collect Insert Size Metrics
+		echo
+		echo
+	
+		time java -jar /home/kprovost/nas3/genomeresequencingFromLucas/picard.jar CollectInsertSizeMetrics \
+		INPUT=$namei.bam \
+		OUTPUT=$namei.insert_metrics.txt \
+		HISTOGRAM_FILE=$namei.insert_size_histogram.pdf
+
+		echo
+		echo
+		echo Adding Read Group
+		echo
+		echo
+	
+		time java -jar /home/kprovost/nas3/genomeresequencingFromLucas/picard.jar AddOrReplaceReadGroups \
+		I=$namei.bam \
+		O=$namei.groups_added.bam \
+		RGID=$ID \
+		RGLB=$LB \
+		RGPL=$PL \
+		RGPU=$PU \
+		RGSM=$SM
+
+		echo
+		echo
+		echo Deduplication
+		echo
+		echo
+	
+		time java -jar /home/kprovost/nas3/genomeresequencingFromLucas/picard.jar MarkDuplicates \
+		TMP_DIR=tmp \
+		I=$namei.groups_added.bam \
+		O=$namei.dedup.bam \
+		METRICS_FILE=$namei.dedup.metrics.txt \
+		REMOVE_DUPLICATES=false \
+		MAX_FILE_HANDLES_FOR_READ_ENDS_MAP=1024 \
+		TAGGING_POLICY=All
+
+		echo
+		echo
+		echo Collect Coverage Metrics
+		echo
+		echo
+
+		time java -jar /home/kprovost/nas3/genomeresequencingFromLucas/picard.jar CollectRawWgsMetrics \
+		I=$namei.bam \
+		O=$namei.raw_wgs_metrics.txt \
+		R=$ref \
+		INCLUDE_BQ_HISTOGRAM=true
+
+		echo
+		echo
+		echo Indexing BAM
+		echo
+		echo
+	
+		time java -jar /home/kprovost/nas3/genomeresequencingFromLucas/picard.jar BuildBamIndex \
+		I=$namei.dedup.bam
+
+		echo
+		echo
+		echo Validating BAM
+		echo
+		echo
+
+		time java -jar /home/kprovost/nas3/genomeresequencingFromLucas/picard.jar ValidateSamFile \
+		I=$namei.dedup.bam \
+		O=$namei.validate.txt \
+		MODE=SUMMARY	
+	
+		#rm $namei.sam
+		#rm $namei.bam
+
+		echo
+		echo
+		echo Qualimap
+		echo
+		echo
+		
+		qualimap bamqc -nt 8 -bam $namei.dedup.bam -outdir $namei.QUALIMAP
+
+		echo
+		echo "#######################"
+		echo $name DONE!
+		echo "#######################"
+		echo
+		echo
+		
+	done
+	
+	cd ..
+
+done
+

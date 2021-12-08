@@ -1,0 +1,127 @@
+#!/bin/bash
+#PBS -l select=1:ncpus=32:mem=128gb
+#PBS -l walltime=99999:00:00
+#PBS -N fla50_sfsA
+#PBS -j oe
+#PBS -m ae
+#PBS -M kprovost@amnh.org
+#PBS -k oe
+
+# change to the working directory
+cd $PBS_O_WORKDIR
+echo "pbsworkdir"
+echo $PBS_O_WORKDIR
+EXECDIR=`pwd`
+export PATH=./:$PATH
+echo $PATH
+
+#Arguments:
+## ref=reference sequence
+ref=/home/kprovost/nas3/genomeresequencingFromLucas/Paru_chrom/pseudochromosomesSHORT.fasta
+
+## bam_list = list of BAM files
+bamlist=/home/kprovost/nas3/ANGSD_pipeline/Auriparus_flaviceps_50.bamlist
+sonlist=/home/kprovost/nas3/ANGSD_pipeline/SON_Auriparus_flaviceps_50.indlist
+chilist=/home/kprovost/nas3/ANGSD_pipeline/CHI_Auriparus_flaviceps_50.indlist
+
+cd /vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/
+
+date
+time
+if [ ! -f "Auriparus-flaviceps-50-sfs1.saf.idx" ]; then
+echo "step 1"
+time /home/kprovost/nas3/angsd/angsd -GL 2 \
+-dosaf 1 \
+-fold 1 \
+-minInd 4 \
+-minMapQ 20 \
+-minQ 20 \
+-nThreads 16 \
+-ref $ref \
+-anc $ref \
+-bam $bamlist \
+-out Auriparus-flaviceps-50-sfs1
+fi
+
+#####
+
+if [ ! -f "Auriparus-flaviceps-50-sfs1.saf.pos.gz" ]; then
+echo "step 2"
+time /home/kprovost/nas3/angsd/misc/realSFS -nSites 5000000 /vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/Auriparus-flaviceps-50-sfs1.saf.idx 
+fi
+
+if [ ! -f "SON_Auriparus_flaviceps-50-sfs1.saf.gz" ]; then
+echo "step 3"
+# get the by population sfs 
+/home/kprovost/nas3/angsd/angsd -b $sonlist \
+-anc $ref \
+-out SON_Auriparus_flaviceps-50-sfs1 \
+-dosaf 1 \
+-gl 1 
+fi
+
+if [ ! -f "CHI_Auriparus_flaviceps-50-sfs1.saf.gz" ]; then
+echo "step 4"
+/home/kprovost/nas3/angsd/angsd -b $chilist \
+-anc $ref \
+-out CHI_Auriparus_flaviceps-50-sfs1 \
+-dosaf 1 \
+-gl 1 
+fi
+
+if [ ! -f "SON_CHI_Auriparus_flaviceps_50.ml" ]; then
+echo "step 5"
+## now get the 2d sfs for each 
+## If you have .saf file larger than -nSites (you can check the number of sites in the .saf.pos file), then the program will loop over the genome and output the results for each block. So each line in your Whit.saf.ml, is an SFS for a region?
+command="time /home/kprovost/nas3/angsd/misc/realSFS -nSites 5000000 /vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/SON_Auriparus_flaviceps-50-sfs1.saf.idx /vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/CHI_Auriparus_flaviceps-50-sfs1.saf.idx > SON_CHI_Auriparus_flaviceps_50.ml"
+eval $command 
+fi
+
+
+
+#####
+
+if [ ! -f "SON_CHI_Auriparus_flaviceps_50.ml.1D.txt" ]; then
+echo "step 6"
+module load R-3.6.3
+Rscript /home/kprovost/nas3/ANGSD_pipeline/fst_ml_to_ml1d.R SON_CHI_Auriparus_flaviceps_50.ml
+fi
+
+## now get the 2d sfs for each 
+echo "step 7"
+time /home/kprovost/nas3/angsd/misc/realSFS SON_CHI_Auriparus_flaviceps_50.ml.1D.txt
+
+# 	-> Version of fname:SON_CHI_Auriparus_flaviceps_50.ml.1D.txt is:0
+# 	-> Looks like you are trying to use a version of realSFS that is incompatible with the old binary output from ANGSD
+# 	-> Please use realSFS.old instead (or consider redoing the saf files )
+# 	-> Will exit
+
+echo "step 8"
+/home/kprovost/nas3/angsd/angsd sites index /vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/SON_Auriparus_flaviceps-50-sfs1.saf.pos.gz
+
+## -> Pxroblem with size of dimension of prior 99 vs 1881?
+## because the ml file format is looped?
+
+# prepare the fst for easy window analysis etc
+# ../misc/realSFS fst index pop1.saf.idx pop2.saf.idx -sfs pop1.pop2.ml.1D.txt -fstout here
+echo "step 9"
+time /home/kprovost/nas3/angsd/misc/realSFS fst index \
+/vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/SON_Auriparus_flaviceps-50-sfs1.saf.idx \
+/vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/CHI_Auriparus_flaviceps-50-sfs1.saf.idx \
+-sfs /vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/SON_CHI_Auriparus_flaviceps_50.ml.1D.txt \
+-fstout /vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/SON_CHI_Auriparus_flaviceps_50_FST 
+
+# get the global estimate
+# ../misc/realSFS fst stats here.fst.idx 
+# -> FST.Unweight:0.069395 Fst.Weight:0.042349
+echo "step 10"
+time /home/kprovost/nas3/angsd/misc/realSFS fst stats \
+/vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/SON_CHI_Auriparus_flaviceps_50_FST.fst.idx 
+
+# flaow is not tested that much, but seems to work
+## this window seems too large
+# ../misc/realSFS fst stats2 here.fst.idx -win 100000 -step 10000 >slidingwindow
+echo "step 11"
+time /home/kprovost/nas3/angsd/misc/realSFS  fst stats2 \
+/vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/SON_CHI_Auriparus_flaviceps_50_FST.fst.idx \
+-win 100000 -step 10000 > /vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/SON_CHI_Auriparus_flaviceps_50_FST_slidingwindow.fst

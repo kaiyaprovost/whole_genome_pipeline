@@ -1,0 +1,47 @@
+#!/bin/bash
+#PBS -l select=1:ncpus=1
+#PBS -l walltime=9999999:00:00
+#PBS -N gzip
+#PBS -j oe
+#PBS -m ae
+#PBS -M kprovost@amnh.org
+#PBS -k oe
+
+# change to the working directory
+cd $PBS_O_WORKDIR
+echo "pbsworkdir"
+echo $PBS_O_WORKDIR
+EXECDIR=`pwd`
+export PATH=./:$PATH
+echo $PATH
+
+#Arguments:
+## directory
+
+cd $directory 
+
+for i in *vcf; do echo $i; gzip -f $i; done;  
+for i in *txt; do echo $i; gzip -f $i; done;
+for i in *tons; do echo $i; gzip -f $i; done;
+for i in *table; do echo $i; gzip -f $i; done;
+for i in *stats; do echo $i; gzip -f $i; done;
+for i in *sam; do echo $i; gzip -f $i; done;
+for i in *qopt; do echo $i; gzip -f $i; done;
+for i in *png; do echo $i; gzip -f $i; done;
+for i in *ped; do echo $i; gzip -f $i; done;
+for i in *pdf; do echo $i; gzip -f $i; done;
+for i in *ml; do echo $i; gzip -f $i; done;
+for i in *map; do echo $i; gzip -f $i; done;
+for i in *maf; do echo $i; gzip -f $i; done;
+for i in *log; do echo $i; gzip -f $i; done;
+for i in *idx; do echo $i; gzip -f $i; done;
+for i in *html; do echo $i; gzip -f $i; done;
+for i in *grp; do echo $i; gzip -f $i; done;
+for i in *gds; do echo $i; gzip -f $i; done;
+for i in *csi; do echo $i; gzip -f $i; done;
+for i in *beagle; do echo $i; gzip -f $i; done;
+for i in *bam; do echo $i; gzip -f $i; done;  
+for i in *bai; do echo $i; gzip -f $i; done;  
+for i in *arg; do echo $i; gzip -f $i; done;
+
+

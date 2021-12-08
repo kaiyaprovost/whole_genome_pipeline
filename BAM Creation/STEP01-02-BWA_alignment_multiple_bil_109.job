@@ -1,0 +1,189 @@
+#!/bin/bash
+#PBS -l select=2:ncpus=8
+#PBS -l walltime=5000:00:00
+#PBS -N S1S2_bil109_BWA_align
+#PBS -j oe
+#PBS -m ae
+#PBS -M kprovost@amnh.org
+#PBS -k oe
+
+# change to the working directory
+cd $PBS_O_WORKDIR
+echo "pbsworkdir"
+echo $PBS_O_WORKDIR
+EXECDIR=`pwd`
+export PATH=./:$PATH
+echo $PATH
+
+#Arguments:
+## ref=reference sequence
+ref=/home/kprovost/nas3/genomeresequencingFromLucas/Zonotrichia_albicollis_GCF_000385455.1_Zonotrichia_albicollis-1.0.1_genomic.fna
+
+##References:
+##Corvus -- Vireo bellii
+##Parus -- Auriparus flaviceps
+##Sturnus -- Toxostoma curvirostre, Toxostoma crissale, Campylorhynchus brunneicapillus, Polioptila melanura, Phainopepla nitens
+##Zonotrichia -- Amphispiza bilineata, Pipilo fuscus
+##Geospiza -- Cardinalis cardinalis, Cardinalis sinuatus
+
+cd /home/kprovost/nas3/AMN_245109/sequences/bilineata/
+
+date
+time
+
+module load bwa-0.7.15
+module load fastqc-0.11.5
+module load R-3.4.1
+
+echo
+echo
+echo Merging BAM files
+echo
+echo
+
+echo
+echo "#######################"
+echo "AMN_245109_P002_WA07_bilineata.bam"
+echo "#######################"
+
+# time java -jar /home/kprovost/nas3/genomeresequencingFromLucas/picard.jar MergeSamFiles \
+# I=AMN_245109_P002_WA07_bilineata/F067_AMN_245109_P002_WA07_i5-515_i7-103_S82_L001.bam \
+# I=AMN_245109_P002_WA07_bilineata/F069_AMN_245109_P002_WA07_i5-515_i7-103_S81_L001.bam \
+# I=AMN_245109_P002_WA07_bilineata/F069_AMN_245109_P002_WA07_i5-515_i7-103_S81_L002.bam \
+# I=AMN_245109_P002_WA07_bilineata/F069_AMN_245109_P002_WA07_i5-515_i7-103_S81_L003.bam \
+# I=AMN_245109_P002_WA07_bilineata/F069_AMN_245109_P002_WA07_i5-515_i7-103_S81_L004.bam \
+# I=AMN_245109_P002_WA07_bilineata/F069_AMN_245109_P002_WA07_i5-515_i7-103_S81_L005.bam \
+# O=AMN_245109_P002_WA07_bilineata.bam
+
+echo
+echo "#######################"
+echo "AMN_245109_P002_WB05_bilineata.bam"
+echo "#######################"
+
+# time java -jar /home/kprovost/nas3/genomeresequencingFromLucas/picard.jar MergeSamFiles \
+# I=AMN_245109_P002_WB05_bilineata/F067_AMN_245109_P002_WB05_i5-515_i7-113_S87_L001.bam \
+# I=AMN_245109_P002_WB05_bilineata/F069_AMN_245109_P002_WB05_i5-515_i7-113_S86_L001.bam \
+# I=AMN_245109_P002_WB05_bilineata/F069_AMN_245109_P002_WB05_i5-515_i7-113_S86_L002.bam \
+# I=AMN_245109_P002_WB05_bilineata/F069_AMN_245109_P002_WB05_i5-515_i7-113_S86_L003.bam \
+# I=AMN_245109_P002_WB05_bilineata/F069_AMN_245109_P002_WB05_i5-515_i7-113_S86_L004.bam \
+# I=AMN_245109_P002_WB05_bilineata/F069_AMN_245109_P002_WB05_i5-515_i7-113_S86_L005.bam \
+# O=AMN_245109_P002_WB05_bilineata.bam
+
+echo
+echo "#######################"
+echo "AMN_245109_P002_WD03_bilineata.bam"
+echo "#######################"
+
+# time java -jar /home/kprovost/nas3/genomeresequencingFromLucas/picard.jar MergeSamFiles \
+# I=AMN_245109_P002_WD03_bilineata/F067_AMN_245109_P002_WD03_i5-515_i7-135_S97_L001.bam \
+# I=AMN_245109_P002_WD03_bilineata/F069_AMN_245109_P002_WD03_i5-515_i7-135_S96_L001.bam \
+# I=AMN_245109_P002_WD03_bilineata/F069_AMN_245109_P002_WD03_i5-515_i7-135_S96_L002.bam \
+# I=AMN_245109_P002_WD03_bilineata/F069_AMN_245109_P002_WD03_i5-515_i7-135_S96_L003.bam \
+# I=AMN_245109_P002_WD03_bilineata/F069_AMN_245109_P002_WD03_i5-515_i7-135_S96_L004.bam \
+# I=AMN_245109_P002_WD03_bilineata/F069_AMN_245109_P002_WD03_i5-515_i7-135_S96_L005.bam \
+# O=AMN_245109_P002_WD03_bilineata.bam
+
+echo
+echo "#######################"
+echo "AMN_245109_P002_WD05_bilineata.bam"
+echo "#######################"
+
+# time java -jar /home/kprovost/nas3/genomeresequencingFromLucas/picard.jar MergeSamFiles \
+# I=AMN_245109_P002_WD05_bilineata/F067_AMN_245109_P002_WD05_i5-515_i7-137_S99_L001.bam \
+# I=AMN_245109_P002_WD05_bilineata/F069_AMN_245109_P002_WD05_i5-515_i7-137_S98_L001.bam \
+# I=AMN_245109_P002_WD05_bilineata/F069_AMN_245109_P002_WD05_i5-515_i7-137_S98_L002.bam \
+# I=AMN_245109_P002_WD05_bilineata/F069_AMN_245109_P002_WD05_i5-515_i7-137_S98_L003.bam \
+# I=AMN_245109_P002_WD05_bilineata/F069_AMN_245109_P002_WD05_i5-515_i7-137_S98_L004.bam \
+# I=AMN_245109_P002_WD05_bilineata/F069_AMN_245109_P002_WD05_i5-515_i7-137_S98_L005.bam \
+# O=AMN_245109_P002_WD05_bilineata.bam
+
+echo
+echo "#######################"
+echo "AMN_245109_P002_WE01_bilineata.bam"
+echo "#######################"
+
+time java -jar /home/kprovost/nas3/genomeresequencingFromLucas/picard.jar MergeSamFiles \
+I=AMN_245109_P002_WE01_bilineata/F067_AMN_245109_P002_WE01_i5-515_i7-145_S101_L001.bam \
+I=AMN_245109_P002_WE01_bilineata/F069_AMN_245109_P002_WE01_i5-515_i7-145_S100_L001.bam \
+I=AMN_245109_P002_WE01_bilineata/F069_AMN_245109_P002_WE01_i5-515_i7-145_S100_L002.bam \
+I=AMN_245109_P002_WE01_bilineata/F069_AMN_245109_P002_WE01_i5-515_i7-145_S100_L003.bam \
+I=AMN_245109_P002_WE01_bilineata/F069_AMN_245109_P002_WE01_i5-515_i7-145_S100_L004.bam \
+I=AMN_245109_P002_WE01_bilineata/F069_AMN_245109_P002_WE01_i5-515_i7-145_S100_L005.bam \
+O=AMN_245109_P002_WE01_bilineata.bam
+
+echo
+echo "#######################"
+echo "AMN_245109_P002_WE02_bilineata.bam"
+echo "#######################"
+
+# time java -jar /home/kprovost/nas3/genomeresequencingFromLucas/picard.jar MergeSamFiles \
+# I=AMN_245109_P002_WE02_bilineata/F067_AMN_245109_P002_WE02_i5-515_i7-146_S102_L001.bam \
+# I=AMN_245109_P002_WE02_bilineata/F069_AMN_245109_P002_WE02_i5-515_i7-146_S101_L001.bam \
+# I=AMN_245109_P002_WE02_bilineata/F069_AMN_245109_P002_WE02_i5-515_i7-146_S101_L002.bam \
+# I=AMN_245109_P002_WE02_bilineata/F069_AMN_245109_P002_WE02_i5-515_i7-146_S101_L003.bam \
+# I=AMN_245109_P002_WE02_bilineata/F069_AMN_245109_P002_WE02_i5-515_i7-146_S101_L004.bam \
+# I=AMN_245109_P002_WE02_bilineata/F069_AMN_245109_P002_WE02_i5-515_i7-146_S101_L005.bam \
+# O=AMN_245109_P002_WE02_bilineata.bam
+
+echo
+echo "#######################"
+echo "AMN_245109_P002_WF01_bilineata.bam"
+echo "#######################"
+
+# time java -jar /home/kprovost/nas3/genomeresequencingFromLucas/picard.jar MergeSamFiles \
+# I=AMN_245109_P002_WF01_bilineata/F067_AMN_245109_P002_WF01_i5-515_i7-157_S106_L001.bam \
+# I=AMN_245109_P002_WF01_bilineata/F069_AMN_245109_P002_WF01_i5-515_i7-157_S105_L001.bam \
+# I=AMN_245109_P002_WF01_bilineata/F069_AMN_245109_P002_WF01_i5-515_i7-157_S105_L002.bam \
+# I=AMN_245109_P002_WF01_bilineata/F069_AMN_245109_P002_WF01_i5-515_i7-157_S105_L003.bam \
+# I=AMN_245109_P002_WF01_bilineata/F069_AMN_245109_P002_WF01_i5-515_i7-157_S105_L004.bam \
+# I=AMN_245109_P002_WF01_bilineata/F069_AMN_245109_P002_WF01_i5-515_i7-157_S105_L005.bam \
+# O=AMN_245109_P002_WF01_bilineata.bam
+
+echo
+echo "#######################"
+echo "AMN_245109_P002_WF02_bilineata.bam"
+echo "#######################"
+
+# time java -jar /home/kprovost/nas3/genomeresequencingFromLucas/picard.jar MergeSamFiles \
+# I=AMN_245109_P002_WF02_bilineata/F067_AMN_245109_P002_WF02_i5-515_i7-158_S107_L001.bam \
+# I=AMN_245109_P002_WF02_bilineata/F069_AMN_245109_P002_WF02_i5-515_i7-158_S106_L001.bam \
+# I=AMN_245109_P002_WF02_bilineata/F069_AMN_245109_P002_WF02_i5-515_i7-158_S106_L002.bam \
+# I=AMN_245109_P002_WF02_bilineata/F069_AMN_245109_P002_WF02_i5-515_i7-158_S106_L003.bam \
+# I=AMN_245109_P002_WF02_bilineata/F069_AMN_245109_P002_WF02_i5-515_i7-158_S106_L004.bam \
+# I=AMN_245109_P002_WF02_bilineata/F069_AMN_245109_P002_WF02_i5-515_i7-158_S106_L005.bam \
+# O=AMN_245109_P002_WF02_bilineata.bam
+
+echo
+echo "#######################"
+echo "AMN_245109_P002_WG01_bilineata.bam"
+echo "#######################"
+
+# time java -jar /home/kprovost/nas3/genomeresequencingFromLucas/picard.jar MergeSamFiles \
+# I=AMN_245109_P002_WG01_bilineata/F067_AMN_245109_P002_WG01_i5-515_i7-169_S111_L001.bam \
+# I=AMN_245109_P002_WG01_bilineata/F069_AMN_245109_P002_WG01_i5-515_i7-169_S110_L001.bam \
+# I=AMN_245109_P002_WG01_bilineata/F069_AMN_245109_P002_WG01_i5-515_i7-169_S110_L002.bam \
+# I=AMN_245109_P002_WG01_bilineata/F069_AMN_245109_P002_WG01_i5-515_i7-169_S110_L003.bam \
+# I=AMN_245109_P002_WG01_bilineata/F069_AMN_245109_P002_WG01_i5-515_i7-169_S110_L004.bam \
+# I=AMN_245109_P002_WG01_bilineata/F069_AMN_245109_P002_WG01_i5-515_i7-169_S110_L005.bam \
+# O=AMN_245109_P002_WG01_bilineata.bam
+
+echo
+echo "#######################"
+echo "AMN_245109_P002_WG06_bilineata.bam"
+echo "#######################"
+
+# time java -jar /home/kprovost/nas3/genomeresequencingFromLucas/picard.jar MergeSamFiles \
+# I=AMN_245109_P002_WG06_bilineata/F067_AMN_245109_P002_WG06_i5-515_i7-174_S115_L001.bam \
+# I=AMN_245109_P002_WG06_bilineata/F069_AMN_245109_P002_WG06_i5-515_i7-174_S114_L001.bam \
+# I=AMN_245109_P002_WG06_bilineata/F069_AMN_245109_P002_WG06_i5-515_i7-174_S114_L002.bam \
+# I=AMN_245109_P002_WG06_bilineata/F069_AMN_245109_P002_WG06_i5-515_i7-174_S114_L003.bam \
+# I=AMN_245109_P002_WG06_bilineata/F069_AMN_245109_P002_WG06_i5-515_i7-174_S114_L004.bam \
+# I=AMN_245109_P002_WG06_bilineata/F069_AMN_245109_P002_WG06_i5-515_i7-174_S114_L005.bam \
+# O=AMN_245109_P002_WG06_bilineata.bam
+
+echo
+echo "#######################"
+echo DONE!
+echo "#######################"
+echo
+echo

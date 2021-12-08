@@ -1,0 +1,59 @@
+#!/bin/bash
+#PBS -l select=1:ncpus=32:mem=32gb
+#PBS -l walltime=5000:00:00
+#PBS -N mel_sfs3
+#PBS -j oe
+#PBS -m ae
+#PBS -M kprovost@amnh.org
+#PBS -k oe
+
+# change to the working directory
+cd $PBS_O_WORKDIR
+echo "pbsworkdir"
+echo $PBS_O_WORKDIR
+EXECDIR=`pwd`
+export PATH=./:$PATH
+echo $PATH
+
+
+## bam_list = list of BAM files
+# sonlist=/home/kprovost/nas3/ANGSD_pipeline/SON_Polioptila_melanura.indlist
+# chilist=/home/kprovost/nas3/ANGSD_pipeline/CHI_Polioptila_melanura.indlist
+
+cd /vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/
+
+date
+time
+
+
+## now get the 2d sfs for each 
+# time /home/kprovost/nas3/angsd/misc/realSFS \
+# SON_CHI_Polioptila_melanura.ml.1D.txt
+
+
+echo "Prep for window analysis"
+
+# prepare the fst for easy window analysis etc
+# ../misc/realSFS fst index pop1-sfs1.saf.idx pop2-sfs1.saf.idx -sfs pop1.pop2.ml.1D.txt -fstout here
+time /home/kprovost/nas3/angsd/misc/realSFS fst index \
+/vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/SAFS/SON_Polioptila_melanura-sfs1.saf.idx \
+/vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/SAFS/CHI_Polioptila_melanura-sfs1.saf.idx \
+-sfs /vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/MLFILES/SON_CHI_Polioptila_melanura.ml.1D.txt \
+-fstout /vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/SON_CHI_Polioptila_melanura_FST 
+
+echo "Get global estimate"
+
+# get the global estimate
+# ../misc/realSFS fst stats here.fst.idx 
+# -> FST.Unweight:0.069395 Fst.Weight:0.042349
+time /home/kprovost/nas3/angsd/misc/realSFS fst stats \
+/vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/SON_CHI_Polioptila_melanura_FST.fst.idx 
+
+echo "Sliding Windows" 
+
+# below is not tested that much, but seems to work
+## this window seems too large
+# ../misc/realSFS fst stats2 here.fst.idx -win 100000 -step 10000 >slidingwindow
+time /home/kprovost/nas3/angsd/misc/realSFS  fst stats2 \
+/vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/SON_CHI_Polioptila_melanura_FST.fst.idx \
+-win 100000 -step 10000 > /vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/SON_CHI_Polioptila_melanura_FST_slidingwindow.fst

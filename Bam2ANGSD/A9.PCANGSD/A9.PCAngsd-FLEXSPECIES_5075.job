@@ -1,0 +1,175 @@
+#!/bin/bash
+#PBS -l select=1:ncpus=32
+#PBS -l walltime=5000:00:00
+#PBS -N all3_5075_PCAngsd
+#PBS -j oe
+#PBS -m ae
+#PBS -M kprovost@amnh.org
+#PBS -k oe
+
+# change to the working directory
+cd $PBS_O_WORKDIR
+echo "pbsworkdir"
+echo $PBS_O_WORKDIR
+EXECDIR=`pwd`
+export PATH=./:$PATH
+echo $PATH
+
+#run=1
+#run=2
+run=3
+
+cd /vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/BEAGLE/
+
+#Arguments:
+## GL = genotype likehood file (Beagle format)
+
+
+#Declare a string array
+spplist=( "Vireo_bellii" "Amphispiza_bilineata" "Campylorhynchus_brunneicapillus" "Toxostoma_crissale" "Toxostoma_curvirostre" "Auriparus_flaviceps" "Melozone_fusca" "Polioptila_melanura" "Phainopepla_nitens" "Cardinalis_sinuatus")
+ 
+# Print array values in  lines
+for spp in ${spplist[*]}; do
+echo $spp
+
+#source activate py36
+for GLu in ${spp}/*F.beagle; do 
+#echo $GLu
+gzip -f $GLu
+done;
+for GLu in /*beagle; do 
+#echo $GLu
+gzip -f $GLu
+done;
+
+if [[ "$run" == 1 ]]; then
+for GL in ${spp}/*.F.beagle; do
+echo "###################"
+echo $GL
+outname=${GL%.beagle.gz}
+#outname=${outname#/$spp/}
+echo $outname
+for k in {1..2}; do ## this does 2-3
+echo $k
+#if [ ! -f ./QOPTS/${outname}.${spp}_PCAngsd.${k}*qopt ]; then
+#if [ ! -f ${outname}.${spp}_PCAngsd.${k}*qopt ]; then 
+if [ ! -f ${outname}.${spp}_PCAngsd.$k.admix.Q.npy ]; then 
+if [ ! -f ./QOPTS/${outname}.${spp}_PCAngsd.$k.admix.Q.npy ]; then 
+# Estimate covariance matrix and individual admixture proportions
+echo "RUN"
+date
+time
+python2.7 /home/kprovost/nas3/pcangsd/pcangsd.py \
+-beagle $GL \
+-admix -admix_save -e $k \
+-inbreed 2 \
+-selection -sites_save \
+-o ${outname}.${spp}_PCAngsd.$k \
+ -threads 32 > ${outname}.${spp}_pca.$k.log 2>&1
+else
+echo "ALREADY HERE1"
+fi 
+else
+echo "ALREADY HERE2"
+fi 
+# mv *selection* ./SELECTIONS/
+# mv *qopt* ./QOPTS/
+# mv *fopt* ./FOPTS/
+# mv *admix.F* ./FOPTS/
+# mv *admix.Q* ./QOPTS/
+# mv *cov* ./COV_INBREED/
+# mv *inbreed* ./COV_INBREED/
+# mv *sites* ./PCASITES/
+# mv *log* ./LOGS/
+done
+done
+fi
+
+if [[ "$run" == 2 ]]; then
+for GL in *${spp}*.beagle.gz; do
+echo "###################"
+echo $GL
+outname=${GL%.beagle.gz}
+#outname=${outname#/$spp/}
+echo $outname
+for k in {1..2}; do
+echo $k
+#if [ ! -f ./QOPTS/${outname}.${spp}_PCAngsd.${k}*qopt ]; then
+#if [ ! -f ${outname}.${spp}_PCAngsd.${k}*qopt ]; then 
+if [ ! -f ${outname}.${spp}_PCAngsd.$k.admix.Q.npy ]; then 
+if [ ! -f ./QOPTS/${outname}.${spp}_PCAngsd.$k.admix.Q.npy ]; then 
+# Estimate covariance matrix and individual admixture proportions
+echo "RUN"
+date
+time
+python3 /home/kprovost/nas3/pcangsd/pcangsd.py \
+-beagle $GL \
+-admix -admix_save -e $k \
+-inbreed 2 \
+-selection -sites_save \
+-o ${outname}.${spp}_PCAngsd.$k \
+ -threads 32 > ${outname}.${spp}_pca.$k.log 2>&1
+## note old version of pcangsd had "selection -1"
+else
+echo "ALREADY HERE1"
+fi 
+else
+echo "ALREADY HERE2"
+fi 
+# mv /*selection* ./SELECTIONS/
+# mv /*qopt* ./QOPTS/
+# mv /*fopt* ./FOPTS/
+# mv /*admix.F* ./FOPTS/
+# mv /*admix.Q* ./QOPTS/
+# mv /*cov* ./COV_INBREED/
+# mv /*inbreed* ./COV_INBREED/
+# mv /*sites* ./PCASITES/
+# mv /*log* ./LOGS/
+done
+done
+fi
+
+if [[ "$run" == 3 ]]; then
+for GL in ${spp}/*.beagle.gz; do
+echo "###################"
+echo $GL
+outname=${GL%.beagle.gz}
+#outname=${outname#/$spp/}
+echo $outname
+for k in {1..2}; do
+echo $k
+#if [ ! -f ./QOPTS/${outname}.${spp}_PCAngsd.${k}*qopt ]; then
+#if [ ! -f ${outname}.${spp}_PCAngsd.${k}*qopt ]; then 
+if [ ! -f ${outname}.${spp}_PCAngsd.$k.admix.Q.npy ]; then 
+if [ ! -f ./QOPTS/${outname}.${spp}_PCAngsd.$k.admix.Q.npy ]; then 
+# Estimate covariance matrix and individual admixture proportions
+echo "RUN"
+date
+time
+python3 /home/kprovost/nas3/pcangsd/pcangsd.py \
+-beagle $GL \
+-admix -admix_save -e $k \
+-inbreed 2 \
+-selection -sites_save \
+-o ${outname}.${spp}_PCAngsd.$k \
+ -threads 32 > ${outname}.${spp}_pca.$k.log 2>&1
+else
+echo "ALREADY HERE1"
+fi 
+else
+echo "ALREADY HERE2"
+fi 
+# mv ${spp}/*selection* ./SELECTIONS/
+# mv ${spp}/*qopt* ./QOPTS/
+# mv ${spp}/*fopt* ./FOPTS/
+# mv ${spp}/*admix.F* ./FOPTS/
+# mv ${spp}/*admix.Q* ./QOPTS/
+# mv ${spp}/*cov* ./COV_INBREED/
+# mv ${spp}/*inbreed* ./COV_INBREED/
+# mv ${spp}/*sites* ./PCASITES/
+# mv ${spp}/*log* ./LOGS/
+done
+done
+fi
+
+done
