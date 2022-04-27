@@ -72,7 +72,9 @@ fi
 if [ ! -f "SON_CHI_Vireo_bellii_50.ml" ]; then
 echo "step 5"
 ## now get the 2d sfs for each 
-## If you have .saf file larger than -nSites (you can check the number of sites in the .saf.pos file), then the program will loop over the genome and output the results for each block. So each line in your Whit.saf.ml, is an SFS for a region?
+## If you have .saf file larger than -nSites (you can check the number of sites in the 
+## .saf.pos file), then the program will loop over the genome and output the results 
+## for each block. So each line in your Whit.saf.ml, is an SFS for a region?
 command="time /home/kprovost/nas3/angsd/misc/realSFS -nSites 5000000 /vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/SON_Vireo_bellii-50-sfs1.saf.idx /vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/CHI_Vireo_bellii-50-sfs1.saf.idx > SON_CHI_Vireo_bellii_50.ml"
 eval $command 
 fi

@@ -1,0 +1,30 @@
+#!/bin/bash
+#PBS -l select=1:ncpus=32:mem=32gb
+#PBS -l walltime=5000:00:00
+#PBS -N sfs
+#PBS -j oe
+#PBS -m ae
+#PBS -M kprovost@amnh.org
+#PBS -k oe
+
+# change to the working directory
+cd $PBS_O_WORKDIR
+echo "pbsworkdir"
+echo $PBS_O_WORKDIR
+EXECDIR=`pwd`
+export PATH=./:$PATH
+echo $PATH
+
+##References:
+##Corvus -- Vireo
+##Geospiza -- Cardinalis
+##Parus -- Auriparus
+##Sturnus -- Toxostoma, Campylorhynchus, Polioptila, Phainopepla
+##Zonotrichia -- Amphispiza, Pipilo
+
+cd /vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/
+
+## original nsites was 5000000
+time /home/kprovost/nas3/angsd/misc/realSFS -nSites 100000 /vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/SAFS/SON_Amphispiza_bilineata-75-sfs1.saf.idx > SON_Amphispiza_bilineata_75.ml
+time /home/kprovost/nas3/angsd/misc/realSFS -nSites 100000 /vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/SAFS/CHI_Amphispiza_bilineata-75-sfs1.saf.idx > CHI_Amphispiza_bilineata_75.ml
+
