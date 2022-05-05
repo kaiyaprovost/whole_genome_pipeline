@@ -1,16 +1,16 @@
 library(lfmm)
 library(LEA)
 library('raster')
-library('RStoolbox')
-#dif (!require("BiocManager", quietly = TRUE))
+library('RStoolbox') ## not working on huxley
+#if (!require("BiocManager", quietly = TRUE))
 #install.packages("BiocManager")
 #BiocManager::install("LEA")
 #devtools::install_github("https://github.com/bcm-uga/lfmm")
 
 #https://bcm-uga.github.io/lfmm/articles/lfmm
 
-setwd("~/Dropbox (AMNH)/")
-
+setwd("/vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/VCFS/CURVIROSTRE/GENOME/")
+#setwd("~/Dropbox (AMNH)/")
 
 reloadEnv = F
 
@@ -45,16 +45,17 @@ if(file.exists("worldclim_pca.tif")) {
   
   
   
-pca1 <- rasterPCA(Env,filename="worldclim_pca.tif",format="GTiff")
+pca1 <- RStoolbox::rasterPCA(Env,filename="worldclim_pca.tif",format="GTiff")
 plot(pca1$model$sdev[1:20]^2, xlab = 'PC', ylab = "Variance explained") ## k=3?
 write.table(summary(pca1$model)$loadings,"worldclim_pca_loadings.txt",sep="\t")
 plot(pca1$map)
 plot(pca1$map,1)
 library(ggplot2)
-ggRGB(pca1$map,1,2,3, stretch="lin", q=0)
+RStoolbox::ggRGB(pca1$map,1,2,3, stretch="lin", q=0)
 }
 
-latlongs = read.csv("/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER3_TRAITS/locations_genome_dissertation.csv",header=T)
+latlongs = read.csv("~/locations_genome_dissertation.csv",header=T)
+#latlongs = read.csv("/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER3_TRAITS/locations_genome_dissertation.csv",header=T)
 latlongs_extract = extract(pca1,latlongs[,c("LONG","LAT")])
 latlongs = cbind(latlongs,latlongs_extract)
 
@@ -165,49 +166,33 @@ if(!file.exists(paste(projectfile,"_K3_pvalues.png",sep=""))){
   dev.off()
 }
 
-## K1 does not work for some reason
-if(file.exists(paste(projectfile,"_K1_pvalues.txt",sep=""))){
-  pvalues1 = read.table(paste(projectfile,"_K1_pvalues.txt",sep=""))
-} else {
-  p1 = snmf.pvalues(project, ## also takes a while because goes through every snp
-                   entropy = TRUE,
-                   ploidy = 2,
-                   K = 1)
-  pvalues1 = p1$pvalues
-  write.table(pvalues1,paste(projectfile,"_K1_pvalues.txt",sep=""))
-}
-if(!file.exists(paste(projectfile,"_K1_pvalues.png",sep=""))){
-  png(paste(projectfile,"_K1_pvalues.png",sep=""))
-  par(mfrow = c(2,1))
-  hist(pvalues1, col = "orange")
-  plot(-log10(pvalues1), pch = 19, col = "blue", cex = .5)
-  dev.off()
-}
+## TODO: implement this imputed for K1, K2, K3? right now overwrites with whichever is assumed
 
-## TODO: implement this imputed for K1, K2, K3
-
-project.missing = project
-
-impute(project.missing, lfmmfile,
-       method = 'mode', K = 2, run = best_2)
+## make this an if statement as well 
 imputelfmm = paste(lfmmfile,"_imputed.lfmm",sep="")
-imputegeno = lfmm2geno(imputelfmm)
+if(!file.exists(imputelfmm)){ 
+  project.missing = project
+  impute(project.missing, lfmmfile,
+         method = 'mode', K = 2, run = best_2)
+}
+if(!file.exists(paste(lfmmfile,"_imputed.geno",sep=""))){ 
+  imputegeno = lfmm2geno(imputelfmm)
+}
 
 # project.impute = snmf(imputelfmm, K = 1:3,
 #                        entropy = TRUE, repetitions = 10, ## maybe do 100
 #                        project = "new")
 # plot(project.impute, col = "red", pch = 19, cex = 1.2) ## still k=2 -- CIRCULAR
 
-
-project = NULL
-project = lfmm(lfmmfile, ## takes a while
+project_env = NULL
+project_env = lfmm(lfmmfile, ## takes a while
                envfile,
                K = 2,
                repetitions = 5,
                project = "new")
 
-project.impute = NULL
-project.impute = lfmm(imputelfmm,
+project.impute_env = NULL
+project.impute_env = lfmm(imputelfmm, ## takes a while 
                envfile,
                K = 2,
                repetitions = 5,
