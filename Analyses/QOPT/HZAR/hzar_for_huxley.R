@@ -5,8 +5,9 @@ setwd("~")
 
 ## take in arguments
 
-species="bellii"
+species="flaviceps"
 plotWholeSpecies=T
+doFull=F
 
 ## set up functions
 preprocess_hzar= function(qopt_ada,chain=1e5,burn=5e2,low=0,high=20,scaling="fixed",tails="none",verbose=F){
@@ -85,7 +86,7 @@ no_mcmc_hzar = function(qopt_ada,index=1,add=F,plot=F){
   
 }
 
-make_qopt_ada = function(filename,spp,desert="",weird="",removeblank=F) {
+make_qopt_ada = function(filename,spp,desert="",weird="",removeblank=F,all_qopt) {
   
   if(tools::file_ext(filename)=="npy") {
     individual_qopt=npyLoad(x)
@@ -97,35 +98,60 @@ make_qopt_ada = function(filename,spp,desert="",weird="",removeblank=F) {
   colnames(individual_qopt)=paste("CLUSTER",seq(1:ncol(individual_qopt)),sep="")
   all_qopt = all_qopt[order(all_qopt$RG),]
   
+  spp = paste(spp,weird,sep="")
+  
+  add_qopt=all_qopt[all_qopt$SP==spp,] 
+  
+  
   if(removeblank==T) {
-    add_qopt = all_qopt[!(is.na(all_qopt$K2_A)),]
+    add_qopt = add_qopt[!(is.na(add_qopt$K2_A)),]
   } else {
-    add_qopt = all_qopt
+    add_qopt = add_qopt
   }
   
   if(desert != ""){
     add_qopt = add_qopt[add_qopt$DES==desert,]
   } 
- 
+  
+  
   
   #add_qopt=add_qopt[add_qopt$SP==paste(spp,weird,sep=""),] 
-  spp = paste(spp,weird,sep="")
-  add_qopt=add_qopt[add_qopt$SP==spp,] 
   
-  add_qopt = cbind(add_qopt[add_qopt$SP==spp,c("RG","SP","LAT","LONG","distance","nSamples")],
-                   individual_qopt)
-  
-  qopt_ada = hzar.doMolecularData1DPops(add_qopt$distance,
-                                        add_qopt$CLUSTER1,
-                                        add_qopt$nSamples)
-  
-  is_positive=(cor(qopt_ada$frame[,1:2],use="pairwise.complete.obs")[2])>0
-  if(is_positive==F){
-    qopt_ada = hzar.doMolecularData1DPops(add_qopt$distance,
-                                          add_qopt$CLUSTER2,
-                                          add_qopt$nSamples)
+  ## THIS STEP IS WHERE IT FAILS IF THE NUMBER OF INDIVIDUALS IS NOT RIGHT
+  ## NEED TO ADD A COLUMN TO THE CSV ABOUT IF IT'S IN EACH DATASET OR NOT
+  add_qopt2 = NULL
+  try({
+    add_qopt2 = cbind(add_qopt[add_qopt$SP==spp,c("RG","SP","LAT","LONG","distance","nSamples")],
+                      individual_qopt)
+  })
+  if(is.null(add_qopt2)){
+    try({
+      add_qopt = add_qopt[add_qopt$F_MISS<=0.75,]
+      add_qopt2 = cbind(add_qopt[add_qopt$SP==spp,c("RG","SP","LAT","LONG","distance","nSamples")],
+                        individual_qopt)
+    })
   }
-  return(qopt_ada)
+  if(is.null(add_qopt2)){
+    try({
+      add_qopt = add_qopt[add_qopt$F_MISS<=0.50,]
+      add_qopt2 = cbind(add_qopt[add_qopt$SP==spp,c("RG","SP","LAT","LONG","distance","nSamples")],
+                        individual_qopt)
+    })
+  }
+  if(!(is.null(add_qopt2))) {
+    add_qopt = add_qopt2
+    qopt_ada = hzar.doMolecularData1DPops(add_qopt$distance,
+                                          add_qopt$CLUSTER1,
+                                          add_qopt$nSamples)
+    
+    is_positive=(cor(qopt_ada$frame[,1:2],use="pairwise.complete.obs")[2])>0
+    if(is_positive==F){
+      qopt_ada = hzar.doMolecularData1DPops(add_qopt$distance,
+                                            add_qopt$CLUSTER2,
+                                            add_qopt$nSamples)
+    }
+    return(qopt_ada)
+  }
 }
 
 npyOutputFunction = function(i,smallsppfiles,smallspp=NULL,all_qopt){
@@ -181,48 +207,58 @@ npyOutputFunction = function(i,smallsppfiles,smallspp=NULL,all_qopt){
 #all_qopt=read.table("AllSpeciesMetadata_allK.csv",
 #                    sep=",",header=T)
 ## /Users/kprovost/Downloads/AllSpeciesMetadata_allK_9june2020.csv
-all_qopt=read.table("/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ANALYSIS/QOPT/AllSpeciesMetadata_allK_5january2021.csv",
+all_qopt=read.table("~/Downloads/TEST.txt",
                     sep="\t",header=T)
+if(ncol(all_qopt)<=1){
+  all_qopt=read.table("/Users/kprovost/Dropbox (AMNH)/AllSpeciesMetadata_allK_5january2021.csv",
+                      sep=",",header=T)
+}
 
 all_qopt = all_qopt[order(all_qopt$RG),]
 all_qopt$distance = all_qopt$LONG-min(all_qopt$LONG,na.rm=T) ## this may be degrees?
 all_qopt$nSamples = 1
 
 ## do for full species values 
-out = data.frame()
-for(spp in unique(all_qopt$SP)) {
-
-for(i in 1:3) {
-  
-  if(i==1){colnames=c("P2_A","P2_B")}else if(i==2){colnames=c("K2_A","K2_B")} else{colnames=c("C2_A","C2_B")}
-  
-  j=c("P","K","C")[i]
-  
-  add_qopt = all_qopt[all_qopt$SP==spp,c("RG","SP","LAT","LONG","distance","nSamples",colnames)]
-  
-  colnames(add_qopt) = c("RG","SP","LAT","LONG","distance","nSamples","CLUSTER1","CLUSTER2")
-  
-  add_qopt = add_qopt[complete.cases(add_qopt),]
-  
-  if(nrow(add_qopt)>0) {
-    qopt_ada = hzar.doMolecularData1DPops(add_qopt$distance,
-                                          add_qopt$CLUSTER2,
-                                          add_qopt$nSamples)
+if(doFull==T){
+  out = data.frame()
+  for(spp in unique(all_qopt$SP)) {
     
-    print(paste(nrow(add_qopt),spp,j))
-    #res=run_hzar(qopt_ada,plot=F,index=1,add=T)
-    #mean_width=res$mean_width
-    #center = mean(res$out$mcmcRaw[,1],na.rm=T)
-    #row = cbind(spp,j,mean_width,center)
-    #out = rbind(out,row)
+    for(i in 1:3) {
+      
+      if(i==1){colnames=c("P2_A","P2_B")}else if(i==2){colnames=c("K2_A","K2_B")} else{colnames=c("C2_A","C2_B")}
+      
+      j=c("P","K","C")[i]
+      
+      add_qopt = all_qopt[all_qopt$SP==spp,c("RG","SP","LAT","LONG","distance","nSamples",colnames)]
+      
+      colnames(add_qopt) = c("RG","SP","LAT","LONG","distance","nSamples","CLUSTER1","CLUSTER2")
+      
+      add_qopt = add_qopt[complete.cases(add_qopt),]
+      
+      if(nrow(add_qopt)>0) {
+        qopt_ada = hzar.doMolecularData1DPops(add_qopt$distance,
+                                              add_qopt$CLUSTER2,
+                                              add_qopt$nSamples)
+        
+        print(paste(nrow(add_qopt),spp,j))
+        res=run_hzar(qopt_ada,plot=F,index=1,add=T)
+        mean_width=res$mean_width
+        center = mean(res$out$mcmcRaw[,1],na.rm=T)
+        pmin=res$out$modelParam$fixed$pMin
+        pmax=res$out$modelParam$fixed$pMax
+        row = cbind(spp,j,mean_width,center,pmin,pmax)
+        write.table(row,"genome_qopt_hzar_extra_stuff.txt",append = T,col.names = F)
+        out = rbind(out,row)
+        
+        
+      }
+      
+    }
+    
   }
-  
+  out
+  write.table(out,"genome_qopt_hzar_extra_stuff.txt")
 }
-
-}
-
-out
-
 ## iterate through species files
 #files = list.files("ADMIX_NUMPY_AUG_2020/",
 #                   pattern="1.admix.Q.npy",full.names = T) ## or K2.a0.qopt
@@ -232,107 +268,186 @@ out
 #files=list.files(path="/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES",
 #                 pattern="1.admix.Q.npy",full.names = T)
 
-files=list.files(path="/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES",
-                 pattern="1.admix.Q.npy.csv",full.names = T,recursive=T)
+files=list.files(path="~/Downloads",
+                 pattern="1.admix.Q.npy.csv$",full.names = T,recursive=T)
 
-sppfiles=(files[grepl(species,files)])
+files2=list.files(path="~/Downloads",
+                 pattern="NGSadmix.qopt$",full.names = T,recursive=T)
 
-for(species in (c("flaviceps-NOWEIRD"))){
-  sppfiles=(files[grepl(species,files)])
-  #sppfiles=sppfiles[1:5]
-  pdf(paste(species,"_test_nomcmc.hzar.pdf",sep=""))
-  for(i in 1:length(sppfiles)){
-    print(i)
-    chrom=strsplit(strsplit(basename(sppfiles[i]),"\\.")[[1]][3], "_")[[1]][3]
-    qopt_ada=make_qopt_ada(filename=sppfiles[i],spp=species)
-    no_mcmc_hzar(qopt_ada,i)
-    title(chrom)
-  }
-  dev.off()
-}; dev.off()
+files = unique(c(files,files2))
 
-for(species in (c("bellii-NOWEIRD"))){
+#files=list.files(path="/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES",
+#                 pattern="1.admix.Q.npy.csv",full.names = T,recursive=T)
+#sppfiles=(files[grepl(species,files)])
+
+## subset based on what you want
+#files = files[(grepl("lostruct",files))]
+#files = files[(grepl("flaviceps",files))]
+#files = files[!(grepl("_75",files))]
+#files = files[(grepl("_75",files))]
+#files = files[!(grepl("_50",files))]
+#files = files[(grepl("_50",files))]
+#files = files[!(grepl("CHI",files))]
+files = files[(grepl("CHI",files))]
+files = files[!(grepl("SON",files))]
+#files = files[(grepl("SON",files))]
+desert="CHI"
+#files = files[!(grepl("Tgut",files))]
+#files = files[(grepl("Tgut",files))]
+#files = files[(grepl("2",files))]
+files = sample(files)
+#x <- file.info(files)
+#files = files[match(1:length(files),rank(x$size))]
+#files = files[complete.cases(files)]
+
+# out2 = data.frame()
+# for(species in (c("bellii","bellii-NOWEIRD",
+#                   "bilineata","bilineata-NOWEIRD",
+#                   "brunneicapillus","brunneicapillus-NOWEIRD",
+#                   "crissale","crissale-NOWEIRD",
+#                   "curvirostre","curvirostre-NOWEIRD",
+#                   "flaviceps","flaviceps-NOWEIRD",
+#                   "fusca","fusca-NOWEIRD",
+#                   "melanura","melanura-NOWEIRD",
+#                   "nitens","nitens-NOWEIRD",
+#                   "sinuatus","sinuatus-NOWEIRD"))){
+#   sppfiles=(files[grepl(species,files)])
+#   print(species)
+#   if(length(sppfiles)>0){
+#   #sppfiles=sppfiles[1:5]
+#   pdf(paste(species,"_test_nomcmc.hzar.pdf",sep=""))
+#     plot(0)
+#   for(i in 1:length(sppfiles)){
+#     print(i)
+#     thisfile=sppfiles[i]
+#     chrom=strsplit(strsplit(basename(thisfile),"\\.")[[1]][3], "_")[[1]][3]
+#     try({
+#     qopt_ada=make_qopt_ada(filename=thisfile,spp=species)
+#     no_mcmc_hzar(qopt_ada,i)
+#     title(chrom)
+#     #res=run_hzar(qopt_ada,plot=F,index=1,add=T)
+#     #mean_width=res$mean_width
+#     #center = mean(res$out$mcmcRaw[,1],na.rm=T)
+#     #pmin=res$out$modelParam$fixed$pMin
+#     #pmax=res$out$modelParam$fixed$pMax
+#     #row = cbind(basename(thisfile),spp,j,mean_width,center,pmin,pmax)
+#     #write.table(row,"chromosomes_qopt_hzar_extra_stuff.txt",append = T,col.names = F)
+#     #out2 = rbind(out2,row)
+#     })
+#     
+#   }
+#   dev.off()
+#   }
+# }; dev.off()
+#write.table(out2,"chromosomes_qopt_hzar_extra_stuff.txt",append = F,col.names = T)
+
+for(species in rev(c(#"bellii",#bellii-NOWEIRD",
+                     #"bilineata","bilineata-NOWEIRD",
+                     #"brunneicapillus","brunneicapillus-NOWEIRD",
+                     #"crissale","crissale-NOWEIRD",
+                     #"curvirostre","curvirostre-NOWEIRD",
+                     #"flaviceps",
+                     "flaviceps-NOWEIRD"#,
+                     #"fusca","fusca-NOWEIRD",
+                     #"melanura",
+                     #"melanura-NOWEIRD"#,
+                     #"nitens",
+                     #"nitens-NOWEIRD"#,
+                     #"sinuatus","sinuatus-NOWEIRD"
+                     ))){
   spp=species
   sppfiles=(files[grepl(species,files)])
-  #sppfiles=sppfiles[1:5]
-  textoutput=paste(species,"_hzar_chroms_npy.txt",sep="")
-  
-  pdf(paste(species,"_hzar_chroms_add.pdf",sep=""))
-  output=lapply(1:length(sppfiles),FUN = function(i){
-    x=sppfiles[i]
-    print(x)
-    spp=paste(strsplit(strsplit(strsplit(basename(x),"\\.")[[1]][5],"_")[[1]][1],"-")[[1]][-1],sep="-")
-    #individual_qopt = read.table("/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ASSEMBLY/ANGSD/QOPT/pca qopt files/chroms/BEL/K2/PseudoNC_007897.1_Tgut_mtDNA.0.F.Vireo-bellii_PCAngsd.1.K2.a0.qopt",
-    #                             header=F)
-    qopt_ada=make_qopt_ada(filename=x,spp=species,removeblank = T)
-    res=run_hzar(qopt_ada,plot=F,index=i,add=T)
-    output=list()
-    mean_width=res$mean_width
-    center = mean(res$out$mcmcRaw[,1],na.rm=T)
-    output$mean_width = mean_width
-    output$center = center
-    #output=c(mean_width,center)
-    output2=as.data.frame(do.call(cbind, output))
-    rownames(output2)=basename(x)
+  if(length(sppfiles)>0){
+    #sppfiles=sppfiles[1:5]
+    textoutput=paste(species,"_hzar_chroms_npy.txt",sep="")
     
-    write.table(output2,file=textoutput,append=T,quote=F,sep="\t")
-    return(output)
-  }); 
-  print(output)
-  dev.off()
-  
-  pdf(paste(species,"_hzar_width_center.pdf",sep=""))
-  chrom=sapply(sppfiles,FUN=function(x){strsplit(strsplit(basename(x),"\\.")[[1]][2], "_")[[1]][3]})
-  plot(0,xlim=c(0,20),ylim=c(1,length(output)+1),type="n",yaxt="n",ylab="",xlab="Longitude")
-  title(spp)
-  axis(2,1:(length(output)+1),c(chrom,"MEAN"),las=2,cex.axis=0.5)
-  for(j in 1:length(output)){
-    center=output[[j]]$center
-    width=output[[j]]$mean_width
-    start=center+(width/2)
-    end=center-(width/2)
-    lines(c(start,center,end),c(j,j,j))
-    points(center,j)
+    pdf(paste(species,"_hzar_chroms_add.pdf",sep=""))
+    plot(0)
+    output=lapply(1:length(sppfiles),FUN = function(i){
+      x=sppfiles[i]
+      print(x)
+      if(file.exists(x)){
+        try({
+          #spp=paste(strsplit(strsplit(strsplit(basename(x),"\\.")[[1]][5],"_")[[1]][1],"-")[[1]][-1],sep="-")
+          #individual_qopt = read.table("/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ASSEMBLY/ANGSD/QOPT/pca qopt files/chroms/BEL/K2/PseudoNC_007897.1_Tgut_mtDNA.0.F.Vireo-bellii_PCAngsd.1.K2.a0.qopt",
+          #                             header=F)
+          ## may need to pass this the desert tag 
+          qopt_ada=make_qopt_ada(filename=x,spp=species,removeblank = F,weird = "",desert=desert,all_qopt = all_qopt)
+          res=run_hzar(qopt_ada,plot=F,index=i,add=T)
+          output=list()
+          mean_width=res$mean_width
+          center = mean(res$out$mcmcRaw[,1],na.rm=T)
+          output$mean_width = mean_width
+          output$center = center
+          output$pmin=res$out$modelParam$fixed$pMin
+          output$pmax=res$out$modelParam$fixed$pMax
+          #output=c(mean_width,center)
+          output2=as.data.frame(do.call(cbind, output))
+          rownames(output2)=basename(x)
+          
+          write.table(output2,file=textoutput,append=T,quote=F,sep="\t")
+          R.utils::gzip(x,remove=T)
+          return(output)
+        })
+      }
+    }); 
+    #print(output)
+    dev.off()
+    # 
+    # pdf(paste(species,"_hzar_width_center.pdf",sep=""))
+    # chrom=sapply(sppfiles,FUN=function(x){strsplit(strsplit(basename(x),"\\.")[[1]][2], "_")[[1]][3]})
+    # plot(0,xlim=c(0,20),ylim=c(1,length(output)+1),type="n",yaxt="n",ylab="",xlab="Longitude")
+    # title(spp)
+    # axis(2,1:(length(output)+1),c(chrom,"MEAN"),las=2,cex.axis=0.5)
+    # for(j in 1:length(output)){
+    #   center=output[[j]]$center
+    #   width=output[[j]]$mean_width
+    #   start=center+(width/2)
+    #   end=center-(width/2)
+    #   lines(c(start,center,end),c(j,j,j))
+    #   points(center,j)
+    # }
+    # output2=as.data.frame(do.call(rbind, output))
+    # width_m=mean(as.numeric(output2$mean_width))
+    # center_m=mean(as.numeric(output2$center))
+    # width_s =sd(as.numeric(output2$mean_width))
+    # center_s=sd(as.numeric(output2$center))
+    # 
+    # start_m=center_m+(width_m/2)
+    # end_m=center_m-(width_m/2)
+    # lines(c(start_m,center_m,end_m),rep(length(output)+1,3),col="red")
+    # points(center_m,length(output)+1,col="red",pch=0)
+    # #abline(v=start_m,col="red",lty=3)
+    # #abline(v=end_m,col="red",lty=3)
+    # #abline(v=center_m,col="red",lty=2)
+    # 
+    # abline(v=center_m+center_s,col="red",lty=3)
+    # abline(v=center_m-center_s,col="red",lty=3)
+    # 
+    # abline(v=start_m+(width_s/2),col="red",lty=3)
+    # abline(v=start_m-(width_s/2),col="red",lty=3)
+    # 
+    # abline(v=end_m-(width_s/2),col="red",lty=3)
+    # abline(v=end_m+(width_s/2),col="red",lty=3)
+    # 
+    # 
+    # par(mfrow=c(2,1))
+    # hist(as.numeric(output2$center),breaks=20,main=spp,xlab="Center Location")
+    # abline(v=center_m,col="red")
+    # abline(v=center_m+center_s,col="red",lty=3)
+    # abline(v=center_m-center_s,col="red",lty=3)
+    # 
+    # hist(as.numeric(output2$mean_width),breaks=20,main=spp,xlab="Width")
+    # abline(v=width_m,col="red")
+    # abline(v=width_m+width_s,col="red",lty=3)
+    # abline(v=width_m-width_s,col="red",lty=3)
+    # 
+    # par(mfrow=c(1,1))
+    # plot(as.numeric(output2$mean_width),as.numeric(output2$center),main=spp,xlab="Width",ylab="Center")
+    # 
+    # dev.off()
   }
-  output2=as.data.frame(do.call(rbind, output))
-  width_m=mean(as.numeric(output2$mean_width))
-  center_m=mean(as.numeric(output2$center))
-  width_s =sd(as.numeric(output2$mean_width))
-  center_s=sd(as.numeric(output2$center))
   
-  start_m=center_m+(width_m/2)
-  end_m=center_m-(width_m/2)
-  lines(c(start_m,center_m,end_m),rep(length(output)+1,3),col="red")
-  points(center_m,length(output)+1,col="red",pch=0)
-  #abline(v=start_m,col="red",lty=3)
-  #abline(v=end_m,col="red",lty=3)
-  #abline(v=center_m,col="red",lty=2)
-  
-  abline(v=center_m+center_s,col="red",lty=3)
-  abline(v=center_m-center_s,col="red",lty=3)
-  
-  abline(v=start_m+(width_s/2),col="red",lty=3)
-  abline(v=start_m-(width_s/2),col="red",lty=3)
-  
-  abline(v=end_m-(width_s/2),col="red",lty=3)
-  abline(v=end_m+(width_s/2),col="red",lty=3)
-  
-  
-  par(mfrow=c(2,1))
-  hist(as.numeric(output2$center),breaks=20,main=spp,xlab="Center Location")
-  abline(v=center_m,col="red")
-  abline(v=center_m+center_s,col="red",lty=3)
-  abline(v=center_m-center_s,col="red",lty=3)
-  
-  hist(as.numeric(output2$mean_width),breaks=20,main=spp,xlab="Width")
-  abline(v=width_m,col="red")
-  abline(v=width_m+width_s,col="red",lty=3)
-  abline(v=width_m-width_s,col="red",lty=3)
-  
-  par(mfrow=c(1,1))
-  plot(as.numeric(output2$mean_width),as.numeric(output2$center),main=spp,xlab="Width",ylab="Center")
-  
-  dev.off()
   
 }; dev.off()
 

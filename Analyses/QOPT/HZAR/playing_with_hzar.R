@@ -6,7 +6,7 @@ setwd("~")
 
 #all_qopt=read.table("/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ASSEMBLY/ANGSD/QOPT/AllSpeciesMetadata_allK.csv",
 #                    sep=",",header=T)
-all_qopt=read.table("/Users/kprovost/Downloads/AllSpeciesMetadata_allK_9june2020.csv",
+all_qopt=read.table("/Users/kprovost/Dropbox (AMNH)/AllSpeciesMetadata_allK_5january2021.csv",
                     sep="\t",header=T)
 all_qopt = all_qopt[order(all_qopt$RG),]
 
@@ -119,17 +119,17 @@ files=files[grepl("0.F",files)]
 files=files[grepl("K2",files)]
 
 for(species in (c(
-  "bellii",
-  "bilineata","brunneicapillus",
-  "crissale",
-  "curvirostre","flaviceps","fusca",
-  "melanura","nitens",
-  "sinuatus"
+  "bellii"#,
+  #"bilineata","brunneicapillus",
+  #"crissale",
+  #"curvirostre","flaviceps","fusca",
+  #"melanura","nitens",
+  #"sinuatus"
 ))){
   
   sppfiles=(files[grepl(species,files)])
   #sppfiles=sppfiles[1:5]
-  pdf(paste(species,"_test.hzar.pdf",sep=""))
+  pdf(paste(species,"_test.hzar_6may2022.pdf",sep=""))
   for(i in 1:length(sppfiles)){
     print(i)
     chrom=strsplit(strsplit(basename(sppfiles[i]),"\\.")[[1]][2], "_")[[1]][3]
@@ -141,20 +141,20 @@ for(species in (c(
 }; dev.off()
 
 for(species in (c(
-  #"bellii",
+  "bellii"#,
   #"bellii-NOWEIRD","flaviceps-NOWEIRD",
-  "bilineata","brunneicapillus",
-  "crissale",
-  "curvirostre","flaviceps","fusca",
-  "melanura","nitens",
-  "sinuatus"
+  #"bilineata","brunneicapillus",
+  #"crissale",
+  #"curvirostre","flaviceps","fusca",
+  #"melanura","nitens",
+  #"sinuatus"
 ))){
   spp=species
   sppfiles=(files[grepl(species,files)])
   #sppfiles=sppfiles[1:5]
-  textoutput=paste(species,"_hzar_chroms.txt",sep="")
+  textoutput=paste(species,"_hzar_chroms_6may2022.txt",sep="")
   
-  pdf(paste(species,"_hzar_chroms.pdf",sep=""))
+  pdf(paste(species,"_hzar_chroms_6may2022.pdf",sep=""))
   output=lapply(1:length(sppfiles),FUN = function(i){
     x=sppfiles[i]
     print(x)
@@ -178,7 +178,7 @@ for(species in (c(
   print(output)
   dev.off()
   
-  pdf(paste(species,"_hzar_width_center.pdf",sep=""))
+  pdf(paste(species,"_hzar_width_center_6may2022.pdf",sep=""))
   chrom=sapply(sppfiles,FUN=function(x){strsplit(strsplit(basename(x),"\\.")[[1]][2], "_")[[1]][3]})
   plot(0,xlim=c(0,20),ylim=c(1,length(output)+1),type="n",yaxt="n",ylab="",xlab="Longitude")
   title(spp)
@@ -291,8 +291,8 @@ npyOutputFunction = function(i,smallsppfiles,smallspp=NULL,all_qopt,fast=T){
 library(RcppCNPy)
 files = list.files("/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ASSEMBLY/ANGSD/QOPT/ADMIX_NUMPY_AUG_2020/",
                    pattern="1.admix.Q.npy",full.names = T,recursive = T) ## PCA1 = k2
-all_qopt=read.table("/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ASSEMBLY/ANGSD/QOPT/AllSpeciesMetadata_allK.csv",
-                    sep=",",header=T)
+all_qopt=read.table("/Users/kprovost/Dropbox (AMNH)/AllSpeciesMetadata_allK_5january2021.csv",
+                    sep="\t",header=T)
 all_qopt = all_qopt[order(all_qopt$RG),]
 all_qopt$distance = all_qopt$LONG-min(all_qopt$LONG,na.rm=T)
 all_qopt$nSamples = 1
@@ -314,7 +314,7 @@ for(fast in c(F)){
         allsplits=unlist(lapply(sppfiles,FUN=function(x){strsplit(basename(x),"\\.")[[1]][1]}))
         ## need to fix this so that if its got pseudonc in it its pulling from tgut instead
         
-        if(plotWholeSpecies==T){pdf(paste(species,"_fast",as.character(fast),"_hzar_npy_chroms.pdf",sep=""))
+        if(plotWholeSpecies==T){pdf(paste(species,"_fast",as.character(fast),"_hzar_npy_chroms_6may2022.pdf",sep=""))
           
           output=lapply(1:length(sppfiles),FUN = function(i){npyOutputFunction(i,smallsppfiles=sppfiles,smallspp=NULL,all_qopt,fast=fast)})
           dev.off()
@@ -325,7 +325,7 @@ for(fast in c(F)){
             print(smallspp)
             smallsppfiles=sppfiles[allsplits==smallspp]
             
-            pdf(paste(species,"_",smallspp,"_fast",as.character(fast),"_hzar_npy_chroms.pdf",sep=""))
+            pdf(paste(species,"_",smallspp,"_fast",as.character(fast),"_hzar_npy_chroms_6may2022.pdf",sep=""))
             
             
             if(length(smallsppfiles)>1){
@@ -370,7 +370,7 @@ for(spp in (c("bellii"#,"bellii-NOWEIRD","bilineata",
     
     
     
-    pdf(paste(spp,"_",method,"_hzar.pdf",sep=""))
+    pdf(paste(spp,"_",method,"_hzar_6may2022.pdf",sep=""))
     
     qopt=all_qopt[all_qopt$SP==spp,]
     

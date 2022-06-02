@@ -1,7 +1,7 @@
 #!/bin/bash
 #PBS -l select=1:ncpus=16
 #PBS -l walltime=5000:00:00
-#PBS -N bel-NOWEIRD_ngsdist
+#PBS -N bel-NOWEIRD_ngsdist_2022
 #PBS -j oe
 #PBS -m ae
 #PBS -M kprovost@amnh.org
@@ -32,9 +32,12 @@ time
 --geno $GL \
 --n_ind 18 \
 --n_sites $sites \
---n_boot_rep 300 \
---boot_block_size 500 \
---out Vireo-bellii-NOWEIRD_ngsdist > Vireo-bellii-NOWEIRD_ngsdist.dist 2>ngsdist > Vireo-bellii-NOWEIRD_ngsdist.dist1 2>&1
+--out Vireo-bellii-NOWEIRD_ngsdist_2022 > Vireo-bellii-NOWEIRD_ngsdist_2022.dist 2>ngsdist > Vireo-bellii-NOWEIRD_ngsdist_2022.dist1 2>&1
+
+## REMOVED:
+# --n_boot_rep 300 \
+# --boot_block_size 500 \
+
 
 ## sites is how many sites in GL file zcat <file> | wc -l (-1 because of header)
 ## 27194088

@@ -3,9 +3,10 @@ import os
 import glob
 import sys
 import pickle
+import gzip
 
-os.chdir("/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ANALYSIS/qopts_1/")
-for npyfile in glob.glob("*/*.npy"):
+os.chdir("/Users/kprovost/Downloads/")
+for npyfile in glob.glob("*/*/*/*/*/*.npy",recursive=True):
 	print(npyfile)
 	try:
 		df = np.load(npyfile,allow_pickle=True,fix_imports=True,encoding="latin1")

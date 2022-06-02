@@ -1,0 +1,15 @@
+#!/bin/bash
+#PBS -l select=1:ncpus=1
+#PBS -l walltime=5000:00:00
+#PBS -N lostruct_pcangsd
+#PBS -j oe
+#PBS -m ae
+#PBS -M kprovost@amnh.org
+#PBS -k oe
+
+## load modules
+module load R-3.6.3 
+
+cd "/vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/COV/"
+
+Rscript "/home/kprovost/nas3/lostruct_from_pcangsd_cov.R"
