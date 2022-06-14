@@ -1,0 +1,102 @@
+#!/bin/bash
+#PBS -l select=1:ncpus=1:mem=32gb
+#PBS -l walltime=5000:00:00
+#PBS -N Par_RealignerTargetCreator
+#PBS -j oe
+#PBS -m ae
+#PBS -M kprovost@amnh.org
+#PBS -k oe
+
+# change to the working directory
+cd $PBS_O_WORKDIR
+echo "pbsworkdir"
+echo $PBS_O_WORKDIR
+EXECDIR=`pwd`
+export PATH=./:$PATH
+echo $PATH
+spp="Parrots"
+ref=/home/kprovost/nas3/genomeresequencingFromLucas/Melo_chrom/pseudochromosomesSHORT.fasta
+echo
+echo RealignerTargetCreator
+## ##### ERROR MESSAGE: File /vz-nas1-active/RawGenomicReads/FASTQ_SCREEN_RESULTS/Parrots/CLIPPED/F098_AMN_245113_P001_WF05_i5-507_i7-161_S923_L006.Parrots.zf.fil.dedup.bam.clipped.bai is malformed: Premature end-of-file while reading BAM index file /vz-nas1-active/RawGenomicReads/FASTQ_SCREEN_RESULTS/Parrots/CLIPPED/F098_AMN_245113_P001_WF05_i5-507_i7-161_S923_L006.Parrots.zf.fil.dedup.bam.clipped.bai. It's likely that this file is truncated or corrupt -- Please try re-indexing the corresponding BAM file.
+cd /vz-nas1-active/RawGenomicReads/FASTQ_SCREEN_RESULTS/Parrots/CLIPPED/
+command="time java -Djava.io.tmpdir=/home/kprovost/nas3/tmp/ 
+-jar /home/kprovost/nas3/genomeresequencingFromLucas/GenomeAnalysisTK-3.8-1-0-gf15c1c3ef/GenomeAnalysisTK.jar 
+-T RealignerTargetCreator -R ${ref} "
+for inputbam in /vz-nas1-active/RawGenomicReads/FASTQ_SCREEN_RESULTS/Parrots/CLIPPED/*.clipped.bam; do
+inputbai=${inputbam%.bam}.bai
+if [ ! -f $inputbai ]; then
+time java -Djava.io.tmpdir=/home/kprovost/nas3/tmp/ -jar /home/kprovost/nas3/genomeresequencingFromLucas/picard.jar BuildBamIndex I=$inputbam O=$inputbai
+fi
+command="${command}-I ${inputbam} ";
+done
+command="${command} -o ${spp}-allsamplesClipped-final.intervals > ${spp}-make-intervals.log 2>&1 "
+echo $command
+eval $command
+
+~~~
+
+# !/bin/bash
+# PBS -l select=1:ncpus=1:mem=32gb
+# PBS -l walltime=5000:00:00
+# PBS -N Par_RealignerTargetCreator
+# PBS -j oe
+# PBS -m ae
+# PBS -M kprovost@amnh.org
+# PBS -k oe
+# 
+# change to the working directory
+# cd $PBS_O_WORKDIR
+# echo "pbsworkdir"
+# echo $PBS_O_WORKDIR
+# EXECDIR=`pwd`
+# export PATH=./:$PATH
+# echo $PATH
+# 
+# Arguments:
+# # ref=reference sequence
+# 
+# #References:
+# #Corvus -- Vireo bellii
+# #Parus -- Auriparus flaviceps
+# #Sturnus -- Toxostoma curvirostre, Toxostoma crissale, Campylorhynchus brunneicapillus, Polioptila bilineata, Phainopepla nitens
+# #Zonotrichia -- Amphispiza bilineata, Pipilo fuscus
+# #Geospiza -- Cardinalis cardinalis, Cardinalis sinuatus
+# 
+# # /home/kprovost/nas3/genomeresequencingFromLucas
+# # Corv_chrom/  Geos_chrom/  Paru_chrom/  Stur_chrom/  Zono_chrom/  Melo_chrom/
+# pseudochromosomesSHORT.fasta 
+# 
+# spp="Parrots"
+# 
+# ref=/home/kprovost/nas3/genomeresequencingFromLucas/Melo_chrom/pseudochromosomesSHORT.fasta
+# 
+# echo
+# echo
+# echo RealignerTargetCreator
+# echo
+# echo
+# 
+# command="time java -Djava.io.tmpdir=/home/kprovost/nas3/tmp/ 
+# -jar /home/kprovost/nas3/genomeresequencingFromLucas/GenomeAnalysisTK-3.8-1-0-gf15c1c3ef/GenomeAnalysisTK.jar 
+# -T RealignerTargetCreator -R ${ref} "
+# 
+# for prebam in /vz-nas1-active/ProcessedGenomicReads/FILTERED/${spp}/REHEADERED/NOTMERGED/*${spp}*bam; do 
+# bam=${prebam%.dedup.reheadered.bam}
+# name=`echo $bam | rev | cut -d'/' -f 1 | rev`
+# inputbam=/vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/CLIPPED/${spp}/NOTMERGED/${name}.clipped.bam
+# inputbai=${inputbam%.bam}.bai
+# if [ ! -f $inputbai ]; then
+# time java -Djava.io.tmpdir=/home/kprovost/nas3/tmp/ -jar /home/kprovost/nas3/genomeresequencingFromLucas/picard.jar BuildBamIndex I=$inputbam O=$inputbai
+# fi
+# command="${command}-I ${inputbam} ";
+# done
+# 
+# cd /vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/
+# 
+# command="${command} -o ${spp}-allsamplesClipped-final.intervals > ${spp}-make-intervals.log 2>&1 "
+# 
+# echo
+# echo $command
+# eval $command
+# 
