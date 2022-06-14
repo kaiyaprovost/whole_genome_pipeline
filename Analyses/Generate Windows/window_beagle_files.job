@@ -15,23 +15,13 @@ EXECDIR=`pwd`
 export PATH=./:$PATH
 echo $PATH
 
-for spp in Amphispiza_bilineata Auriparus_flaviceps Campylorhynchus_brunneicapillus Cardinalis_sinuatus Melozone_fusca Phainopepla_nitens Polioptila_melanura Toxostoma_crissale Toxostoma_curvirostre Vireo_bellii
-do
-#spp="Auriparus-flaviceps-NOWEIRD"
-
-window=0 ## alt = 0/1
-
 cd /vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/BEAGLE/
-
-mkdir $spp/
-#cd $spp/
-
+for spp in bilineata flaviceps brunneicapillus sinuatus fusca nitens melanura crissale curvirostre bellii
+do
+echo $spp
+window=0 ## alt = 0/1
 	for i in *${spp}*beagle.gz; do 
 	echo $i
-
-	#gzip $spp.beagle
-
-
 		if [ "$window" -eq "0" ]; then
 		echo "ZERO"
 		zcat $i | awk 'FNR==1{header=$0; next} {match($1,".*_",tmp); chr=substr(tmp[0],1,length(tmp[0])-1); split($1,tmp,"_"); pos=tmp[length(tmp)]; file = chr"."int(pos/1000000000)".F.beagle"} outfile != file{outfile = file; print header > outfile} {print $0 > outfile}'
@@ -39,15 +29,11 @@ mkdir $spp/
 		echo "ONE"
 		zcat $i | awk 'FNR==1{header=$0; next} {match($1,".*_",tmp); chr=substr(tmp[0],1,length(tmp[0])-1); split($1,tmp,"_"); pos=tmp[length(tmp)]; file = chr"."int(pos/100000)".beagle"} outfile != file{outfile = file; print header > outfile} {print $0 > outfile}'
 		fi
-		
 		rm NW*beagle*
 		rm PseudoNW*beagle*
 		rm SS*beagle*
-		
 		for tempbeag in PseudoNC*beagle*; do mv $tempbeag ${i}.${tempbeag}; done;
-
 	done
-
 cd /vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/BEAGLE/
 
 #mv *${spp}*beagle* $spp/
