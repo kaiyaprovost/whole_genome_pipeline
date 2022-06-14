@@ -18,8 +18,13 @@ echo $PATH
 #Arguments:
 ## GL = genotype likehood file (Beagle format)
 
-for GL in /vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/BEAGLE/*beagle.gz; do
+for GL in /vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/BEAGLE/*_1.0.F*beagle.gz; do
 echo $GL
+
+if [ ! -f ${GL}_ngsdist_2022.txt ]
+then
+    echo "RUN"
+
 #GL="/vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/BEAGLE/Vireo_bellii/Vireo_bellii_75.bamlist.beagle.gz.PseudoNC_011495.1_Tgut_LG5.0.F.beagle.gz"
 lines=`zcat $GL | wc -l`
 sites="$(($lines-1))"
@@ -40,7 +45,7 @@ echo time
 --n_ind $indsN \
 --n_sites $sites \
 --out "${GL}_ngsdist_2022.txt"
-
+fi
 done
 
 ## REMOVED:
