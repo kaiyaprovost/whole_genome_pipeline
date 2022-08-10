@@ -1,0 +1,56 @@
+#!/bin/bash
+#PBS -l select=1:ncpus=1
+#PBS -l walltime=5000:00:00
+#PBS -N beagle_subset
+#PBS -j oe
+#PBS -m ae
+#PBS -M kprovost@amnh.org
+#PBS -k oe
+
+cd /vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/BEAGLE/
+
+# beaglepath="/vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/BEAGLE/Vireo_bellii/WINDOWS/"
+# windowfile="~/nas3/bel_mds_coords_COLORLOSTRUCT.csv"
+# python ~/nas3/beagle_extract_lostruct_windows_2.py $beaglepath $windowfile
+
+# beaglepath="/vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/BEAGLE/Amphispiza_bilineata/WINDOWS/"
+# windowfile="~/nas3/bil_mds_coords_COLORLOSTRUCT.csv"
+# python ~/nas3/beagle_extract_lostruct_windows_2.py $beaglepath $windowfile
+
+beaglepath="/vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/BEAGLE/Campylorhynchus_brunneicapillus/WINDOWS/"
+windowfile="~/nas3/bru_mds_coords_COLORLOSTRUCT.csv"
+python ~/nas3/beagle_extract_lostruct_windows_2.py $beaglepath $windowfile
+
+# beaglepath="/vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/BEAGLE/Toxostoma_crissale/WINDOWS/"
+# windowfile="~/nas3/cri_mds_coords_COLORLOSTRUCT.csv"
+# python ~/nas3/beagle_extract_lostruct_windows_2.py $beaglepath $windowfile
+
+# beaglepath="/vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/BEAGLE/Toxostoma_curvirostre/WINDOWS/"
+# windowfile="~/nas3/cur_mds_coords_COLORLOSTRUCT.csv"
+# python ~/nas3/beagle_extract_lostruct_windows_2.py $beaglepath $windowfile
+
+# beaglepath="/vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/BEAGLE/Auriparus_flaviceps/WINDOWS/"
+# windowfile="~/nas3/fla_mds_coords_COLORLOSTRUCT.csv"
+# python ~/nas3/beagle_extract_lostruct_windows_2.py $beaglepath $windowfile
+
+# beaglepath="/vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/BEAGLE/Melozone_fusca/WINDOWS/"
+# windowfile="~/nas3/fus_mds_coords_COLORLOSTRUCT.csv"
+# python ~/nas3/beagle_extract_lostruct_windows_2.py $beaglepath $windowfile
+
+# beaglepath="/vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/BEAGLE/Polioptila_melanura/WINDOWS/"
+# windowfile="~/nas3/mel_mds_coords_COLORLOSTRUCT.csv"
+# python ~/nas3/beagle_extract_lostruct_windows_2.py $beaglepath $windowfile
+
+# beaglepath="/vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/BEAGLE/Phainopepla_nitens/WINDOWS/"
+# windowfile="~/nas3/nit_mds_coords_COLORLOSTRUCT.csv"
+# python ~/nas3/beagle_extract_lostruct_windows_2.py $beaglepath $windowfile
+
+# beaglepath="/vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/BEAGLE/Cardinalis_sinuatus/WINDOWS/"
+# windowfile="~/nas3/sin_mds_coords_COLORLOSTRUCT.csv"
+# python ~/nas3/beagle_extract_lostruct_windows_2.py $beaglepath $windowfile
+
+
+
+
+
+

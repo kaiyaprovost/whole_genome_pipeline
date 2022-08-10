@@ -1,0 +1,41 @@
+#!/bin/bash
+#PBS -l select=1:ncpus=1:mem=1gb
+#PBS -l walltime=5000:00:00
+#PBS -N fst_vcf_subset
+#PBS -j oe
+#PBS -m ae
+#PBS -M kprovost@amnh.org
+#PBS -k oe
+
+cd /vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/BEAGLE/
+
+windowfile="/home/kprovost/nas3/ANGSD_pipeline/bil.fst-100.outlier.SMALL.27July2022_MICRO.txt"
+python3 /home/kprovost/nas3/ANGSD_pipeline/beagle_extract_fst_windows_folders.py /vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/BEAGLE/Amphispiza_bilineata/WINDOWS/ $windowfile
+
+# windowfile=/home/kprovost/nas3/ANGSD_pipeline/fla.fst-100.outlier.SMALL.27July2022.txt
+# python3 /home/kprovost/nas3/ANGSD_pipeline/beagle_extract_fst_windows_folders.py /vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/BEAGLE/Auriparus_flaviceps/WINDOWS/ $windowfile 
+
+# windowfile=/home/kprovost/nas3/ANGSD_pipeline/bru.fst-100.outlier.SMALL.27July2022.txt
+# python3 /home/kprovost/nas3/ANGSD_pipeline/beagle_extract_fst_windows_folders.py /vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/BEAGLE/Campylorhynchus_brunneicapillus/WINDOWS/ $windowfile 
+
+# windowfile=/home/kprovost/nas3/ANGSD_pipeline/sin.fst-100.outlier.SMALL.27July2022.txt
+# python3 /home/kprovost/nas3/ANGSD_pipeline/beagle_extract_fst_windows_folders.py /vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/BEAGLE/Cardinalis_sinuatus/WINDOWS/ $windowfile 
+
+# windowfile=/home/kprovost/nas3/ANGSD_pipeline/fus.fst-100.outlier.SMALL.27July2022.txt
+# python3 /home/kprovost/nas3/ANGSD_pipeline/beagle_extract_fst_windows_folders.py /vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/BEAGLE/Melozone_fusca/WINDOWS/ $windowfile 
+
+# windowfile=/home/kprovost/nas3/ANGSD_pipeline/nit.fst-100.outlier.SMALL.27July2022.txt
+# python3 /home/kprovost/nas3/ANGSD_pipeline/beagle_extract_fst_windows_folders.py /vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/BEAGLE/Phainopepla_nitens/WINDOWS/ $windowfile 
+
+# windowfile=/home/kprovost/nas3/ANGSD_pipeline/mel.fst-100.outlier.SMALL.27July2022.txt
+# python3 /home/kprovost/nas3/ANGSD_pipeline/beagle_extract_fst_windows_folders.py /vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/BEAGLE/Polioptila_melanura/WINDOWS/ $windowfile 
+
+# windowfile=/home/kprovost/nas3/ANGSD_pipeline/cri.fst-100.outlier.SMALL.27July2022.txt
+# python3 /home/kprovost/nas3/ANGSD_pipeline/beagle_extract_fst_windows_folders.py /vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/BEAGLE/Toxostoma_crissale/WINDOWS/ $windowfile 
+
+# windowfile=/home/kprovost/nas3/ANGSD_pipeline/cur.fst-100.outlier.SMALL.27July2022.txt
+# python3 /home/kprovost/nas3/ANGSD_pipeline/beagle_extract_fst_windows_folders.py /vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/BEAGLE/Toxostoma_curvirostre/WINDOWS/ $windowfile 
+
+# windowfile=/home/kprovost/nas3/ANGSD_pipeline/bel.fst-100.outlier.SMALL.27July2022.txt
+# python3 /home/kprovost/nas3/ANGSD_pipeline/beagle_extract_fst_windows_folders.py /vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/BEAGLE/Vireo_bellii/WINDOWS/ $windowfile 
+

@@ -17,84 +17,117 @@ echo $PATH
 
 #Arguments:
 ## GL = genotype likehood file (Beagle format)
-spp="Campylorhynchus-brunneicapillus"
-cd /vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/
-source activate py27
-for GLu in ./BEAGLE/${spp}/*F.beagle; do
+spp="Campylorhynchus_brunneicapillus"
+mainpath="/vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/BEAGLE/${spp}/"
+source activate py36
+#cd /home/kprovost/nas3/ANGSD_pipeline/pcangsd/pcangsd/
+cd $mainpath
+
+for GLu in ${mainpath}*/*.SUBSET.beagle; do
 #echo $GLu
 gzip -f $GLu
 done;
-
-for GL in ./BEAGLE/${spp}/*.F.beagle.gz; do
+ 
+for GL in ${mainpath}*/*.SUBSET.beagle.gz; do
 echo "###################"
 echo $GL
 outname=${GL%.beagle.gz}
-outname=${outname#./BEAGLE/$spp/}
 echo $outname
-for k in {1..4}; do
+for k in {1..1}; do
 echo $k
-if [ ! -f ./FOPTS/${outname}.${spp}_PCAngsd.${k}*qopt ]; then
-if [ ! -f ${outname}.${spp}_PCAngsd.${k}*qopt ]; then 
+if [ ! -f ${outname}.${spp}_PCAngsd.${k}*cov.npy* ]; then 
 # Estimate covariance matrix and individual admixture proportions
 echo "RUN"
 date
 time
-python2.7 /home/lmoreira/ANGSD_pipeline/PCAngsd/pcangsd/pcangsd.py \
+python /home/kprovost/nas3/ANGSD_pipeline/pcangsd-0.98/pcangsd.py \
 -beagle $GL \
 -admix -admix_save -e $k \
 -inbreed 2 \
--selection 1 -sites_save \
+-selection -sites_save \
 -o ${outname}.${spp}_PCAngsd.$k \
- -threads 32 > ${outname}.${spp}_pca.$k.log 2>&1
+-threads 32 > ${outname}.${spp}_pca.$k.log 2>&1
 else
 echo "ALREADY HERE1"
 fi 
-else
-echo "ALREADY HERE2"
-fi 
-mv *selection* ./SELECTIONS/
-mv *qopt* ./FOPTS/
-mv *fopt* ./FOPTS/
-mv *cov* ./COV_INBREED/
-mv *inbreed* ./COV_INBREED/
-mv *sites* ./PCASITES/
-mv *log* ./LOGS/
 done
 done
 
-for GL in ./BEAGLE/${spp}/*.beagle.gz; do
-echo "###################"
-echo $GL
-outname=${GL%.beagle.gz}
-outname=${outname#./BEAGLE/$spp/}
-echo $outname
-for k in {1..4}; do
-echo $k
-if [ ! -f ./FOPTS/${outname}.${spp}_PCAngsd.${k}*qopt ]; then
-if [ ! -f ${outname}.${spp}_PCAngsd.${k}*qopt ]; then 
-# Estimate covariance matrix and individual admixture proportions
-echo "RUN"
-date
-time
-python2.7 /home/lmoreira/ANGSD_pipeline/PCAngsd/pcangsd/pcangsd.py \
--beagle $GL \
--admix -admix_save -e $k \
--inbreed 2 \
--selection 1 -sites_save \
--o ${outname}.${spp}_PCAngsd.$k \
- -threads 32 > ${outname}.${spp}_pca.$k.log 2>&1
-else
-echo "ALREADY HERE1"
-fi 
-else
-echo "ALREADY HERE2"
-fi 
-mv *selection* ./SELECTIONS/
-mv *qopt* ./FOPTS/
-mv *fopt* ./FOPTS/
-mv *cov* ./COV_INBREED/
-mv *inbreed* ./COV_INBREED/
-mv *sites* ./PCASITES/
-mv *log* ./LOGS/
-done
-done
+# for GLu in ./BEAGLE/${spp}/*F.beagle; do
+# #echo $GLu
+# gzip -f $GLu
+# done;
+
+# for GL in ./BEAGLE/${spp}/*.F.beagle.gz; do
+# echo "###################"
+# echo $GL
+# outname=${GL%.beagle.gz}
+# outname=${outname#./BEAGLE/$spp/}
+# echo $outname
+# for k in {1..4}; do
+# echo $k
+# if [ ! -f ./FOPTS/${outname}.${spp}_PCAngsd.${k}*qopt ]; then
+# if [ ! -f ${outname}.${spp}_PCAngsd.${k}*qopt ]; then 
+# # Estimate covariance matrix and individual admixture proportions
+# echo "RUN"
+# date
+# time
+# python2.7 /home/kprovost/nas3/pcangsd/pcangsd.py \
+# -beagle $GL \
+# -admix -admix_save -e $k \
+# -inbreed 2 \
+# -selection 1 -sites_save \
+# -o ${outname}.${spp}_PCAngsd.$k \
+#  -threads 32 > ${outname}.${spp}_pca.$k.log 2>&1
+# else
+# echo "ALREADY HERE1"
+# fi 
+# else
+# echo "ALREADY HERE2"
+# fi 
+# mv *selection* ./SELECTIONS/
+# mv *qopt* ./FOPTS/
+# mv *fopt* ./FOPTS/
+# mv *cov* ./COV_INBREED/
+# mv *inbreed* ./COV_INBREED/
+# mv *sites* ./PCASITES/
+# mv *log* ./LOGS/
+# done
+# done
+# 
+# for GL in ./BEAGLE/${spp}/*.SUBSET.beagle.gz; do
+# echo "###################"
+# echo $GL
+# outname=${GL%.beagle.gz}
+# outname=${outname#./BEAGLE/$spp/}
+# echo $outname
+# for k in {1..4}; do
+# echo $k
+# if [ ! -f ./FOPTS/${outname}.${spp}_PCAngsd.${k}*qopt ]; then
+# if [ ! -f ${outname}.${spp}_PCAngsd.${k}*qopt ]; then 
+# # Estimate covariance matrix and individual admixture proportions
+# echo "RUN"
+# date
+# time
+# python2.7 /home/kprovost/nas3/pcangsd/pcangsd.py \
+# -beagle $GL \
+# -admix -admix_save -e $k \
+# -inbreed 2 \
+# -selection 1 -sites_save \
+# -o ${outname}.${spp}_PCAngsd.$k \
+#  -threads 32 > ${outname}.${spp}_pca.$k.log 2>&1
+# else
+# echo "ALREADY HERE1"
+# fi 
+# else
+# echo "ALREADY HERE2"
+# fi 
+# mv *selection* ./SELECTIONS/
+# mv *qopt* ./FOPTS/
+# mv *fopt* ./FOPTS/
+# mv *cov* ./COV_INBREED/
+# mv *inbreed* ./COV_INBREED/
+# mv *sites* ./PCASITES/
+# mv *log* ./LOGS/
+# done
+# done

@@ -39,7 +39,7 @@ if [ ! -f ${outname}.${spp}_PCAngsd.${k}*qopt ]; then
 echo "RUN"
 date
 time
-python2.7 /home/lmoreira/ANGSD_pipeline/PCAngsd/pcangsd/pcangsd.py \
+python2.7 /home/kprovost/nas3/pcangsd/pcangsd.py \
 -beagle $GL \
 -admix -admix_save -e $k \
 -inbreed 2 \
@@ -76,7 +76,7 @@ if [ ! -f ${outname}.${spp}_PCAngsd.${k}*qopt ]; then
 echo "RUN"
 date
 time
-python2.7 /home/lmoreira/ANGSD_pipeline/PCAngsd/pcangsd/pcangsd.py \
+python2.7 /home/kprovost/nas3/pcangsd/pcangsd.py \
 -beagle $GL \
 -admix -admix_save -e $k \
 -inbreed 2 \

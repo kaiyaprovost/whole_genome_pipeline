@@ -18,7 +18,7 @@ echo $PATH
 #Arguments:
 ## GL = genotype likehood file (Beagle format)
 
-for GL in /vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/BEAGLE/*_1.0.F*beagle.gz; do
+for GL in /vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/BEAGLE/*bil*/WINDOWS/*ALL*beagle.gz; do
 echo $GL
 
 if [ ! -f ${GL}_ngsdist_2022.txt ]
@@ -39,12 +39,15 @@ cd "/vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/"
 echo date
 echo time
 
-/home/lmoreira/programs/ngsTools/ngsDist/ngsDist \
+/home/kprovost/nas3/ANGSD_pipeline/ngsTools/ngsDist/ngsDist \
+--verbose 4 \
 --n_threads 16 \
 --geno $GL \
 --n_ind $indsN \
 --n_sites $sites \
 --out "${GL}_ngsdist_2022.txt"
+
+
 fi
 done
 

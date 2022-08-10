@@ -1,0 +1,39 @@
+#!/bin/bash
+#PBS -l select=1:ncpus=1
+#PBS -l walltime=5000:00:00
+#PBS -N npycov
+#PBS -j oe
+#PBS -m ae
+#PBS -M kprovost@amnh.org
+#PBS -k oe
+
+# change to the working directory
+cd $PBS_O_WORKDIR
+echo "pbsworkdir"
+echo $PBS_O_WORKDIR
+EXECDIR=`pwd`
+export PATH=./:$PATH
+echo $PATH
+
+#Arguments:
+## GL = genotype likehood file (Beagle format)
+cd "/vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/BEAGLE/"
+source activate py36
+
+# for npyfile in /vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/BEAGLE/*/*/*cov.npy; do
+# echo $npyfile
+# python /home/kprovost/nas3/ANGSD_pipeline/npy2cov.py $npyfile
+# gzip -f $npyfile
+# done
+
+# for npyfile in /vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/BEAGLE/*/*/*/*cov.npy; do
+# echo $npyfile
+# python /home/kprovost/nas3/ANGSD_pipeline/npy2cov.py $npyfile
+# gzip -f $npyfile
+# done
+
+for npyfile in /vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/BEAGLE/*/*/*/*/*cov.npy; do
+echo $npyfile;
+#python /home/kprovost/nas3/ANGSD_pipeline/npy2cov.py $npyfile;
+#gzip -f $npyfile;
+done

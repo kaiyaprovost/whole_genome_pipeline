@@ -1,7 +1,7 @@
 #!/bin/bash
 #PBS -l select=1:ncpus=1
 #PBS -l walltime=5000:00:00
-#PBS -N bel3_fullrelernn
+#PBS -N bil_fullrelernn
 #PBS -j oe
 #PBS -m ae
 #PBS -M kprovost@amnh.org
@@ -19,7 +19,7 @@ echo $PATH
 
 cd "/vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/VCFS/"
 
-mainpath="/vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/VCFS/BELLII/"
+mainpath="/vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/VCFS/BILINEATA/"
 
 #echo "$mainpath \n\n"  >> simulate.log
 cd $mainpath
@@ -27,7 +27,7 @@ cd $mainpath
 #echo "$directory \n\n" >> simulate.log
 #cd $directory;
 
-for gzfile in *vcf.gz; do gunzip -f $gzfile; done
+#for gzfile in *vcf.gz; do gunzip -f $gzfile; done
 
 rm simulate.log
 
@@ -35,8 +35,8 @@ echo "#########################
 START
 #########################" >> simulate.log
 
-for vcffile in ${PWD}/*vcf; do 
-
+for vcffile in ${PWD}/Amphispiza-bilineata-called.geno.PseudoNC.all.sorted.vcf; do
+#for vcffile in ${PWD}/*vcf; do 
 
 echo "#########################
 $vcffile
@@ -51,14 +51,21 @@ $vcffile
 ## need to see if the file is sorted! 
 
 ## fix the headers to make sure that the GENOTYPE info gets added
-python3 /home/kprovost/nas4/fix_vcf_headers.py $vcffile
+#python3 /home/kprovost/nas4/fix_vcf_headers.py $vcffile
 
 ## THIS SEEMS TO BE INTRODUCING ISSUES -- RUN A CHECK AT THE END? 
+
+STRING="sorted"
+if [[ "$vcffile" == *"$STRING"* ]]; then
+echo "SORTED"
+else
+echo "NOTSORTED"
 if [ ! -f "${vcffile%.vcf}.sorted.vcf" ]; then
 echo "##### SORTING #####" >> simulate.log;
 python3 /home/kprovost/nas4/sort_vcfs.py $vcffile
 fi
 vcffile=${vcffile%.vcf}.sorted.vcf
+fi
 
 #SIMULATE="ReLERNN_SIMULATE"
 SIMULATE="/home/kprovost/nas4/ReLERNN/ReLERNN/ReLERNN_SIMULATE"

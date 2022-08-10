@@ -139,13 +139,13 @@ options(scipen=10)
 
 filelist = sort(c(#list.files(path="/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ANALYSIS/RECOMBINATION/",
                   #           pattern="PREDICT.BSCORRECTED.txt$",full.names = T,recursive = T),
-                  list.files(path="/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER2_GENOMES/ANALYSIS/RECOMBINATION/",
-                             pattern="PREDICT.txt$",full.names = T,recursive = T)))
+                  list.files(path="/Users/kprovost/Documents/TempDropbox/BS/",
+                             pattern="BOTH_cri.PREDICT.BSCORRECTED.txt$",full.names = T,recursive = F)))
 #filelist = filelist[grepl("geno",filelist)]
 #filelist = filelist[!(grepl("sorted.sorted",filelist))]
 
 
-for(j in 119:length(filelist)) {
+for(j in 1:length(filelist)) {
   recomb_file = filelist[j]
   print(paste(j,"/",length(filelist)))
   print(recomb_file)
