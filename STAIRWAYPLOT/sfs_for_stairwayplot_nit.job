@@ -1,7 +1,7 @@
 #!/bin/bash
 #PBS -l select=1:ncpus=32:mem=32gb
 #PBS -l walltime=5000:00:00
-#PBS -N sfs
+#PBS -N sfsnit
 #PBS -j oe
 #PBS -m ae
 #PBS -M kprovost@amnh.org
@@ -14,20 +14,29 @@ echo $PBS_O_WORKDIR
 EXECDIR=`pwd`
 export PATH=./:$PATH
 echo $PATH
-
 ##References:
 ##Corvus -- Vireo
 ##Geospiza -- Cardinalis
 ##Parus -- Auriparus
 ##Sturnus -- Toxostoma, Campylorhynchus, Polioptila, Phainopepla
 ##Zonotrichia -- Amphispiza, Pipilo
-
 cd /vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/
-
 ## original nsites was 5000000
-time /home/kprovost/nas3/angsd/misc/realSFS -nSites 100000 /vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/SAFS/nit/CHI_Phainopepla-nitens_50.sfs1.saf.idx > CHI_Phainopepla-nitens_50.ml
-time /home/kprovost/nas3/angsd/misc/realSFS -nSites 100000 /vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/SAFS/nit/CHI_Phainopepla-nitens_75.sfs1.saf.idx > CHI_Phainopepla-nitens_75.ml
-time /home/kprovost/nas3/angsd/misc/realSFS -nSites 100000 /vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/SAFS/nit/CHI_Phainopepla-nitens_100.sfs1.saf.idx > CHI_Phainopepla-nitens.ml
-time /home/kprovost/nas3/angsd/misc/realSFS -nSites 100000 /vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/SAFS/nit/SON_Phainopepla-nitens_50.sfs1.saf.idx > SON_Phainopepla-nitens_50.ml
-time /home/kprovost/nas3/angsd/misc/realSFS -nSites 100000 /vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/SAFS/nit/SON_Phainopepla-nitens_75.sfs1.saf.idx > SON_Phainopepla-nitens_75.ml
-time /home/kprovost/nas3/angsd/misc/realSFS -nSites 100000 /vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/SAFS/nit/SON_Phainopepla-nitens_100.sfs1.saf.idx > SON_Phainopepla-nitens.ml
+#time /home/kprovost/nas3/angsd/misc/realSFS -nSites 100000 /vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/SAFS/nit/CHI_Phainopepla_nitens_50.sfs1.saf.idx > CHI_Phainopepla_nitens_50.ml
+#time /home/kprovost/nas3/angsd/misc/realSFS -nSites 100000 /vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/SAFS/nit/CHI_Phainopepla_nitens_75.sfs1.saf.idx > CHI_Phainopepla_nitens_75.ml
+#time /home/kprovost/nas3/angsd/misc/realSFS -nSites 100000 /vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/SAFS/nit/CHI_Phainopepla_nitens_100.sfs1.saf.idx > CHI_Phainopepla_nitens.ml
+#time /home/kprovost/nas3/angsd/misc/realSFS -nSites 100000 /vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/SAFS/nit/SON_Phainopepla_nitens_50.sfs1.saf.idx > SON_Phainopepla_nitens_50.ml
+time /home/kprovost/nas3/angsd/misc/realSFS -nSites 100000 /vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/SAFS/nit/CHI_Phainopepla_nitens_100.sfs1.saf.idx > CHI_Phainopepla_nitens_100.ml
+time /home/kprovost/nas3/angsd/misc/realSFS -nSites 100000 /vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/SAFS/nit/CHI_Phainopepla_nitens.sfs1.saf.idx > CHI_Phainopepla_nitens.ml
+time /home/kprovost/nas3/angsd/misc/realSFS -nSites 100000 /vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/SAFS/nit/CHI_Phainopepla-nitens_100.taj1.saf.idx > CHI_Phainopepla_nitens_taj_100.ml
+time /home/kprovost/nas3/angsd/misc/realSFS -nSites 100000 /vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/SAFS/nit/CHI_Phainopepla-nitens-NOWEIRD_100.taj1.saf.idx > CHI_Phainopepla_nitens_NOWEIRD_taj_100.ml
+time /home/kprovost/nas3/angsd/misc/realSFS -nSites 100000 /vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/SAFS/nit/Phainopepla-nitens-CHI-taj1.saf.idx > CHI_Phainopepla_nitens_taj.ml
+time /home/kprovost/nas3/angsd/misc/realSFS -nSites 100000 /vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/SAFS/nit/Phainopepla_nitens_100.sfs1.saf.idx > Phainopepla_nitens_100.ml
+time /home/kprovost/nas3/angsd/misc/realSFS -nSites 100000 /vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/SAFS/nit/Phainopepla-nitens_100.taj1.saf.idx > Phainopepla_nitens_taj_100.ml
+time /home/kprovost/nas3/angsd/misc/realSFS -nSites 100000 /vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/SAFS/nit/Phainopepla-nitens-NOWEIRD_100.taj1.saf.idx > Phainopepla_nitens_NOWEIRD_taj_100.ml
+time /home/kprovost/nas3/angsd/misc/realSFS -nSites 100000 /vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/SAFS/nit/Phainopepla-nitens-taj1.saf.idx > Phainopepla_nitens_taj.ml
+time /home/kprovost/nas3/angsd/misc/realSFS -nSites 100000 /vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/SAFS/nit/SON_Phainopepla_nitens_100.sfs1.saf.idx > SON_Phainopepla_nitens_100.ml
+time /home/kprovost/nas3/angsd/misc/realSFS -nSites 100000 /vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/SAFS/nit/SON_Phainopepla_nitens.sfs1.saf.idx > SON_Phainopepla_nitens.ml
+time /home/kprovost/nas3/angsd/misc/realSFS -nSites 100000 /vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/SAFS/nit/SON_Phainopepla-nitens_100.taj1.saf.idx > SON_Phainopepla_nitens_taj_100.ml
+time /home/kprovost/nas3/angsd/misc/realSFS -nSites 100000 /vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/SAFS/nit/SON_Phainopepla-nitens-NOWEIRD_100.taj1.saf.idx > SON_Phainopepla_nitens_NOWEIRD_taj_100.ml
+time /home/kprovost/nas3/angsd/misc/realSFS -nSites 100000 /vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/SAFS/nit/Phainopepla-nitens-SON-taj1.saf.idx > SON_Phainopepla_nitens_taj.ml
