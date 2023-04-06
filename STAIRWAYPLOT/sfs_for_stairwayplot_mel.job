@@ -26,12 +26,12 @@ cd /vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/
 #time /home/kprovost/nas3/angsd/misc/realSFS -nSites 100000 /vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/SAFS/mel/CHI_Polioptila_melanura_50.sfs1.saf.idx > CHI_Polioptila_melanura_50.ml
 #time /home/kprovost/nas3/angsd/misc/realSFS -nSites 100000 /vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/SAFS/mel/CHI_Polioptila_melanura_75.sfs1.saf.idx > CHI_Polioptila_melanura_75.ml
 #time /home/kprovost/nas3/angsd/misc/realSFS -nSites 100000 /vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/SAFS/mel/SON_Polioptila_melanura_50.sfs1.saf.idx > SON_Polioptila_melanura_50.ml
-time /home/kprovost/nas3/angsd/misc/realSFS -nSites 100000 /vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/SAFS/mel/CHI_Polioptila_melanura_100.sfs1.saf.idx > CHI_Polioptila_melanura_100.ml
-time /home/kprovost/nas3/angsd/misc/realSFS -nSites 100000 /vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/SAFS/mel/CHI_Polioptila_melanura.sfs1.saf.idx > CHI_Polioptila_melanura.ml
-time /home/kprovost/nas3/angsd/misc/realSFS -nSites 100000 /vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/SAFS/mel/CHI_Polioptila-melanura_100.taj1.saf.idx > CHI_Polioptila_melanura_taj_100.ml
-time /home/kprovost/nas3/angsd/misc/realSFS -nSites 100000 /vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/SAFS/mel/CHI_Polioptila-melanura-NOWEIRD_100.taj1.saf.idx > CHI_Polioptila_melanura_NOWEIRD_taj_100.ml
-time /home/kprovost/nas3/angsd/misc/realSFS -nSites 100000 /vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/SAFS/mel/Polioptila-melanura-CHI-taj1.saf.idx > CHI_Polioptila_melanura_taj.ml
-time /home/kprovost/nas3/angsd/misc/realSFS -nSites 100000 /vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/SAFS/mel/Polioptila_melanura_100.sfs1.saf.idx > Polioptila_melanura_100.ml
+# time /home/kprovost/nas3/angsd/misc/realSFS -nSites 100000 /vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/SAFS/mel/CHI_Polioptila_melanura_100.sfs1.saf.idx > CHI_Polioptila_melanura_100.ml
+# time /home/kprovost/nas3/angsd/misc/realSFS -nSites 100000 /vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/SAFS/mel/CHI_Polioptila_melanura.sfs1.saf.idx > CHI_Polioptila_melanura.ml
+# time /home/kprovost/nas3/angsd/misc/realSFS -nSites 100000 /vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/SAFS/mel/CHI_Polioptila-melanura_100.taj1.saf.idx > CHI_Polioptila_melanura_taj_100.ml
+# time /home/kprovost/nas3/angsd/misc/realSFS -nSites 100000 /vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/SAFS/mel/CHI_Polioptila-melanura-NOWEIRD_100.taj1.saf.idx > CHI_Polioptila_melanura_NOWEIRD_taj_100.ml
+# time /home/kprovost/nas3/angsd/misc/realSFS -nSites 100000 /vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/SAFS/mel/Polioptila-melanura-CHI-taj1.saf.idx > CHI_Polioptila_melanura_taj.ml
+
 time /home/kprovost/nas3/angsd/misc/realSFS -nSites 100000 /vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/SAFS/mel/Polioptila_melanura-sfs1.saf.idx > Polioptila_melanura.ml
 time /home/kprovost/nas3/angsd/misc/realSFS -nSites 100000 /vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/SAFS/mel/Polioptila-melanura_100.taj1.saf.idx > Polioptila_melanura_taj_100.ml
 time /home/kprovost/nas3/angsd/misc/realSFS -nSites 100000 /vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/SAFS/mel/Polioptila-melanura-NOWEIRD_100.taj1.saf.idx > Polioptila_melanura_NOWEIRD_taj_100.ml
@@ -41,3 +41,4 @@ time /home/kprovost/nas3/angsd/misc/realSFS -nSites 100000 /vz-nas1-active/Proce
 time /home/kprovost/nas3/angsd/misc/realSFS -nSites 100000 /vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/SAFS/mel/SON_Polioptila_melanura.sfs1.saf.idx > SON_Polioptila_melanura.ml
 time /home/kprovost/nas3/angsd/misc/realSFS -nSites 100000 /vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/SAFS/mel/SON_Polioptila-melanura_100.taj1.saf.idx > SON_Polioptila_melanura_taj_100.ml
 time /home/kprovost/nas3/angsd/misc/realSFS -nSites 100000 /vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/SAFS/mel/SON_Polioptila-melanura-NOWEIRD_100.taj1.saf.idx > SON_Polioptila_melanura_NOWEIRD_taj_100.ml
+time /home/kprovost/nas3/angsd/misc/realSFS -nSites 100000 /vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/SAFS/mel/Polioptila_melanura_100.sfs1.saf.idx > Polioptila_melanura_100.ml

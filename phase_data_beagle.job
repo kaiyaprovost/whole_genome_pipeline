@@ -1,0 +1,16 @@
+#!/bin/bash
+#PBS -l select=1:ncpus=1
+#PBS -l walltime=99999:00:00
+#PBS -N beaglephase
+#PBS -j oe
+#PBS -m ae
+#PBS -M kprovost@amnh.org
+#PBS -k oe
+
+cd "/vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/VCFS/"
+
+vcffile="/vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/VCFS/BELLII/WINDOWS/GENOME_WINDOWS/Vireo-bellii-called.geno.PseudoNC.all.sorted.sorted.sorted.vcf_w100000_o20000_0.window.vcf.gz"
+
+module load java-jdk-14.0.1
+
+java -Xmx100m -jar "/home/kprovost/nas3/beagle.25Mar22.4f6.jar" gt=$vcffile out=$vcffile.phased burnin=3 iterations=12 phase-states=280 impute=false

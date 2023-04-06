@@ -1,0 +1,73 @@
+#!/bin/bash
+#PBS -l select=1:ncpus=8:mem=128gb
+#PBS -l walltime=5000:00:00
+#PBS -N fastq_screen
+#PBS -j oe
+#PBS -m ae
+#PBS -M kprovost@amnh.org
+#PBS -k oe
+
+# change to the working directory
+cd $PBS_O_WORKDIR
+echo "pbsworkdir"
+echo $PBS_O_WORKDIR
+EXECDIR=`pwd`
+export PATH=./:$PATH
+echo $PATH
+
+module load bwa-0.7.15
+
+export PERL5LIB=/usr/bin/perl
+export PERL5LIB=/home/kprovost/perl5/perlbrew/build/perl-5.28.0/perl-5.28.0/perl
+export PERLLIB=/usr/bin/perl
+export PERLLIB=/home/kprovost/perl5/perlbrew/build/perl-5.28.0/perl-5.28.0/perl
+export PERL5LIB=/usr/local/software/PERL/perl-5.26.0/bin/perl
+export PERLLIB=/usr/local/software/PERL/perl-5.26.0/bin/perl
+
+module load perl-5.26.0
+
+## to do this for the human genome
+
+cd /vz-nas1-active/RawGenomicReads/HUMANS/
+
+for fastq in /vz-nas2-archive/RawGenomicReads-Archive/RAPiD-Genomics_GW180323979_AMN_245107_P01_WD03_i5-SI_i7-135_S762_L004_R?_001.fastq.gz; do 
+/home/kprovost/nas3/fastq_screen_v0.14.0/fastq_screen --aligner bwa --tag --filter 00003 \
+--conf /home/kprovost/nas3/genomeresequencingFromLucas/fastq_screen.conf $fastq
+done 
+
+# 
+# /home/kprovost/nas3/fastq_screen_v0.14.0/fastq_screen --aligner bwa $fastq
+# 
+# cd /vz-nas1-active/RawGenomicReads/
+# 
+# # three different loops
+# 
+# for fastq in AMN_245*/*/*/*fastq.gz; do 
+# echo 
+# echo "####################"
+# echo $fastq
+# echo "####################"
+# echo 
+# /home/kprovost/nas3/fastq_screen_v0.14.0/fastq_screen --aligner bwa $fastq
+# done
+# 
+# for fastq in AMN_245*/Plate2/*/*/*fastq.gz; do 
+# echo 
+# echo "####################"
+# echo $fastq
+# echo "####################"
+# echo 
+# /home/kprovost/nas3/fastq_screen_v0.14.0/fastq_screen --aligner bwa $fastq
+# done
+# 
+# for fastq in AMN_245*/*/*fastq.gz; do 
+# echo 
+# echo "####################"
+# echo $fastq
+# echo "####################"
+# echo 
+# /home/kprovost/nas3/fastq_screen_v0.14.0/fastq_screen --aligner bwa $fastq
+# done
+# 
+# 
+# 

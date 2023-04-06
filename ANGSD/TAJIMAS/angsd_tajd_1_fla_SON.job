@@ -50,7 +50,13 @@ time /home/kprovost/nas3/angsd/misc/realSFS \
 /vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/SAFS/Auriparus-flaviceps-SON-taj1.saf.idx \
 > Auriparus-flaviceps-SON-taj.sfs
 
-time /home/kprovost/nas3/angsd/angsd -GL 2 -bam $bamlist -doThetas 1 -doSaf 1 -pest Auriparus-flaviceps-SON-taj.sfs -anc $ref -out Auriparus-flaviceps-SON-taj2 
+time /home/kprovost/nas3/angsd/angsd -GL 2 \
+-bam $bamlist \
+-doThetas 1 \
+-doSaf 1 \
+-pest Auriparus-flaviceps-SON-taj.sfs \
+-anc $ref \
+-out Auriparus-flaviceps-SON-taj2 
 
 #Estimate for every Chromosome/scaffold
 time /home/kprovost/nas3/angsd/misc/thetaStat do_stat \

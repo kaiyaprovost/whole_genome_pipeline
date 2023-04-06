@@ -7,7 +7,7 @@ import gzip
 
 ## this will work with npy files and npz files 
 
-os.chdir("/Users/kprovost/Documents/Postdoc_Working/Sounds_and_Annotations/Aves/Passeriformes/Oscines/Passerellidae/Pipilo/ocai/C/")
+os.chdir("/Users/kprovost/Documents/Postdoc_Working/Finished_Models/9SppBalanced/")
 for npyfile in glob.glob("*.npy",recursive=True):
 	print(npyfile)
 	try:
