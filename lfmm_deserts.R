@@ -2,15 +2,133 @@ library(lfmm)
 library(LEA)
 library('raster')
 library('RStoolbox') ## not working on huxley
-#if (!require("BiocManager", quietly = TRUE))
-#install.packages("BiocManager")
-#BiocManager::install("LEA")
+if (!require("BiocManager", quietly = TRUE))
+install.packages("BiocManager")
+BiocManager::install("LEA")
+BiocManager::install("lfmm2")
 #devtools::install_github("https://github.com/bcm-uga/lfmm")
+
+## step 1: run the lfmm examples
+{
+  data("example.data")
+  data("skin.exposure")
+  
+  Y = example.data$genotype
+  pc = prcomp(Y)
+  plot(pc$sdev[1:20]^2,xlab="PC",ylab="Var explained")
+  points(6,pc$sdev[6]^2,type="h",lwd=3,col="blue")
+  
+  Y = example.data$genotype
+  X = example.data$phenotype
+  mod.lfmm = lfmm_ridge(Y=Y,X=X,K=6)
+  pv = lfmm_test(Y=Y,X=X,lfmm=mod.lfmm,calibrate="gif")
+  pvalues = pv$calibrated.pvalue
+  qqplot(rexp(length(pvalues),rate=log(10)),-log10(pvalues),
+         xlab="Exp quant",pch=19,cex=0.4)
+  abline(0,1)
+  plot(-log10(pvalues),pch=19,cex=0.2,xlab="SNP",ylab="-Log P",col="grey")
+  points(example.data$causal.set,-log10(pvalues)[example.data$causal.set],
+         type="h",col="blue")
+  
+  mod.lfmm = lfmm_lasso(Y=Y,X=X,K=6,nozero.prop = 0.01) ## this takes longer than ridge
+  pv = lfmm_test(Y=Y,X=X,lfmm=mod.lfmm,calibrate="gif")
+  pvalues=pv$calibrated.pvalue
+  qqplot(rexp(length(pvalues),rate=log(10)),-log10(pvalues),
+         xlab="Exp quant",pch=19,cex=0.4)
+  abline(0,1)
+  plot(-log10(pvalues),pch=19,cex=0.2,xlab="SNP",ylab="-Log P",col="grey")
+  points(example.data$causal.set,-log10(pvalues)[example.data$causal.set],
+         type="h",col="blue")
+  
+  
+  
+  Y = skin.exposure$beta.value
+  pc = prcomp(Y)
+  plot(pc$sdev[1:20]^2,xlab="PC",ylab="Var explained")
+  points(2,pc$sdev[2]^2,type="h",lwd=3,col="blue")
+  
+  Y = scale(skin.exposure$beta.value)
+  X = scale(as.numeric(skin.exposure$exposure))
+  mod.lfmm = lfmm_ridge(Y=Y,X=X,K=2)
+  pv = lfmm_test(Y=Y,X=X,lfmm=mod.lfmm,calibrate = "gif")
+  plot(-log10(pv$calibrated.pvalue),pch=19,cex=0.3,
+       xlab="probe",ylab="-logp",col="grey")
+  causal.set=seq(11,1496,by=80)
+  points(causal.set,-log10(pv$calibrated.pvalue)[causal.set],col="blue")
+}
+
+## run the lfmm2 examples
+{
+  setwd("~/")
+  
+  data("tutorial")
+  write.lfmm(tutorial.R,"genotypes.lfmm") ## ped format is closest to this
+  write.geno(tutorial.R,"genotypes.geno")
+  write.env(tutorial.C,"gradients.env")
+  
+  pc = pca("genotypes.lfmm",scale=T)
+  tw = tracy.widom(pc)
+  plot(tw$percentage,pch=19,col="darkblue",cex=0.8)
+  
+
+  ## snmf
+  {
+  project = NULL
+  project = snmf("genotypes.geno",K=1:10,entropy=T,repetitions=10,project="new") 
+  ## this seems to have issues when on dropbox, don't run it on dropbox
+  plot(project,col="blue",pch=19,cex=1.2)
+  best = which.min(cross.entropy(project,K=4))
+  my.colors=c("tomato","lightblue","olivedrab","gold")
+  bp = barchart(project,K=4,run=best,border=NA,space=0,
+           col=my.colors,xlab="Inds",ylab="Anc. prop",main="Anc. matrix")
+  }
+  
+  ## BELOW IS FOR LFMM
+  
+  project = NULL
+  project = lfmm("genotypes.lfmm","gradients.env",K=6,repetitions=5,project="new")
+  p = lfmm.pvalues(project,K=6)
+  pvalues = p$pvalues
+  ## GEA significant test
+  par(mfrow=c(2,1))
+  hist(pvalues,col="lightblue")
+  plot(-(log10(pvalues)),pch=19,col="blue",cex=0.7)
+  
+  for(alpha in c(0.05,0.1,0.15,0.2)) {
+    print(paste("Expected FDR: ",alpha))
+    L = length(pvalues)
+    w = which(sort(pvalues) < alpha * (1:L) / L)
+    candidates = order(pvalues)[w]
+    Lc = length(candidates)
+    estimated.FDR = sum(candidates<= 350)/Lc
+    print(paste("Observed FDR:",
+                round(estimated.FDR,digits=2)))
+    estimated.TPR = sum(candidates>350)/50
+    print(paste("Estimated TPR:",
+                round(estimated.TPR,digits=2)))
+  }
+  
+  data("offset_example")
+  Y = offset_example$geno
+  X = offset_example$env
+  mod.lfmm2 = lfmm2(input=Y,env=X,K=2)
+  par(mfrow=c(1,1))
+  plot(mod.lfmm2@U,col="grey",pch=19,xlab="Factor 1",ylab="Factor 2")
+
+  pv = lfmm2.test(object=mod.lfmm2,input=Y,env=X,full=T)
+  plot(-log10(pv$pvalues),col="grey",cex=0.6,pch=19)
+  points()
+  
+  
+  pv = lfmm2.test(object=mod.lfmm2,input=Y,env=X,full=T)
+  
+}
 
 #https://bcm-uga.github.io/lfmm/articles/lfmm
 
-setwd("/vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/VCFS/CURVIROSTRE/GENOME/")
+#setwd("/vz-nas1-active/ProcessedGenomicReads/EVERY_PLATE/ANGSD/VCFS/CURVIROSTRE/GENOME/")
 #setwd("~/Dropbox (AMNH)/")
+setwd("C:/Users/kaiya/Dropbox (AMNH)")
 
 reloadEnv = F
 
@@ -37,24 +155,22 @@ if(file.exists("worldclim_pca.tif")) {
     #plot(border)
     
   } else {
-    Env <- getData("worldclim",var="bio",res=10)
+    Env <- getData("worldclim",var="bio",res=10) ## need to replace with geodata
     Env = crop(Env,extent(-130,-70,20,50))
     
   }
   
-  
-  
-  
-pca1 <- RStoolbox::rasterPCA(Env,filename="worldclim_pca.tif",format="GTiff")
-plot(pca1$model$sdev[1:20]^2, xlab = 'PC', ylab = "Variance explained") ## k=3?
-write.table(summary(pca1$model)$loadings,"worldclim_pca_loadings.txt",sep="\t")
-plot(pca1$map)
-plot(pca1$map,1)
-library(ggplot2)
-RStoolbox::ggRGB(pca1$map,1,2,3, stretch="lin", q=0)
+  pca1 <- RStoolbox::rasterPCA(Env,filename="worldclim_pca.tif",format="GTiff")
+  plot(pca1$model$sdev[1:20]^2, xlab = 'PC', ylab = "Variance explained") ## k=3?
+  write.table(summary(pca1$model)$loadings,"worldclim_pca_loadings.txt",sep="\t")
+  plot(pca1$map)
+  plot(pca1$map,1)
+  library(ggplot2)
+  RStoolbox::ggRGB(pca1$map,1,2,3, stretch="lin", q=0)
 }
 
-latlongs = read.csv("~/locations_genome_dissertation.csv",header=T)
+latlongs = read.csv("C:/Users/kaiya/Dropbox (AMNH)/Dissertation/CHAPTER3_TRAITS/locations_genome_dissertation.csv")
+#latlongs = read.csv("~/locations_genome_dissertation.csv",header=T)
 #latlongs = read.csv("/Users/kprovost/Dropbox (AMNH)/Dissertation/CHAPTER3_TRAITS/locations_genome_dissertation.csv",header=T)
 latlongs_extract = extract(pca1,latlongs[,c("LONG","LAT")])
 latlongs = cbind(latlongs,latlongs_extract)
@@ -64,12 +180,12 @@ vcffile="Toxostoma-curvirostre-called.geno.PseudoNC.all.fixedchroms.converted.vc
 lfmmfile=paste(tools::file_path_sans_ext(vcffile),".lfmm",sep="")
 projectfile=sub("lfmm","snmfProject",lfmmfile)
 if(!file.exists(lfmmfile)){
-fullfile = readr::read_file(vcffile)
-fullfile=sub(" ","",fullfile)
-readr::write_file(fullfile,vcffile)
-## this will crash R if the header contains spaces in the names, or any other kind of text
-## try reading in the first few lines and seeing if there are spaces?
-lfmmfile = LEA::vcf2lfmm(vcffile)
+  fullfile = readr::read_file(vcffile)
+  fullfile=sub(" ","",fullfile)
+  readr::write_file(fullfile,vcffile)
+  ## this will crash R if the header contains spaces in the names, or any other kind of text
+  ## try reading in the first few lines and seeing if there are spaces?
+  lfmmfile = LEA::vcf2lfmm(vcffile)
 }
 genofile = sub("lfmm","geno",lfmmfile)
 
@@ -78,11 +194,11 @@ envfile=paste(vcfspecies,"_env_pc1_lfmm.txt",sep="") ## want to only do this onc
 if(file.exists(envfile)){
   envalues = read.table(envfile,sep="\t",header=F)
 } else {
-envalues = latlongs[latlongs$SPECIES==vcfspecies,colnames(latlongs_extract)]
-envalues = envalues[,1] ## only keep pc1
-## get the environments for each individual  
-#thesevalues = extract(pca1,latlongs_species)
-write.table(envalues,envfile,row.names = F,sep="\t",col.names =F)
+  envalues = latlongs[latlongs$SPECIES==vcfspecies,colnames(latlongs_extract)]
+  envalues = envalues[,1] ## only keep pc1
+  ## get the environments for each individual  
+  #thesevalues = extract(pca1,latlongs_species)
+  write.table(envalues,envfile,row.names = F,sep="\t",col.names =F)
 }
 
 # main options
@@ -93,11 +209,11 @@ project = NULL
 if(file.exists(projectfile)){ 
   project = load.snmfProject(projectfile) 
 } else {
-project = snmf(genofile, ## takes a while
-               K = 1:3,
-               entropy = TRUE,
-               repetitions = 10,
-               project = "new")
+  project = snmf(genofile, ## takes a while
+                 K = 1:3,
+                 entropy = TRUE,
+                 repetitions = 10,
+                 project = "new")
 }
 par(mfrow=c(1,1))
 plot(project, col = "blue", pch = 19, cex = 1.2)
@@ -133,28 +249,28 @@ dev.off()
 if(file.exists(paste(projectfile,"_K2_pvalues.txt",sep=""))){
   pvalues = read.table(paste(projectfile,"_K2_pvalues.txt",sep=""))
 } else {
-p = snmf.pvalues(project, ## also takes a while because goes through every snp
-                 entropy = TRUE,
-                 ploidy = 2,
-                 K = 2)
-pvalues = p$pvalues
-write.table(pvalues,paste(projectfile,"_K2_pvalues.txt",sep=""))
+  p = snmf.pvalues(project, ## also takes a while because goes through every snp
+                   entropy = TRUE,
+                   ploidy = 2,
+                   K = 2)
+  pvalues = p$pvalues
+  write.table(pvalues,paste(projectfile,"_K2_pvalues.txt",sep=""))
 }
 if(!file.exists(paste(projectfile,"_K2_pvalues.png",sep=""))){
-png(paste(projectfile,"_K2_pvalues.png",sep=""))
-par(mfrow = c(2,1))
-hist(pvalues, col = "orange")
-plot(-log10(pvalues), pch = 19, col = "blue", cex = .5)
-dev.off()
+  png(paste(projectfile,"_K2_pvalues.png",sep=""))
+  par(mfrow = c(2,1))
+  hist(pvalues, col = "orange")
+  plot(-log10(pvalues), pch = 19, col = "blue", cex = .5)
+  dev.off()
 }
 
 if(file.exists(paste(projectfile,"_K3_pvalues.txt",sep=""))){
   pvalues3 = read.table(paste(projectfile,"_K3_pvalues.txt",sep=""))
 } else {
   p3 = snmf.pvalues(project, ## also takes a while because goes through every snp
-                   entropy = TRUE,
-                   ploidy = 2,
-                   K = 3)
+                    entropy = TRUE,
+                    ploidy = 2,
+                    K = 3)
   pvalues3 = p3$pvalues
   write.table(pvalues3,paste(projectfile,"_K3_pvalues.txt",sep=""))
 }
@@ -186,17 +302,17 @@ if(!file.exists(paste(lfmmfile,"_imputed.geno",sep=""))){
 
 project_env = NULL
 project_env = lfmm(lfmmfile, ## takes a while
-               envfile,
-               K = 2,
-               repetitions = 5,
-               project = "new")
+                   envfile,
+                   K = 2,
+                   repetitions = 5,
+                   project = "new")
 
 project.impute_env = NULL
 project.impute_env = lfmm(imputelfmm, ## takes a while 
-               envfile,
-               K = 2,
-               repetitions = 5,
-               project = "new")
+                          envfile,
+                          K = 2,
+                          repetitions = 5,
+                          project = "new")
 
 ## this needs to be imputed to work i think 
 Y = data.table::fread(imputelfmm)
@@ -208,18 +324,18 @@ pp <- lfmm_test(Y = Y,
                 X = X, 
                 lfmm = mod.lfmm, 
                 calibrate = "gif" ## median+MAD, gif, or NULL
-                )
+)
 pvalues <- pp$calibrated.pvalue
 pvalues
 
 Y2 = data.table::fread(lfmmfile)
 mod.lfmm2 <- lfmm_ridge(Y = Y2, 
-                       X = X, 
-                       K = 2)  # K = 2 genetic clusters
+                        X = X, 
+                        K = 2)  # K = 2 genetic clusters
 pp2 <- lfmm_test(Y = Y2, 
-                X = X, 
-                lfmm = mod.lfmm2, 
-                calibrate = "gif" ## median+MAD, gif, or NULL
+                 X = X, 
+                 lfmm = mod.lfmm2, 
+                 calibrate = "gif" ## median+MAD, gif, or NULL
 )
 pvalues2 <- pp2$calibrated.pvalue
 pvalues2
@@ -260,26 +376,26 @@ project.missing = snmf(lfmmfile, K = 4,
 
 
 {
-#### LEA EXAMPLES
-# creation of a directory for LEA analyses
-dir.create("LEA_analyses")
-# set the created directory as the working directory
-setwd("LEA_analyses")
-
-## TODO: look up how to convert this data
-
-library(LEA)
-# Creation a the genotypic file: "genotypes.lfmm"
-# The data include 400 SNPs for 50 individuals.
-data("tutorial")
-# Write genotypes in the lfmm format
-write.lfmm(tutorial.R, "genotypes.lfmm")
-# Write genotypes in the geno format
-write.geno(tutorial.R, "genotypes.geno")
-# creation of an environment gradient file: gradient.env.
-# The .env file contains a single ecological variable
-# for each individual.
-write.env(tutorial.C, "gradients.env")
+  #### LEA EXAMPLES
+  # creation of a directory for LEA analyses
+  dir.create("LEA_analyses")
+  # set the created directory as the working directory
+  setwd("LEA_analyses")
+  
+  ## TODO: look up how to convert this data
+  
+  library(LEA)
+  # Creation a the genotypic file: "genotypes.lfmm"
+  # The data include 400 SNPs for 50 individuals.
+  data("tutorial")
+  # Write genotypes in the lfmm format
+  write.lfmm(tutorial.R, "genotypes.lfmm")
+  # Write genotypes in the geno format
+  write.geno(tutorial.R, "genotypes.geno")
+  # creation of an environment gradient file: gradient.env.
+  # The .env file contains a single ecological variable
+  # for each individual.
+  write.env(tutorial.C, "gradients.env")
 }
 # run of pca
 # Available options, K (the number of PCs),
@@ -301,66 +417,66 @@ tw$pvalues[1:5]
 # plot the percentage of variance explained by each component
 plot(tw$percentage)
 {
-# main options
-# K = number of ancestral populations
-# entropy = TRUE: computes the cross-entropy criterion,
-# CPU = 4 the number of CPUs.
-project = NULL
-project = snmf("genotypes.geno", ## takes a while
-               K = 1:10,
-               entropy = TRUE,
-               repetitions = 10,
-               project = "new")
-
-# plot cross-entropy criterion for all runs in the snmf project
-plot(project, col = "blue", pch = 19, cex = 1.2)
-
-# select the best run for K = 4
-best = which.min(cross.entropy(project, K = 4))
-my.colors <- c("tomato", "lightblue",
-               "olivedrab", "gold")
-barchart(project, K = 4, run = best,
-         border = NA, space = 0,
-         col = my.colors,
-         xlab = "Individuals",
-         ylab = "Ancestry proportions",
-         main = "Ancestry matrix") -> bp
-axis(1, at = 1:length(bp$order),
-     labels = bp$order, las=1,
-     cex.axis = .4)
-
-# Population differentiation tests
-p = snmf.pvalues(project,
+  # main options
+  # K = number of ancestral populations
+  # entropy = TRUE: computes the cross-entropy criterion,
+  # CPU = 4 the number of CPUs.
+  project = NULL
+  project = snmf("genotypes.geno", ## takes a while
+                 K = 1:10,
                  entropy = TRUE,
-                 ploidy = 2,
-                 K = 4)
-pvalues = p$pvalues
-par(mfrow = c(2,1))
-hist(pvalues, col = "orange")
-plot(-log10(pvalues), pch = 19, col = "blue", cex = .5)
-
-
-# creation of a genotypic matrix with missing genotypes
-dat = as.numeric(tutorial.R)
-dat[sample(1:length(dat), 100)] <- 9 ## 9 is missing data 
-dat <- matrix(dat, nrow = 50, ncol = 400)
-write.lfmm(dat, "genoM.lfmm")
-
-project.missing = snmf("genoM.lfmm", K = 4,
-                       entropy = TRUE, repetitions = 10,
-                       project = "new")
-
-# select the run with the lowest cross-entropy value
-best = which.min(cross.entropy(project.missing, K = 4))
-# Impute the missing genotypes
-impute(project.missing, "genoM.lfmm",
-       method = 'mode', K = 4, run = best)
-## Missing genotype imputation for K = 4
-## Missing genotype imputation for run = 3
-## Results are written in the file: genoM.lfmm_imputed.lfmm
-# Proportion of correct imputation results
-dat.imp = read.lfmm("genoM.lfmm_imputed.lfmm")
-mean( tutorial.R[dat == 9] == dat.imp[dat == 9] )
+                 repetitions = 10,
+                 project = "new")
+  
+  # plot cross-entropy criterion for all runs in the snmf project
+  plot(project, col = "blue", pch = 19, cex = 1.2)
+  
+  # select the best run for K = 4
+  best = which.min(cross.entropy(project, K = 4))
+  my.colors <- c("tomato", "lightblue",
+                 "olivedrab", "gold")
+  barchart(project, K = 4, run = best,
+           border = NA, space = 0,
+           col = my.colors,
+           xlab = "Individuals",
+           ylab = "Ancestry proportions",
+           main = "Ancestry matrix") -> bp
+  axis(1, at = 1:length(bp$order),
+       labels = bp$order, las=1,
+       cex.axis = .4)
+  
+  # Population differentiation tests
+  p = snmf.pvalues(project,
+                   entropy = TRUE,
+                   ploidy = 2,
+                   K = 4)
+  pvalues = p$pvalues
+  par(mfrow = c(2,1))
+  hist(pvalues, col = "orange")
+  plot(-log10(pvalues), pch = 19, col = "blue", cex = .5)
+  
+  
+  # creation of a genotypic matrix with missing genotypes
+  dat = as.numeric(tutorial.R)
+  dat[sample(1:length(dat), 100)] <- 9 ## 9 is missing data 
+  dat <- matrix(dat, nrow = 50, ncol = 400)
+  write.lfmm(dat, "genoM.lfmm")
+  
+  project.missing = snmf("genoM.lfmm", K = 4,
+                         entropy = TRUE, repetitions = 10,
+                         project = "new")
+  
+  # select the run with the lowest cross-entropy value
+  best = which.min(cross.entropy(project.missing, K = 4))
+  # Impute the missing genotypes
+  impute(project.missing, "genoM.lfmm",
+         method = 'mode', K = 4, run = best)
+  ## Missing genotype imputation for K = 4
+  ## Missing genotype imputation for run = 3
+  ## Results are written in the file: genoM.lfmm_imputed.lfmm
+  # Proportion of correct imputation results
+  dat.imp = read.lfmm("genoM.lfmm_imputed.lfmm")
+  mean( tutorial.R[dat == 9] == dat.imp[dat == 9] )
 }
 
 # main options:
